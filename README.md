@@ -1,14 +1,13 @@
-##Ccircle: Learn to code with Python!
+# CCircle: Learn to code with Python!
 
-##Getting started
-[Setup](index)
+## [Setup](index)
 
-Highlights:
+### Highlights:
 * No prior programming experience required.
 * Learn the fundamentals of computer science through games.
 * Everything is written in Python, so you can go down the 'how does this work?' rabbit hole as far as you want.
 
-Checklist (Prioritized!):
+### Checklist (Prioritized!):
 - [ ] Windows, OSX, Linux support.
     - [ ] Full OSX support.
         - [x] replace windows-native windowing with GLFW (OS-agnostic windowing)
