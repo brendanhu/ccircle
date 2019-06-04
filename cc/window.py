@@ -1,54 +1,105 @@
 from cc import *
+from cc.constant import *
+from cc.ds.triangle import *
+from cc.shader import Shader
 from cc.window_input import RegisterInputFunctionality
 
 
 class Window:
     """ Window class powered by GLFW.
         Provides intuitive 'wrapper' function calls to circumvent confusing GLFW and GL nuances.
-
-    Args:
-        width (int, optional): Width in pixels of the GLFW window.
-        height (int, optional): Height in pixels of the GLFW window.
-        win_title (str, optional): The title of the window.
-        fullscreen (bool, optional): if the window should be fullscreen.
-
-    Notes:
-        OpenGL 3.2+ required for Mac: https://developer.apple.com/opengl/OpenGL-Capabilities-Tables.pdf
-        Per OpenGL Face Culling norms, vertices are specified in clockwise order.
+        Written for OpenGL 3.2+ (required for Mac: https://developer.apple.com/opengl/OpenGL-Capabilities-Tables.pdf)
+            using examples from http://www.opengl-tutorial.org/.
+        Per OpenGL Face Culling norms, vertices for front-facing shapes are specified in counter-clockwise order.
     """
 
     def __init__(self, width=640, height=480, win_title="CC Window", fullscreen=False):
-        """ Create window, set context and register input callbacks. """
-        # GLFW hints for OpenGL Context, etc.
+        """ Create window, set context and register input callbacks.
+
+        Args:
+            width (int, optional): Width in pixels of the GLFW window.
+            height (int, optional): Height in pixels of the GLFW window.
+            win_title (str, optional): The title of the window.
+            fullscreen (bool, optional): if the window should be fullscreen.
+        """
+        # GLFW hints for OpenGL 3.2+, etc.; hints like COCOA_RETINA_FRAMEBUFFER are ignored off of OSX.
         glfw.window_hint(glfw.CONTEXT_VERSION_MAJOR, 3)
         glfw.window_hint(glfw.CONTEXT_VERSION_MINOR, 2)
         glfw.window_hint(glfw.OPENGL_FORWARD_COMPAT, gl.GL_TRUE)
         glfw.window_hint(glfw.OPENGL_PROFILE, glfw.OPENGL_CORE_PROFILE)
+        glfw.window_hint(glfw.SAMPLES, 4)
         glfw.window_hint(glfw.DEPTH_BITS, 24)
         glfw.window_hint(glfw.STENCIL_BITS, 8)
         glfw.window_hint(glfw.FOCUSED, True)
+        glfw.window_hint(glfw.COCOA_RETINA_FRAMEBUFFER, glfw.TRUE)
         if glfw.raw_mouse_motion_supported():
             glfw.set_input_mode(self.win, glfw.RAW_MOUSE_MOTION, glfw.TRUE)
-        # Ignored off of osx.
-        glfw.window_hint(glfw.COCOA_RETINA_FRAMEBUFFER, glfw.TRUE)
 
-        # Create window.
+        # Create window and attach to this instance.
         monitor = glfw.get_primary_monitor() if fullscreen else None
         self.win = glfw.create_window(width=width, height=height, title=win_title, monitor=monitor, share=None)
         self.__validate_window()
 
-        # OpenGL hints.
-        gl.glEnable(gl.GL_POINT_SMOOTH)
-        gl.glEnable(gl.GL_LINE_SMOOTH)
-        gl.glHint(gl.GL_POINT_SMOOTH_HINT, gl.GL_NICEST)
-        gl.glHint(gl.GL_LINE_SMOOTH_HINT, gl.GL_NICEST)
-        gl.glPointSize(2.0)
-        gl.glLineWidth(1.0)
-
-        # Set swap interval for vsync, input callbacks, and set active.
+        # Make window active and swap interval for vsync.
         self.__set_active()
         glfw.swap_interval(1)
+
+        # Add input functionality.
         RegisterInputFunctionality(self.win)
+
+        # Compile shaders and attach to this instance.
+        self.shader = Shader(fragment=FRAGMENT_SHADER, vertex=VERTEX_SHADER)
+
+        # Make VAO and VBOS.
+        self.vao_id = gl.glGenVertexArrays(1)
+        gl.glBindVertexArray(self.vao_id)
+
+        # Initialize the num_verts to draw to 0.
+        self.num_verts = 0
+
+    def create_tri_vbos(self, tri: Triangle):
+        """ Creates vertex buffers for triangles and sets appropriate vertex attributes for the shader.
+
+        Args:
+            tri: the triangle to draw.
+
+        Notes:
+            Names of the vertex attribute match the names defined in SHADERS from constant.py.
+        """
+        num_buffers = 2
+        verts_vbo_id, colors_vbo_id = gl.glGenBuffers(num_buffers)
+
+        # VBO1: verts in shader's 'vin_position' vertex attribute.
+        verts = tri.vertices_as_array()
+        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, verts_vbo_id)
+        gl.glBufferData(gl.GL_ARRAY_BUFFER, arrays.ArrayDatatype.arrayByteCount(verts), verts, gl.GL_STATIC_DRAW)
+        vaa_id = self.shader.attribute_location('vin_position')
+        gl.glVertexAttribPointer(vaa_id, 3, gl.GL_FLOAT, gl.GL_FALSE, 0, None)
+        gl.glEnableVertexAttribArray(vaa_id)
+
+        # VBO2: colors in shader's 'vin_color' vertex attribute.
+        colors = tri.colors_as_array()
+        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, colors_vbo_id)
+        gl.glBufferData(gl.GL_ARRAY_BUFFER, arrays.ArrayDatatype.arrayByteCount(colors), colors, gl.GL_STATIC_DRAW)
+        vaa_id = self.shader.attribute_location('vin_color')
+        gl.glVertexAttribPointer(vaa_id, 3, gl.GL_FLOAT, gl.GL_FALSE, 0, None)
+        gl.glEnableVertexAttribArray(vaa_id)
+
+        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0)
+        gl.glBindVertexArray(0)
+
+        self.num_verts += 3
+
+    def draw(self):
+        """ Draws TODO(Brendan) on screen. """
+        gl.glClear(gl.GL_COLOR_BUFFER_BIT)
+        gl.glClear(gl.GL_DEPTH_BUFFER_BIT)
+
+        gl.glBindVertexArray(self.vao_id)
+        gl.glDrawArrays(gl.GL_TRIANGLES, 0, self.num_verts)
+
+        glfw.swap_buffers(self.win)
+        glfw.poll_events()
 
     def isOpen(self):
         """ Returns whether or not this window is open.
@@ -101,10 +152,10 @@ class Window:
         """
         return tuple(glfw.get_cursor_pos(self.win))
 
-    def clear(self, r, g, b):
+    def clear(self, color: Color):
         """ Clears the window with a certain color. """
         self.__set_active()
-        gl.glClearColor(r, g, b, 1.0)
+        gl.glClearColor(*color.to_list())
         gl.glClear(gl.GL_COLOR_BUFFER_BIT)
 
     def close(self):
@@ -120,17 +171,18 @@ class Window:
         """
         return glfw.get_time()
 
-    def draw_point(self, x, y, s=2.0, r=1.0, g=1.0, b=1.0, a=1.0):
+    def draw_point(self, x: int, y: int, s: float = 2.0, r: float = 1.0, g: float = 1.0, b: float = 1.0,
+                    a: float = 1.0):
         """ Draws a line from (x1, y1) to (x2, y2).
 
         Args:
-            x (int): The x-coord of the point.
-            y (int): The y-coord of the point.
-            s (float): The size of the point.
-            r (float, optional): The 'red' component of the circle's color.
-            g (float, optional): The 'green' component of the circle's color.
-            b (float, optional): The 'blue' component of the circle's color.
-            a (float, optional): The alpha (transparency) component of the circle.
+            x: The x-coord of the point.
+            y: The y-coord of the point.
+            s: The size of the point.
+            r: The 'red' component of the circle's color.
+            g: The 'green' component of the circle's color.
+            b: The 'blue' component of the circle's color.
+            a: The alpha (transparency) component of the circle.
         """
         self.__set_active()
         gl.glPointSize(s)
@@ -217,6 +269,9 @@ class Window:
             g (float, optional): The 'green' component of the circle's color.
             b (float, optional): The 'blue' component of the circle's color.
             a (float, optional): The alpha (transparency) component of the circle.
+
+        Notes:
+            Uses vertex buffers per OpenGL 3.2+.
         """
         self.__set_active()
         fv = radius / 4.0
@@ -246,20 +301,11 @@ class Window:
     def close_all_windows():
         glfw.terminate()
 
+    def __bind_vao(self):
+        gl.glBindVertexArray(self.vao_id)
+
     def __set_active(self):
         glfw.make_context_current(self.win)
-        self.__set_viewport()
-
-    def __set_viewport(self):
-        """ TODO(Brendan): Rewrite this to be OpenGL 3.2 forward compatible. """
-        (fbw, fbh) = self.get_framebuffer_size()
-        gl.glViewport(0, 0, fbw, fbh)
-        gl.glMatrixMode(gl.GL_PROJECTION)
-        gl.glLoadIdentity()
-        gl.glTranslated(-1.0, 1.0, 0.0)
-        gl.glScaled(2.0 / fbw, -2.0 / fbh, 1.0)
-        gl.glMatrixMode(gl.GL_MODELVIEW)
-        gl.glLoadIdentity()
 
     def __validate_window(self):
         if not self.win:
@@ -270,7 +316,7 @@ class Window:
         ctx_major = glfw.get_window_attrib(self.win, glfw.CONTEXT_VERSION_MAJOR)
         forward_compat = glfw.get_window_attrib(self.win, glfw.OPENGL_FORWARD_COMPAT)
         if ctx_major >= 3 and forward_compat:
-            logging.warning("Context is forward compatible, you can't use OpenGL 2.x commands.")
+            logging.warning("Context is forward compatible, no old-school OpenGL (2.x commands) allowed!")
         self.log_window_statistics()
 
     def log_window_statistics(self):
@@ -281,16 +327,12 @@ class Window:
         x2, y2 = (x1 + width, y1 + height)
 
         logging.debug("OpenGL %d.%d Window" % (ctx_major, ctx_minor))
-        logging.debug('  Top-left: (%d, %d)' % (x1, y1))
-        logging.debug('  Size: (%d, %d)' % (width, height))
-        logging.debug('  Bottom right: (%d, %d)' % (x2, y2))
-        logging.debug('  frame size: ' + str(self.get_frame_size()))
-        logging.debug('  framebuffer size: ' + str(self.get_framebuffer_size()))
-
-    def update(self):
-        glfw.swap_buffers(self.win)
-        glfw.poll_events()
-        gl.glClearColor(0, 0, 0, 1)
-        gl.glClear(gl.GL_COLOR_BUFFER_BIT)
-        gl.glEnable(gl.GL_BLEND)
-        gl.glBlendFunc(gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA)
+        logging.debug('  Position:')
+        logging.debug('    Top-left: (%d, %d)' % (x1, y1))
+        logging.debug('    Size: (%d, %d)' % (width, height))
+        logging.debug('    Bottom right: (%d, %d)' % (x2, y2))
+        logging.debug('    frame size: ' + str(self.get_frame_size()))
+        logging.debug('    framebuffer size: ' + str(self.get_framebuffer_size()))
+        logging.debug('  Vendor: %s' % (gl.glGetString(gl.GL_VENDOR)))
+        logging.debug('  GLSL Version: %s' % (gl.glGetString(gl.GL_SHADING_LANGUAGE_VERSION)))
+        logging.debug('  Renderer: %s' % (gl.glGetString(gl.GL_RENDERER)))

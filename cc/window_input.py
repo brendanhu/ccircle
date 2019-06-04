@@ -1,4 +1,4 @@
-from cc import *
+from cc import gl, glfw, logging
 
 
 class RegisterInputFunctionality:
