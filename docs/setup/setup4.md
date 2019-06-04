@@ -3,7 +3,7 @@
 
 * First, [download 64-bit Git for Windows](https://git-scm.com/download/win)
   Run the download when it finishes.
-  ![gitDownload01](../assets/img/gitDownload01.jpg)
+  ![gitDownload01](assets/img/gitDownload01.jpg)
 
 * On the next pages, leave all settings as is; just click "next" to move on until the installer finishes.
 

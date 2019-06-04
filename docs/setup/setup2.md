@@ -6,22 +6,22 @@
   Once downloaded, run the installer.
 
 * Click next...  
-  ![1](../assets/img/pychsetup01.jpg)
+  ![1](assets/img/pychsetup01.jpg)
 
 * Click next again, the default path is fine...  
-  ![2](../assets/img/pychsetup02.jpg)
+  ![2](assets/img/pychsetup02.jpg)
 
 * Select the checkboxes for '64-bit launcher' and '.py', as shown below  
-  ![3](../assets/img/pychsetup03.jpg)
+  ![3](assets/img/pychsetup03.jpg)
 
 * Click install, the default folder name is fine  
-  ![4](../assets/img/pychsetup04.jpg)
+  ![4](assets/img/pychsetup04.jpg)
 
 * Wait...  
-  ![5](../assets/img/pychsetup05.jpg)
+  ![5](assets/img/pychsetup05.jpg)
 
 * Click finish! Don't run PyCharm yet, as we've still got some more setup to do
   before we open it.  
-  ![6](../assets/img/pychsetup06.jpg)
+  ![6](assets/img/pychsetup06.jpg)
 
 ### Next -> [CCircle.Setup.3](setup3.html)
