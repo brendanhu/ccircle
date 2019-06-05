@@ -3,12 +3,12 @@ from cc.constant import VertexAttribute
 
 
 class Shader:
-    """ Our graphics Shader. """
-    def __init__(self, vertex, fragment):
+    """ Basic graphics Shader. """
+    def __init__(self, vertex: str, fragment: str):
         """
         Args:
-            vertex (str): String containing shader source code for the vertex shader
-            fragment (str): String containing shader source code for the fragment shader
+            vertex: String containing shader source code for the vertex shader.
+            fragment: String containing shader source code for the fragment shader.
         """
         self.program_id = gl.glCreateProgram()
         vs_id = Shader.add_shader(vertex, gl.GL_VERTEX_SHADER)

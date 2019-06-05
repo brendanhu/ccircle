@@ -15,16 +15,50 @@ class Window:
         Per OpenGL Face Culling norms, vertices for front-facing shapes are specified in counter-clockwise order.
     """
 
-    def __init__(self, width=640, height=480, win_title="CC Window", fullscreen=False):
+    def __init__(self,
+                 width: int = 640,
+                 height: int = 480,
+                 win_title: str = "CC Window",
+                 fullscreen: bool = False):
         """ Create window, set context and register input callbacks.
 
         Args:
-            width (int, optional): Width in pixels of the GLFW window.
-            height (int, optional): Height in pixels of the GLFW window.
-            win_title (str, optional): The title of the window.
-            fullscreen (bool, optional): if the window should be fullscreen.
+            width (optional): Width in pixels of the GLFW window.
+            height (optional): Height in pixels of the GLFW window.
+            win_title (optional): The title of the window.
+            fullscreen (optional): if the window should be fullscreen.
         """
-        # GLFW hints for OpenGL 3.2+, etc.; hints like COCOA_RETINA_FRAMEBUFFER are ignored off of OSX.
+        self.__set_glfw_hints()
+        self.__make_window(fullscreen, height, width, win_title)
+        RegisterInputFunctionality(self.win)
+        self.shader = Shader(fragment=FRAGMENT_SHADER, vertex=VERTEX_SHADER)
+
+        # TODO: 2-VAO paradigm: static and dynamic (using glBufferSubData); https://stackoverflow.com/a/8923298
+        # Make VAO / VBOs.
+        self.vao_id = gl.glGenVertexArrays(1)
+        self.verts_vbo_id, self.colors_vbo_id = gl.glGenBuffers(2)
+        # Bind VAO needed to enable vertex attributes.
+        gl.glBindVertexArray(self.vao_id)
+        # Enable 2 Vertex Attributes via linker-assigned index (location).
+        self.position_attr_idx = self.shader.attribute_index(VertexAttribute.POSITION_IN)
+        self.colors_attr_idx = self.shader.attribute_index(VertexAttribute.COLOR_IN)
+        gl.glEnableVertexAttribArray(self.position_attr_idx)
+        gl.glEnableVertexAttribArray(self.colors_attr_idx)
+
+    def __make_window(self, fullscreen, height, width, win_title):
+        """ Create window, attach to this instance, make active.
+
+        Notes:
+            Sets self.win
+        """
+        monitor = glfw.get_primary_monitor() if fullscreen else None
+        self.win = glfw.create_window(width=width, height=height, title=win_title, monitor=monitor, share=None)
+        self.__validate_window()
+        self.__set_active()
+
+    @staticmethod
+    def __set_glfw_hints():
+        """ Set GLFW hints for OpenGL 3.2+, etc.; hints like COCOA_RETINA_FRAMEBUFFER are ignored off of OSX. """
         glfw.window_hint(glfw.CONTEXT_VERSION_MAJOR, 3)
         glfw.window_hint(glfw.CONTEXT_VERSION_MINOR, 2)
         glfw.window_hint(glfw.OPENGL_FORWARD_COMPAT, gl.GL_TRUE)
@@ -34,34 +68,6 @@ class Window:
         glfw.window_hint(glfw.STENCIL_BITS, 8)
         glfw.window_hint(glfw.FOCUSED, True)
         glfw.window_hint(glfw.COCOA_RETINA_FRAMEBUFFER, glfw.TRUE)
-        if glfw.raw_mouse_motion_supported():
-            glfw.set_input_mode(self.win, glfw.RAW_MOUSE_MOTION, glfw.TRUE)
-
-        # Create window and attach to this instance.
-        monitor = glfw.get_primary_monitor() if fullscreen else None
-        self.win = glfw.create_window(width=width, height=height, title=win_title, monitor=monitor, share=None)
-        self.__validate_window()
-
-        # Make window active and swap interval for vsync.
-        self.__set_active()
-        glfw.swap_interval(1)
-
-        # Add input functionality.
-        RegisterInputFunctionality(self.win)
-
-        # Compile shaders and attach to this instance.
-        self.shader = Shader(fragment=FRAGMENT_SHADER, vertex=VERTEX_SHADER)
-
-        # Make and bind VAO.
-        self.vao_id = gl.glGenVertexArrays(1)
-        gl.glBindVertexArray(self.vao_id)
-        # Make VBOs.
-        self.verts_vbo_id, self.colors_vbo_id = gl.glGenBuffers(2)
-        # Enable 2 Vertex Attributes via linker-assigned index (location).
-        self.position_attr_idx = self.shader.attribute_index(VertexAttribute.POSITION_IN)
-        gl.glEnableVertexAttribArray(self.position_attr_idx)
-        self.colors_attr_idx = self.shader.attribute_index(VertexAttribute.COLOR_IN)
-        gl.glEnableVertexAttribArray(self.colors_attr_idx)
 
     def prepare_triangles(self, *tris: Triangle):
         """ Prepares triangles--IN ORDER--prior to a draw(), allocating a separate VBO per vertex attribute
@@ -73,10 +79,6 @@ class Window:
 
         Notes:
             For more information, see http://antongerdelan.net/opengl/vertexbuffers.html
-
-        TODO:
-            Use a single vbo, per best practices.
-            2-buffer draw paradigm: static and dynamic (using glBufferSubData)
         """
         # VBO1: verts in shader's POSITION_IN VertexAttribute
         verts = util.extract_vertices_as_single_vbo_ready_array(*tris)
@@ -95,7 +97,7 @@ class Window:
         self.prepare_triangles(*tris)
         num_triangles = len(tris)
 
-        # Drawz.
+        # Draw.
         gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
         gl.glDrawArrays(gl.GL_TRIANGLES, 0, 3 * num_triangles)
 
