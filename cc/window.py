@@ -95,7 +95,7 @@ class Window:
         self.prepare_triangles(*tris)
         num_triangles = len(tris)
 
-        # Draw.
+        # Drawz.
         gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
         gl.glDrawArrays(gl.GL_TRIANGLES, 0, 3 * num_triangles)
 

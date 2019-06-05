@@ -17,7 +17,7 @@ while win.is_open():
     win.clear(GRAY)
 
     # Create triangle on mouse by projecting pixels onto 2x2 GL grid.
-    # TODO(Brendan): pull into window.py so user deals with pixels instead of [-1, 1]?
+    # TODO(Brendan): pull into window.py so user deals with pixels instead of [-1, 1]!
     mx, my = win.get_mouse_pos()
     px = 2 * mx / wx - 1
     py = 1 - 2 * my / wy
