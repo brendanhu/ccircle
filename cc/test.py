@@ -2,7 +2,6 @@
 from cc.constant import *
 from cc.ds.triangle import *
 from cc.window import Window
-from cc import logging, np
 
 # Create window.
 win = Window()
@@ -18,17 +17,23 @@ while win.isOpen():
     win.clear(GRAY)
 
     # Create triangle on mouse by projecting pixels onto 2x2 GL grid.
+    # TODO(Brendan): pull into window.py so user deals with pixels instead of [-1, 1]?
     mx, my = win.get_mouse_pos()
     px = 2 * mx / wx - 1
     py = 1 - 2 * my / wy
-    tri = Triangle(
-        Point(px, py, 0.0, RED),
-        Point(px + wx_offset_normalized, py - wy_offset_normalized, 0.0, GREEN),
-        Point(px - wx_offset_normalized, py - wy_offset_normalized, 0.0, BLUE),
+    cursor_tri = Triangle(
+        NDCPoint(px, py, 0.0, RED),
+        NDCPoint(px + wx_offset_normalized, py - wy_offset_normalized, 0.0, GREEN),
+        NDCPoint(px - wx_offset_normalized, py - wy_offset_normalized, 0.0, BLUE),
     )
-    win.create_tri_vbos(tri)
 
-    # TODO(Brendan) Draw another triangle.
+    tri2 = Triangle(
+        NDCPoint(-1.0, 1.0, 0.0, BLUE),
+        NDCPoint(-1.0, 0.0, 0.0, GREEN),
+        NDCPoint(-0.5, 0.5, 0.0, PURPLE),
+    )
+
+    win.prepare_triangles(cursor_tri, tri2)
 
     # # Draw a growing circle.
     # cx = x + (wx / 2)
@@ -36,9 +41,7 @@ while win.isOpen():
     # circle_grow_rate = 10
     # radius = int(circle_grow_rate * win.getTime())
     # win.draw_circle(cx, cy, radius, *BLUE_PACKED)
-
-
-    win.draw()
+    win.draw_triangles()
 win.close()
 
 # # Draw a stupid-big point.
@@ -51,12 +54,3 @@ win.close()
 # # Draw a rectangle.
 # ry = y + wy - ten_percent_y
 # win.draw_rect(x, y, ten_percent_x, ten_percent_y, *RED_PACKED)
-#
-# # Draw a small triangle on the mouse pos.
-# mx, my = win.get_mouse_pos()
-# win.draw_tri(
-#     mx, my,
-#     mx + 15, my + 20,
-#     mx - 15, my + 20,
-#     *PURPLE_PACKED
-# )

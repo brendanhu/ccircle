@@ -1,6 +1,8 @@
+import cc.util as util
+
 from cc import *
+from cc.ds.triangle import Triangle
 from cc.constant import *
-from cc.ds.triangle import *
 from cc.shader import Shader
 from cc.window_input import RegisterInputFunctionality
 
@@ -53,51 +55,45 @@ class Window:
         # Make VAO and VBOS.
         self.vao_id = gl.glGenVertexArrays(1)
         gl.glBindVertexArray(self.vao_id)
+        self.verts_vbo_id, self.colors_vbo_id = gl.glGenBuffers(2)
+        self.position_attr_idx = self.shader.attribute_index(VertexAttribute.POSITION_IN)
+        self.colors_attr_idx = self.shader.attribute_index(VertexAttribute.COLOR_IN)
 
-        # Initialize the num_verts to draw to 0.
-        self.num_verts = 0
-
-    def create_tri_vbos(self, tri: Triangle):
-        """ Creates vertex buffers for triangles and sets appropriate vertex attributes for the shader.
+    def prepare_triangles(self, *tris: Triangle):
+        """ Prepares triangles--IN ORDER--prior to a draw(), allocating a separate VBO per vertex attribute
+            (here, via 2 vertex buffers--1 for vertices and 1 for colors) and sets appropriate vertex attributes.
+            Following https://www.khronos.org/opengl/wiki/Vertex_Specification_Best_Practices#Formatting_VBO_Data
 
         Args:
-            tri: the triangle to draw.
+            tris: triangles to draw.
 
         Notes:
-            Names of the vertex attribute match the names defined in SHADERS from constant.py.
+            For more information, see http://antongerdelan.net/opengl/vertexbuffers.html
+
+        TODO:
+            2-buffer draw paradigm: static and dynamic (using glBufferSubData)
         """
-        num_buffers = 2
-        verts_vbo_id, colors_vbo_id = gl.glGenBuffers(num_buffers)
-
-        # VBO1: verts in shader's 'vin_position' vertex attribute.
-        verts = tri.vertices_as_array()
-        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, verts_vbo_id)
+        # VBO1: verts in shader's POSITION_IN VertexAttribute
+        verts = util.extract_vertices_as_single_vbo_ready_array(*tris)
+        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, self.verts_vbo_id)
         gl.glBufferData(gl.GL_ARRAY_BUFFER, arrays.ArrayDatatype.arrayByteCount(verts), verts, gl.GL_STATIC_DRAW)
-        vaa_id = self.shader.attribute_location('vin_position')
-        gl.glVertexAttribPointer(vaa_id, 3, gl.GL_FLOAT, gl.GL_FALSE, 0, None)
-        gl.glEnableVertexAttribArray(vaa_id)
+        gl.glVertexAttribPointer(self.position_attr_idx, 3, gl.GL_FLOAT, gl.GL_FALSE, 0, None)
+        gl.glEnableVertexAttribArray(self.position_attr_idx)
 
-        # VBO2: colors in shader's 'vin_color' vertex attribute.
-        colors = tri.colors_as_array()
-        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, colors_vbo_id)
+        # VBO2: colors in shader's COLOR_IN VertexAttribute
+        colors = util.extract_colors_as_single_vbo_ready_array(*tris)
+        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, self.colors_vbo_id)
         gl.glBufferData(gl.GL_ARRAY_BUFFER, arrays.ArrayDatatype.arrayByteCount(colors), colors, gl.GL_STATIC_DRAW)
-        vaa_id = self.shader.attribute_location('vin_color')
-        gl.glVertexAttribPointer(vaa_id, 3, gl.GL_FLOAT, gl.GL_FALSE, 0, None)
-        gl.glEnableVertexAttribArray(vaa_id)
+        gl.glVertexAttribPointer(self.colors_attr_idx, 3, gl.GL_FLOAT, gl.GL_FALSE, 0, None)
+        gl.glEnableVertexAttribArray(self.colors_attr_idx)
 
-        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0)
-        gl.glBindVertexArray(0)
-
-        self.num_verts += 3
-
-    def draw(self):
-        """ Draws TODO(Brendan) on screen. """
-        gl.glClear(gl.GL_COLOR_BUFFER_BIT)
-        gl.glClear(gl.GL_DEPTH_BUFFER_BIT)
-
+    def draw_triangles(self):
+        """ Draws the given triangles for enabled VAOs (from their VBOs) on the screen. """
+        gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
         gl.glBindVertexArray(self.vao_id)
-        gl.glDrawArrays(gl.GL_TRIANGLES, 0, self.num_verts)
-
+        # TODO(Brendan): fix this...
+        gl.glDrawArrays(gl.GL_TRIANGLES, 0, 3)
+        gl.glDrawArrays(gl.GL_TRIANGLES, 3, 6)
         glfw.swap_buffers(self.win)
         glfw.poll_events()
 
@@ -172,7 +168,7 @@ class Window:
         return glfw.get_time()
 
     def draw_point(self, x: int, y: int, s: float = 2.0, r: float = 1.0, g: float = 1.0, b: float = 1.0,
-                    a: float = 1.0):
+                   a: float = 1.0):
         """ Draws a line from (x1, y1) to (x2, y2).
 
         Args:

@@ -8,6 +8,7 @@ import OpenGL.arrays as arrays
 import logging
 import math
 import numpy as np
+import sys
 
 # This defines all imports available to the cc module.
 __all__ = [
@@ -17,6 +18,7 @@ __all__ = [
     'logging',
     'math',
     'np',
+    'sys',
 ]
 
 # Set logger level from the constants file, defaulting to INFO.

@@ -1,4 +1,5 @@
 from cc import gl
+from cc.constant import VertexAttribute
 
 
 class Shader:
@@ -25,27 +26,16 @@ class Shader:
             gl.glDeleteProgram(self.program_id)
             raise RuntimeError('Error linking program: %s' % info)
 
-    def uniform_location(self, name):
-        """ Get location of an OpenGL uniform variable.
+    def attribute_index(self, vertex_attribute: VertexAttribute):
+        """ Get index of the vertex attribute for impending glVertexAttribPointer(index) call.
 
         Args:
-            name (str): Name of the variable for which location is to be returned.
+            vertex_attribute: the attribute of which we're retrieving the index.
 
         Returns:
-            location (int): Integer describing location.
+            location (int): Integer describing location (index) of the attribute.
         """
-        return gl.glGetUniformLocation(self.program_id, name)
-
-    def attribute_location(self, name):
-        """ Get location of an OpenGL attribute variable.
-
-        Args:
-            name (str): Name of the variable for which location is to be returned.
-
-        Returns:
-            location (int): Integer describing location.
-        """
-        return gl.glGetAttribLocation(self.program_id, name)
+        return gl.glGetAttribLocation(self.program_id, vertex_attribute.name)
 
     @staticmethod
     def add_shader(source, shader_type):
