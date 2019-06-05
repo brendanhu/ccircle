@@ -13,7 +13,7 @@ half_wy = wy / 2.0
 wx_offset_normalized = 0.04
 wy_offset_normalized = 0.1
 
-while win.isOpen():
+while win.is_open():
     win.clear(GRAY)
 
     # Create triangle on mouse by projecting pixels onto 2x2 GL grid.
@@ -33,7 +33,7 @@ while win.isOpen():
         NDCPoint(-0.5, 0.5, 0.0, PURPLE),
     )
 
-    win.prepare_triangles(cursor_tri, tri2)
+    win.draw_triangles(cursor_tri, tri2)
 
     # # Draw a growing circle.
     # cx = x + (wx / 2)
@@ -41,7 +41,6 @@ while win.isOpen():
     # circle_grow_rate = 10
     # radius = int(circle_grow_rate * win.getTime())
     # win.draw_circle(cx, cy, radius, *BLUE_PACKED)
-    win.draw_triangles()
 win.close()
 
 # # Draw a stupid-big point.

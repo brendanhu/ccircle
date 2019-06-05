@@ -52,12 +52,16 @@ class Window:
         # Compile shaders and attach to this instance.
         self.shader = Shader(fragment=FRAGMENT_SHADER, vertex=VERTEX_SHADER)
 
-        # Make VAO and VBOS.
+        # Make and bind VAO.
         self.vao_id = gl.glGenVertexArrays(1)
         gl.glBindVertexArray(self.vao_id)
+        # Make VBOs.
         self.verts_vbo_id, self.colors_vbo_id = gl.glGenBuffers(2)
+        # Enable 2 Vertex Attributes via linker-assigned index (location).
         self.position_attr_idx = self.shader.attribute_index(VertexAttribute.POSITION_IN)
+        gl.glEnableVertexAttribArray(self.position_attr_idx)
         self.colors_attr_idx = self.shader.attribute_index(VertexAttribute.COLOR_IN)
+        gl.glEnableVertexAttribArray(self.colors_attr_idx)
 
     def prepare_triangles(self, *tris: Triangle):
         """ Prepares triangles--IN ORDER--prior to a draw(), allocating a separate VBO per vertex attribute
@@ -71,6 +75,7 @@ class Window:
             For more information, see http://antongerdelan.net/opengl/vertexbuffers.html
 
         TODO:
+            Use a single vbo, per best practices.
             2-buffer draw paradigm: static and dynamic (using glBufferSubData)
         """
         # VBO1: verts in shader's POSITION_IN VertexAttribute
@@ -78,26 +83,27 @@ class Window:
         gl.glBindBuffer(gl.GL_ARRAY_BUFFER, self.verts_vbo_id)
         gl.glBufferData(gl.GL_ARRAY_BUFFER, arrays.ArrayDatatype.arrayByteCount(verts), verts, gl.GL_STATIC_DRAW)
         gl.glVertexAttribPointer(self.position_attr_idx, 3, gl.GL_FLOAT, gl.GL_FALSE, 0, None)
-        gl.glEnableVertexAttribArray(self.position_attr_idx)
 
         # VBO2: colors in shader's COLOR_IN VertexAttribute
         colors = util.extract_colors_as_single_vbo_ready_array(*tris)
         gl.glBindBuffer(gl.GL_ARRAY_BUFFER, self.colors_vbo_id)
         gl.glBufferData(gl.GL_ARRAY_BUFFER, arrays.ArrayDatatype.arrayByteCount(colors), colors, gl.GL_STATIC_DRAW)
         gl.glVertexAttribPointer(self.colors_attr_idx, 3, gl.GL_FLOAT, gl.GL_FALSE, 0, None)
-        gl.glEnableVertexAttribArray(self.colors_attr_idx)
 
-    def draw_triangles(self):
+    def draw_triangles(self, *tris: Triangle):
         """ Draws the given triangles for enabled VAOs (from their VBOs) on the screen. """
+        self.prepare_triangles(*tris)
+        num_triangles = len(tris)
+
+        # Draw.
         gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
-        gl.glBindVertexArray(self.vao_id)
-        # TODO(Brendan): fix this...
-        gl.glDrawArrays(gl.GL_TRIANGLES, 0, 3)
-        gl.glDrawArrays(gl.GL_TRIANGLES, 3, 6)
+        gl.glDrawArrays(gl.GL_TRIANGLES, 0, 3 * num_triangles)
+
+        Window.clear_gl_array_buffer()
         glfw.swap_buffers(self.win)
         glfw.poll_events()
 
-    def isOpen(self):
+    def is_open(self):
         """ Returns whether or not this window is open.
 
         Returns:
@@ -157,15 +163,6 @@ class Window:
     def close(self):
         """ Closes the window. """
         glfw.destroy_window(self.win)
-
-    @staticmethod
-    def getTime():
-        """ Returns whether or not this window is open.
-
-        Returns:
-            time (double): the number of seconds this window has been open as a float.
-        """
-        return glfw.get_time()
 
     def draw_point(self, x: int, y: int, s: float = 2.0, r: float = 1.0, g: float = 1.0, b: float = 1.0,
                    a: float = 1.0):
@@ -293,13 +290,6 @@ class Window:
     def toggle_maximized(self):
         glfw.maximize_window(self.win)
 
-    @staticmethod
-    def close_all_windows():
-        glfw.terminate()
-
-    def __bind_vao(self):
-        gl.glBindVertexArray(self.vao_id)
-
     def __set_active(self):
         glfw.make_context_current(self.win)
 
@@ -332,3 +322,24 @@ class Window:
         logging.debug('  Vendor: %s' % (gl.glGetString(gl.GL_VENDOR)))
         logging.debug('  GLSL Version: %s' % (gl.glGetString(gl.GL_SHADING_LANGUAGE_VERSION)))
         logging.debug('  Renderer: %s' % (gl.glGetString(gl.GL_RENDERER)))
+
+    @staticmethod
+    def close_all_windows():
+        glfw.terminate()
+
+    @staticmethod
+    def get_time():
+        """ Returns the number of seconds this window has been open.
+
+        Returns:
+            time (double): the number of seconds this window has been open as a float.
+
+        Notes:
+            GLFW claims near-nanosecond precision!
+        """
+        return glfw.get_time()
+
+    @staticmethod
+    def clear_gl_array_buffer():
+        """ Restore memory for GL_ARRAY_BUFFER. """
+        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0)
