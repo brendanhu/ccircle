@@ -1,26 +1,28 @@
 import cc.util as util
 
 from cc import *
-from cc.ds.point import NDCPoint
+from cc.ds.point import NDCPoint, GLPoint
 from cc.ds.triangle import Triangle
 from cc.constant import *
 from cc.shader import Shader
+from cc.util import validate_tri
 from cc.window_input import RegisterInputFunctionality
 
 
 class Window:
+    point_buffer = []
+    tri_buffer = []
+
     """ Window class powered by GLFW.
         Provides intuitive 'wrapper' function calls to circumvent confusing GLFW and GL nuances.
+
+    Notes:
         Written for OpenGL 3.2+ (required for Mac: https://developer.apple.com/opengl/OpenGL-Capabilities-Tables.pdf)
             using examples from http://www.opengl-tutorial.org/.
-        Per OpenGL Face Culling norms, vertices for front-facing shapes are specified in counter-clockwise order.
+        Per OpenGL Face Culling norms, vertices for front-facing shapes should be specified in counter-clockwise order.
     """
 
-    def __init__(self,
-                 width: int = 640,
-                 height: int = 480,
-                 win_title: str = "CC Window",
-                 fullscreen: bool = False):
+    def __init__(self, width: int = 640, height: int = 480, win_title: str = "CC Window", fullscreen: bool = False):
         """ Create window, set context and register input callbacks.
 
         Args:
@@ -29,33 +31,46 @@ class Window:
             win_title (optional): The title of the window.
             fullscreen (optional): if the window should be fullscreen.
         """
-        self.__set_glfw_hints()
-        self.__make_window(fullscreen, height, width, win_title)
-        RegisterInputFunctionality(self.win)
-        self.shader = Shader(fragment=FRAGMENT_SHADER, vertex=VERTEX_SHADER)
+        self.__glfw_setup(fullscreen, height, width, win_title)
+        self.__gl_setup()
 
-        # TODO(Brendan): 2-VAO paradigm--static and dynamic (using glBufferSubData); https://stackoverflow.com/a/8923298
-        # Make VAO / VBOs.
-        self.vao_id = gl.glGenVertexArrays(1)
-        self.verts_vbo_id, self.colors_vbo_id = gl.glGenBuffers(2)
-        # Bind VAO before enabling vertex attributes.
-        gl.glBindVertexArray(self.vao_id)
-        # Enable 2 Vertex Attributes via linker-assigned index (location).
-        self.position_attr_idx = self.shader.attribute_index(VertexAttribute.POSITION_IN)
-        self.colors_attr_idx = self.shader.attribute_index(VertexAttribute.COLOR_IN)
-        gl.glEnableVertexAttribArray(self.position_attr_idx)
-        gl.glEnableVertexAttribArray(self.colors_attr_idx)
-
-    def __make_window(self, fullscreen, height, width, win_title):
-        """ Create window, attach to this instance, make active.
+    def __glfw_setup(self, fullscreen, height, width, win_title):
+        """ Create window, attach to this instance, make active, register input callbacks.
 
         Notes:
-            Sets self.win
+            Initializes self.win
         """
+        self.__set_glfw_hints()
         monitor = glfw.get_primary_monitor() if fullscreen else None
         self.win = glfw.create_window(width=width, height=height, title=win_title, monitor=monitor, share=None)
         self.__validate_window()
         self.__set_active()
+        RegisterInputFunctionality(self.win)
+
+    def __gl_setup(self):
+        """ GL Setup: VAO -> Vertex Attribute Locations via Shader's Linker; VBOs
+
+        Notes:
+            Initializes self.vao_id
+            Initializes self.shader
+            Initializes self.position_attr_idx
+            Initializes self.self.colors_attr_idx
+            Initializes self.verts_vbo_id
+            Initializes self.colors_vbo_id
+        """
+        self.vao_id = gl.glGenVertexArrays(1)
+
+        gl.glBindVertexArray(self.vao_id)
+        self.shader = Shader(fragment=FRAGMENT_SHADER, vertex=VERTEX_SHADER)
+        self.position_attr_idx = self.shader.attribute_index(VertexAttribute.POSITION_IN)
+        self.colors_attr_idx = self.shader.attribute_index(VertexAttribute.COLOR_IN)
+        gl.glEnableVertexAttribArray(self.position_attr_idx)
+        gl.glEnableVertexAttribArray(self.colors_attr_idx)
+        gl.glBindVertexArray(0)
+
+        self.verts_vbo_id, self.colors_vbo_id = gl.glGenBuffers(2)
+
+        gl.glEnable(gl.GL_PROGRAM_POINT_SIZE)
 
     @staticmethod
     def __set_glfw_hints():
@@ -70,51 +85,72 @@ class Window:
         glfw.window_hint(glfw.FOCUSED, True)
         glfw.window_hint(glfw.COCOA_RETINA_FRAMEBUFFER, glfw.TRUE)
 
-    def prepare_triangles(self, *tris: Triangle):
-        """ Prepares triangles--IN ORDER--prior to a draw(), allocating a separate VBO per vertex attribute
-            (here, via 2 vertex buffers--1 for vertices and 1 for colors) and sets appropriate vertex attributes.
-            Following https://www.khronos.org/opengl/wiki/Vertex_Specification_Best_Practices#Formatting_VBO_Data
+    def __prepare_triangles(self) -> int:
+        """ Prepares triangles from tri_buffer in order, placing their data in vbos and specifying format.
 
-        Args:
-            tris: triangles to draw.
+        Returns:
+            num_triangles: the number of triangles prepared.
 
         Notes:
-            For more information, see http://antongerdelan.net/opengl/vertexbuffers.html
+            Empties tri_buffer ASAP.
+            Though inferior in performance to a single interleaved VBO, conceptually easier to grasp.
+            For further explanation of what is happening here, see http://antongerdelan.net/opengl/vertexbuffers.html
         """
+        if not self.tri_buffer:
+            return 0
+        verts = util.extract_vertices_as_single_vbo_ready_array(*self.tri_buffer)
+        colors = util.extract_colors_as_single_vbo_ready_array(*self.tri_buffer)
+        num_triangles = len(self.tri_buffer)
+        self.tri_buffer = []
+
+        gl.glBindVertexArray(self.vao_id)
         # VBO1: verts in shader's POSITION_IN VertexAttribute
-        verts = util.extract_vertices_as_single_vbo_ready_array(*tris)
         gl.glBindBuffer(gl.GL_ARRAY_BUFFER, self.verts_vbo_id)
         gl.glBufferData(gl.GL_ARRAY_BUFFER, arrays.ArrayDatatype.arrayByteCount(verts), verts, gl.GL_STATIC_DRAW)
         gl.glVertexAttribPointer(self.position_attr_idx, 3, gl.GL_FLOAT, gl.GL_FALSE, 0, None)
-
         # VBO2: colors in shader's COLOR_IN VertexAttribute
-        colors = util.extract_colors_as_single_vbo_ready_array(*tris)
         gl.glBindBuffer(gl.GL_ARRAY_BUFFER, self.colors_vbo_id)
         gl.glBufferData(gl.GL_ARRAY_BUFFER, arrays.ArrayDatatype.arrayByteCount(colors), colors, gl.GL_STATIC_DRAW)
         gl.glVertexAttribPointer(self.colors_attr_idx, 3, gl.GL_FLOAT, gl.GL_FALSE, 0, None)
 
-    def draw_triangles(self, *tris: Triangle):
-        """ Draws the given triangles for enabled VAOs (from their VBOs) on the screen. """
-        self.prepare_triangles(*tris)
-        num_triangles = len(tris)
+        return num_triangles
 
-        # Draw.
+    def update(self):
+        """ Draws triangles offered by draw_triangle() on the screen. """
+        num_triangles = self.__prepare_triangles()
+
+        # Draw
         gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
-        gl.glDrawArrays(gl.GL_TRIANGLES, 0, 3 * num_triangles)
-        Window.clear_gl_array_buffer()
+        if num_triangles:
+            gl.glDrawArrays(gl.GL_TRIANGLES, 0, 3 * num_triangles)
 
+        Window.clear_gl_array_buffer()
         glfw.swap_buffers(self.win)
         glfw.poll_events()
 
-    def is_open(self):
-        """ Returns whether or not this window is open.
+    def draw_point(self, p: GLPoint):
+        """ Places the point in the point_buffer to draw upon next update() call.
 
-        Returns:
-            True if open, False otherwise.
+        Args:
+            p: the point to draw.
         """
+        util.validate_point_for_render(p)
+        self.point_buffer.append(p)
+
+    def draw_triangle(self, tri: Triangle):
+        """ Validates triangle and draws upon next update() call.
+
+        Args:
+            tri: triangles to draw.
+        """
+        validate_tri(tri)
+        self.tri_buffer.append(tri)
+
+    def is_open(self) -> bool:
+        """ Returns whether or not this window is open. """
         return not glfw.window_should_close(self.win)
 
-    def get_top_left_corner(self):
+    def get_top_left_corner(self) -> tuple:
         """ Gets the coordinates of the top left corner of the window.
 
         Returns:
@@ -122,7 +158,7 @@ class Window:
         """
         return tuple(glfw.get_window_pos(self.win))
 
-    def get_size(self):
+    def get_size(self) -> tuple:
         """ Gets the width x height (in pixels) of the window.
 
         Returns:
@@ -133,7 +169,7 @@ class Window:
         """
         return tuple(glfw.get_window_size(self.win))
 
-    def get_frame_size(self):
+    def get_frame_size(self) -> tuple:
         """ Gets the size of the frame of the window.
 
         Returns:
@@ -141,7 +177,7 @@ class Window:
         """
         return tuple(glfw.get_window_frame_size(self.win))
 
-    def get_framebuffer_size(self):
+    def get_framebuffer_size(self) -> tuple:
         """ Gets the size of the framebuffer of the window.
 
         Returns:
@@ -149,7 +185,7 @@ class Window:
         """
         return tuple(glfw.get_framebuffer_size(self.win))
 
-    def get_mouse_pos(self):
+    def get_mouse_pos(self) -> NDCPoint:
         """ Compute the NDC Point of the mouse position.
             Automatically translates the glfw.get_cursor_pos() results
                 (pixels with respect to the top-left corner of the window) into NDC.
@@ -165,38 +201,17 @@ class Window:
         px = 2 * mx / wx - 1
         py = 1 - 2 * my / wy
 
-        mouse_point = NDCPoint(px, py, 0.0)
+        mouse_point = NDCPoint(px, py)
         return mouse_point
 
     def clear(self, color: Color):
         """ Clears the window with a certain color. """
         self.__set_active()
         gl.glClearColor(*color.to_list())
-        gl.glClear(gl.GL_COLOR_BUFFER_BIT)
 
     def close(self):
         """ Closes the window. """
         glfw.destroy_window(self.win)
-
-    def draw_point(self, x: int, y: int, s: float = 2.0, r: float = 1.0, g: float = 1.0, b: float = 1.0,
-                   a: float = 1.0):
-        """ Draws a line from (x1, y1) to (x2, y2).
-
-        Args:
-            x: The x-coord of the point.
-            y: The y-coord of the point.
-            s: The size of the point.
-            r: The 'red' component of the circle's color.
-            g: The 'green' component of the circle's color.
-            b: The 'blue' component of the circle's color.
-            a: The alpha (transparency) component of the circle.
-        """
-        self.__set_active()
-        gl.glPointSize(s)
-        gl.glColor4f(r, g, b, a)
-        gl.glBegin(gl.GL_POINTS)
-        gl.glVertex2f(x, y)
-        gl.glEnd()
 
     def draw_line(self, x1, y1, x2, y2, thickness=2.0, r=1.0, g=1.0, b=1.0, a=1.0):
         """ Draws a line from (x1, y1) to (x2, y2) that is thickness pixels thick with color (r, g, b, a).
@@ -240,29 +255,6 @@ class Window:
         gl.glVertex2f(x1 + width, y1)
         gl.glVertex2f(x1 + width, y1 + height)
         gl.glVertex2f(x1, y1 + height)
-        gl.glEnd()
-
-    def draw_tri(self, x1, y1, x2, y2, x3, y3, r=1.0, g=1.0, b=1.0, a=1.0):
-        """ Draws a triangle with clockwise-specified coordinates (x1, y1), (x2, y2), (x3, y3) with color (r, g, b, a).
-
-        Args:
-            x1 (int): The x-coord of the first point (P1) of the triangle.
-            y1 (int): The y-coord of the first point (P1) of the triangle.
-            x2 (int): The x-coord of the point immediately clockwise of P1 of the triangle.
-            y2 (int): The y-coord of the point immediately clockwise of P1 of the triangle.
-            x3 (int): The x-coord of the point immediately clockwise of P2 of the triangle.
-            y3 (int): The y-coord of the point immediately clockwise of P2 of the triangle.
-            r (float, optional): The 'red' component of the circle's color.
-            g (float, optional): The 'green' component of the circle's color.
-            b (float, optional): The 'blue' component of the circle's color.
-            a (float, optional): The alpha (transparency) component of the circle.
-        """
-        self.__set_active()
-        gl.glColor4f(r, g, b, a)
-        gl.glBegin(gl.GL_TRIANGLES)
-        gl.glVertex2f(x1, y1)
-        gl.glVertex2f(x2, y2)
-        gl.glVertex2f(x3, y3)
         gl.glEnd()
 
     def draw_circle(self, x, y, radius, r=1.0, g=1.0, b=1.0, a=1.0):
@@ -333,27 +325,23 @@ class Window:
         logging.debug('    Bottom right: (%d, %d)' % (x2, y2))
         logging.debug('    frame size: ' + str(self.get_frame_size()))
         logging.debug('    framebuffer size: ' + str(self.get_framebuffer_size()))
-        logging.debug('  Vendor: %s' % (gl.glGetString(gl.GL_VENDOR)))
-        logging.debug('  GLSL Version: %s' % (gl.glGetString(gl.GL_SHADING_LANGUAGE_VERSION)))
-        logging.debug('  Renderer: %s' % (gl.glGetString(gl.GL_RENDERER)))
 
     @staticmethod
     def close_all_windows():
         glfw.terminate()
 
     @staticmethod
-    def get_time():
-        """ Returns the number of seconds this window has been open.
+    def get_time() -> float:
+        """ Get # of ms the window has the open.
 
         Returns:
-            time (double): the number of seconds this window has been open as a float.
-
-        Notes:
-            GLFW claims near-nanosecond precision!
+            time (float): the number of seconds this window has been open as a float.
         """
         return glfw.get_time()
 
     @staticmethod
     def clear_gl_array_buffer():
         """ Restore memory for GL_ARRAY_BUFFER. """
+        # gl.glDisableVertexAttribArray(0)
+        gl.glBindVertexArray(0)
         gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0)

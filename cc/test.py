@@ -1,33 +1,37 @@
 """ Run this for an adhoc test demonstrating current cc module functionality. """
 from cc.constant import *
+from cc.ds.point import GLPoint
 from cc.ds.triangle import *
 from cc.window import Window
 
 # Create window.
 win = Window()
-# Misc window info.
-x, y = win.get_top_left_corner()
 
 while win.is_open():
     win.clear(GRAY)
 
-    # Create triangle on mouse.
+    # Triangle on mouse.
     mouse = win.get_mouse_pos()
     cursor_tri = Triangle(
-        NDCPoint(mouse.x, mouse.y, 0.0, PURPLE),
-        NDCPoint(mouse.x + .05, mouse.y - .1, 0.0, PURPLE),
-        NDCPoint(mouse.x - .05, mouse.y - .1, 0.0, PURPLE),
+        NDCPoint(mouse.x, mouse.y, color=PURPLE),
+        NDCPoint(mouse.x + .05, mouse.y - .1, color=PURPLE),
+        NDCPoint(mouse.x - .05, mouse.y - .1, color=PURPLE),
     )
 
+    # A stationary triangle.
     static_tri = Triangle(
-        NDCPoint(-1.0, 1.0, 0.0, BLUE),
-        NDCPoint(-1.0, 0.0, 0.0, GREEN),
-        NDCPoint(-0.5, 0.5, 0.0, PURPLE),
+        NDCPoint(-1.0, 1.0, color=BLUE),
+        NDCPoint(-1.0, 0.0, color=GREEN),
+        NDCPoint(-0.5, 0.5, color=PURPLE),
     )
 
-    win.draw_triangles(static_tri, cursor_tri)
+    # A point. TODO(Brendan): draw this.
+    static_point = GLPoint(0.5, 0.5, color=RED, size=10.0)
 
-
+    # Specify everything to draw and update.
+    win.draw_triangle(static_tri)
+    win.draw_triangle(cursor_tri)
+    win.update()
 win.close()
 # TODO(Brendan): implement below.
 # # Draw a growing circle.

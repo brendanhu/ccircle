@@ -4,6 +4,8 @@ from enum import Enum
 
 LOGGER_LEVEL = 'DEBUG'
 
+BLACK = Color(0.0, 0.0, 0.0)
+WHITE = Color(1.0, 1.0, 1.0)
 RED = Color(1.0, 0.0, 0.0)
 GREEN = Color(0.0, 1.0, 0.0)
 BLUE = Color(0.0, 0.0, 1.0)

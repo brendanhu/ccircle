@@ -1,34 +1,54 @@
 """ Utility functions. """
 from cc import logging, np, sys
+from cc.ds.point import GLPoint, NDCPoint
 from cc.ds.triangle import Triangle
 
 
-# def nonempty_list_param(func):
-#     """ Decorator verifying that a list parameter is non-empty. """
-#     def temp(*args, **kwargs):
-#         if not args:
-#             logging.fatal('Function %s expected a non-empty list parameter.' % func.__name__)
-#             sys.exit(1)
-#         func(*args, **kwargs)
-#
-#     return temp
+def clamp(x: float, low: float, high: float, fail_on_error: bool = False):
+    """ Clamp x in [low, high].
 
-def clamp(x: float, low: float, high: float):
-    """ Clamp x in [low, high]. """
+    Args:
+        x: the value to clamp.
+        low: the lowest allowable value.
+        high: the highest allowable value.
+        fail_on_error: If true, throws a RuntimeException instead of clamping an out-of-range value.
+    """
     if x < low:
+        if fail_on_error:
+            raise RuntimeError('Value %.4f not within allowable range [%.4f, %.4f]' % (x, low, high))
         return low
     if x > high:
         return high
     return x
 
 
-def clamp_rgba(x: float):
-    """Ensures the float value given is within [0.0, 1.0], logging a warning if clamped. """
-    low, high = 0.0, 1.0
-    if x < low or x > high:
-        logging.warning('Clamping %s to valid rgba range.' % x)
-        return clamp(x, low, high)
-    return x
+def clamp_ndc(x: float, fail_on_error: bool = False):
+    """Ensures the float value given is within [-1.0, 1.0]. """
+    return clamp(x, -1.0, 1.0, fail_on_error)
+
+
+def clamp_rgba(x: float, fail_on_error: bool = False):
+    """Ensures the float value given is within [0.0, 1.0]. """
+    return clamp(x, 0.0, 1.0, fail_on_error)
+
+
+def validate_point_for_render(p: NDCPoint):
+    """ Validates that an NDCPoint is valid:
+        - 3-axes of vert within [-1.0, 1.0]
+        - color rgba within [0.0, 1.0]
+    """
+    map(lambda a: clamp_ndc(a, True), [p.x, p.y, p.z])
+    map(lambda a: clamp_rgba(a, True), [p.color.r, p.color.g, p.color.b])
+
+
+def validate_tri(tri: Triangle):
+    """ Validates that a triangle is valid:
+        - verts within [-1.0, 1.0]
+        - colors within [0.0, 1.0]
+    """
+    if not tri:
+        raise RuntimeError("Empty triangles not allowed.")
+    map(lambda p: validate_point_for_render(p), [tri.p1, tri.p2, tri.p3])
 
 
 def vertices_as_array(tri: Triangle):
