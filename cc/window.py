@@ -1,6 +1,7 @@
 import cc.util as util
 
 from cc import *
+from cc.ds.point import NDCPoint
 from cc.ds.triangle import Triangle
 from cc.constant import *
 from cc.shader import Shader
@@ -33,11 +34,11 @@ class Window:
         RegisterInputFunctionality(self.win)
         self.shader = Shader(fragment=FRAGMENT_SHADER, vertex=VERTEX_SHADER)
 
-        # TODO: 2-VAO paradigm: static and dynamic (using glBufferSubData); https://stackoverflow.com/a/8923298
+        # TODO(Brendan): 2-VAO paradigm--static and dynamic (using glBufferSubData); https://stackoverflow.com/a/8923298
         # Make VAO / VBOs.
         self.vao_id = gl.glGenVertexArrays(1)
         self.verts_vbo_id, self.colors_vbo_id = gl.glGenBuffers(2)
-        # Bind VAO needed to enable vertex attributes.
+        # Bind VAO before enabling vertex attributes.
         gl.glBindVertexArray(self.vao_id)
         # Enable 2 Vertex Attributes via linker-assigned index (location).
         self.position_attr_idx = self.shader.attribute_index(VertexAttribute.POSITION_IN)
@@ -100,8 +101,8 @@ class Window:
         # Draw.
         gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
         gl.glDrawArrays(gl.GL_TRIANGLES, 0, 3 * num_triangles)
-
         Window.clear_gl_array_buffer()
+
         glfw.swap_buffers(self.win)
         glfw.poll_events()
 
@@ -122,7 +123,7 @@ class Window:
         return tuple(glfw.get_window_pos(self.win))
 
     def get_size(self):
-        """ Gets the size of the window.
+        """ Gets the width x height (in pixels) of the window.
 
         Returns:
             (width, height): A tuple of the (width, height) of the window.
@@ -149,12 +150,23 @@ class Window:
         return tuple(glfw.get_framebuffer_size(self.win))
 
     def get_mouse_pos(self):
-        """ The coordinates of the mouse position with respect to the top-left corner of the window.
+        """ Compute the NDC Point of the mouse position.
+            Automatically translates the glfw.get_cursor_pos() results
+                (pixels with respect to the top-left corner of the window) into NDC.
 
         Returns:
-            (x, y): A tuple of the mouse position.
+            mouse_point (NDCPoint): (px, py, 0)--the current mouse position.
+
+        Notes:
+            Note the z is always 0... for now. This will change once projection matrix is added.
         """
-        return tuple(glfw.get_cursor_pos(self.win))
+        mx, my = glfw.get_cursor_pos(self.win)
+        wx, wy = self.get_size()
+        px = 2 * mx / wx - 1
+        py = 1 - 2 * my / wy
+
+        mouse_point = NDCPoint(px, py, 0.0)
+        return mouse_point
 
     def clear(self, color: Color):
         """ Clears the window with a certain color. """
