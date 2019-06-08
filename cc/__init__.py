@@ -1,4 +1,5 @@
 """ Imports (python module dependencies) for the ccircle (cc) module. """
+# TODO(Brendan): just use single imports in files.
 import glfw
 if not glfw.init():
     raise RuntimeError('Could not initialize GLFW')

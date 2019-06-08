@@ -70,11 +70,6 @@ def vertices_as_array(tri: Triangle):
                      tri.p3.x, tri.p3.y, tri.p3.z], dtype=np.float32)
 
 
-def extract_vertices_as_single_vbo_ready_array(*tris: Triangle):
-    verts_uncollapsed = list(map(lambda tri: vertices_as_array(tri), tris))
-    return np.concatenate(verts_uncollapsed)
-
-
 def colors_as_array(tri: Triangle):
     """ Convert a triangle's color data to a numpy array of single-precision floats.
 
@@ -89,8 +84,3 @@ def colors_as_array(tri: Triangle):
     return np.array([tri.p1.color.r, tri.p1.color.g, tri.p1.color.b,
                      tri.p2.color.r, tri.p2.color.g, tri.p2.color.b,
                      tri.p3.color.r, tri.p3.color.g, tri.p3.color.b], dtype=np.float32)
-
-
-def extract_colors_as_single_vbo_ready_array(*tris: Triangle):
-    colors_uncollapsed = list(map(lambda tri: colors_as_array(tri), tris))
-    return np.concatenate(colors_uncollapsed)

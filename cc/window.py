@@ -1,6 +1,7 @@
 import cc.util as util
 from cc import *
 from cc.constant import *
+from cc.ds.circle import Circle
 from cc.ds.point import NDCPoint
 from cc.ds.triangle import Triangle
 from cc.shader import Shader
@@ -20,7 +21,7 @@ class Window:
         Per OpenGL Face Culling norms, vertices for front-facing shapes should be specified in counter-clockwise order.
     """
 
-    def __init__(self, width: int = 1920, height: int = 1080, win_title: str = "CC Window", fullscreen: bool = False):
+    def __init__(self, width: int = 1280, height: int = 960, win_title: str = "CC Window", fullscreen: bool = False):
         """ Create window, set context and register input callbacks.
 
         Args:
@@ -96,8 +97,8 @@ class Window:
         """
         if not self.tri_buffer:
             return 0
-        verts = util.extract_vertices_as_single_vbo_ready_array(*self.tri_buffer)
-        colors = util.extract_colors_as_single_vbo_ready_array(*self.tri_buffer)
+        verts = np.concatenate([util.vertices_as_array(tri) for tri in self.tri_buffer])
+        colors = np.concatenate([util.colors_as_array(tri) for tri in self.tri_buffer])
         num_triangles = len(self.tri_buffer)
         self.tri_buffer = []
 
@@ -134,6 +135,42 @@ class Window:
         """
         validate_tri(tri)
         self.tri_buffer.append(tri)
+
+    def draw_circle(self, circle : Circle):
+        """ Validates circle (TODO(Brendan)) and draws upon next update() call.
+
+        Args:
+            circle: the circle to draw.
+
+        Notes:
+            This is the old-school OpenGL--less efficien--way to draw a circle. Perhaps conceptually easier?
+                XXX(Brendan): use indexed drawing / GL_TRIANGLE_FAN.
+        """
+        fv = circle.radius / 4.0
+        fv = max(fv, 64)
+        num_tris = int(fv)
+
+        for i in range(num_tris):
+            angle1 = math.tau * (i + 0) / fv
+            angle2 = math.tau * (i + 1) / fv
+            tri = Triangle(
+                NDCPoint(
+                    circle.center.x,
+                    circle.center.y,
+                    color=circle.center.color
+                ),
+                NDCPoint(
+                    circle.center.x + circle.radius * math.cos(angle1),
+                    circle.center.y + circle.radius * math.sin(angle1),
+                    color=circle.color
+                ),
+                NDCPoint(
+                    circle.center.x + circle.radius * math.cos(angle2),
+                    circle.center.y + circle.radius * math.sin(angle2),
+                    color=circle.color
+                ),
+            )
+            self.tri_buffer.append(tri)
 
     def is_open(self) -> bool:
         """ Returns whether or not this window is open. """
@@ -196,7 +233,7 @@ class Window:
     def clear(self, color: Color):
         """ Clears the window with a certain color. """
         self.__set_active()
-        gl.glClearColor(*color.to_list())
+        gl.glClearColor(color.r, color.b, color.g, color.a)
 
     def close(self):
         """ Closes the window. """
@@ -244,36 +281,6 @@ class Window:
         gl.glVertex2f(x1 + width, y1)
         gl.glVertex2f(x1 + width, y1 + height)
         gl.glVertex2f(x1, y1 + height)
-        gl.glEnd()
-
-    def draw_circle(self, x, y, radius, r=1.0, g=1.0, b=1.0, a=1.0):
-        """ Draws a circle centered at (x, y) with color (r, g, b, a).
-
-        Args:
-            x (int): The x-coord of the center of the circle.
-            y (int): The y-coord of the center of the circle.
-            radius (int): The radius of the circle (in pixels).
-            r (float, optional): The 'red' component of the circle's color.
-            g (float, optional): The 'green' component of the circle's color.
-            b (float, optional): The 'blue' component of the circle's color.
-            a (float, optional): The alpha (transparency) component of the circle.
-
-        Notes:
-            Uses vertex buffers per OpenGL 3.2+.
-        """
-        self.__set_active()
-        fv = radius / 4.0
-        fv = max(fv, 64)
-        num_tris = int(fv)
-
-        gl.glBegin(gl.GL_POLYGON)
-        gl.glColor4f(r, g, b, a)
-        for i in range(num_tris):
-            angle1 = math.tau * (i + 0) / fv
-            angle2 = math.tau * (i + 1) / fv
-            gl.glVertex2f(x, y)
-            gl.glVertex2f(x + radius * math.cos(angle1), y + radius * math.sin(angle1))
-            gl.glVertex2f(x + radius * math.cos(angle2), y + radius * math.sin(angle2))
         gl.glEnd()
 
     def hide_cursor(self):
