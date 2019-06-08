@@ -12,7 +12,13 @@
     - [ ] Full OSX support.
         - [x] replace windows-native windowing with GLFW (OS-agnostic windowing)
         - [ ] opengl++ (Mac requires OpenGL 3.2+) -> rewrite primitives rendering
+            - [ ] Circle
+            - [ ] Circle + Triangle Scene
             - [ ] XXX: 2-VAO paradigm--static and dynamic (using glBufferSubData)--https://stackoverflow.com/a/8923298
+            - [ ] Lines
+            - [ ] Points (?)
+            - [ ] Textures
+            - [ ] Fonts
     - [ ] Ensure Windows Support once upon OSX rewrite completion.
     - [ ] Ensure Linux Support upon OSX rewrite completion.
 - [ ] Setup.
