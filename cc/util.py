@@ -1,6 +1,6 @@
 """ Utility functions. """
 from cc import logging, np, sys
-from cc.ds.point import GLPoint, NDCPoint
+from cc.ds.point import NDCPoint
 from cc.ds.triangle import Triangle
 
 

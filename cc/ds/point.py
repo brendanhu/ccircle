@@ -1,5 +1,4 @@
 from cc.ds.color import Color
-from cc.constant import BLACK
 
 
 class NDCPoint:
@@ -12,15 +11,3 @@ class NDCPoint:
         self.y = y
         self.z = z
         self.color = color
-
-
-# TODO(Brendan): This is so messed up but will be rewritten for textured vertices anyway.
-class GLPoint(NDCPoint):
-    def __init__(self, x: float, y: float, z: float = 0.0, color: Color = BLACK, size: float = 1.0):
-        """ An NDCPoint with a draw size in pixels and a color. Defaults to BLACK.
-
-        Args:
-            size: the point size in pixels.
-        """
-        super().__init__(x, y, z, color)
-        self.size = size

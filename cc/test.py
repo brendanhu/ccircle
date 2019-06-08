@@ -1,6 +1,5 @@
 """ Run this for an adhoc test demonstrating current cc module functionality. """
 from cc.constant import *
-from cc.ds.point import GLPoint
 from cc.ds.triangle import *
 from cc.window import Window
 
@@ -25,14 +24,13 @@ while win.is_open():
         NDCPoint(-0.5, 0.5, color=PURPLE),
     )
 
-    # A point.
-    static_point = GLPoint(0.5, 0.5, color=RED, size=10.0)
 
     # Specify everything to draw and update.
     win.draw_triangle(static_tri)
     win.draw_triangle(cursor_tri)
     win.update()
 win.close()
+
 # TODO(Brendan): implement below.
 # # Draw a growing circle.
 # cx = x + (wx / 2)

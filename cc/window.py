@@ -1,7 +1,7 @@
 import cc.util as util
 
 from cc import *
-from cc.ds.point import NDCPoint, GLPoint
+from cc.ds.point import NDCPoint
 from cc.ds.triangle import Triangle
 from cc.constant import *
 from cc.shader import Shader
@@ -10,7 +10,6 @@ from cc.window_input import RegisterInputFunctionality
 
 
 class Window:
-    point_buffer = []
     tri_buffer = []
 
     """ Window class powered by GLFW.
@@ -127,15 +126,6 @@ class Window:
         Window.clear_gl_array_buffer()
         glfw.swap_buffers(self.win)
         glfw.poll_events()
-
-    def draw_point(self, p: GLPoint):
-        """ Places the point in the point_buffer to draw upon next update() call.
-
-        Args:
-            p: the point to draw.
-        """
-        util.validate_point_for_render(p)
-        self.point_buffer.append(p)
 
     def draw_triangle(self, tri: Triangle):
         """ Validates triangle and draws upon next update() call.
