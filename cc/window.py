@@ -1,9 +1,8 @@
 import cc.util as util
-
 from cc import *
+from cc.constant import *
 from cc.ds.point import NDCPoint
 from cc.ds.triangle import Triangle
-from cc.constant import *
 from cc.shader import Shader
 from cc.util import validate_tri
 from cc.window_input import RegisterInputFunctionality

@@ -1,6 +1,7 @@
 """ Constants for the ccircle (cc) module. """
-from cc.ds.color import Color
 from enum import Enum
+
+from cc.ds.color import Color
 
 LOGGER_LEVEL = 'DEBUG'
 

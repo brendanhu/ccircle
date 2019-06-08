@@ -1,5 +1,5 @@
 """ Utility functions. """
-from cc import logging, np, sys
+from cc import np
 from cc.ds.point import NDCPoint
 from cc.ds.triangle import Triangle
 
