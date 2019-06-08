@@ -22,7 +22,7 @@ class Window:
         Per OpenGL Face Culling norms, vertices for front-facing shapes should be specified in counter-clockwise order.
     """
 
-    def __init__(self, width: int = 640, height: int = 480, win_title: str = "CC Window", fullscreen: bool = False):
+    def __init__(self, width: int = 1920, height: int = 1080, win_title: str = "CC Window", fullscreen: bool = False):
         """ Create window, set context and register input callbacks.
 
         Args:

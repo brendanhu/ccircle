@@ -11,22 +11,8 @@ class RegisterInputFunctionality:
 
     def __init__(self, glfwWin):
         # Register input callbacks.
-        glfw.set_window_size_callback(glfwWin, _on_resize)
-        glfw.set_framebuffer_size_callback(glfwWin, _on_framebuffer_resize)
         glfw.set_mouse_button_callback(glfwWin, _on_mouse_button)
         glfw.set_key_callback(glfwWin, _on_key)
-
-
-def _on_resize(glfwWin, width, height):
-    gl.glViewport(0, 0, width, height)
-    gl.glLoadIdentity()
-
-
-def _on_framebuffer_resize(glfwWin, width, height):
-    """ Change the GL viewport upon framebuffer resize."""
-    fbw, fbh = glfw.get_framebuffer_size(glfwWin)
-    gl.glViewport(0, 0, fbw, fbh)
-    gl.glLoadIdentity()
 
 
 def _on_mouse_button(glfwWin, button, action, mods):

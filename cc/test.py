@@ -25,7 +25,7 @@ while win.is_open():
         NDCPoint(-0.5, 0.5, color=PURPLE),
     )
 
-    # A point. TODO(Brendan): draw this.
+    # A point.
     static_point = GLPoint(0.5, 0.5, color=RED, size=10.0)
 
     # Specify everything to draw and update.
