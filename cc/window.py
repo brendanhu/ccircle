@@ -10,11 +10,12 @@ from OpenGL.arrays import ArrayDatatype
 
 import cc.util as util
 from cc import *
-from cc.constant import *
-from cc.ds.circle import Circle
-from cc.ds.point import NDCPoint
-from cc.ds.triangle import Triangle
-from cc.shader import Shader
+from cc import color
+from cc._constant import *
+from cc.shapes.circle import Circle
+from cc.point import NDCPoint
+from cc.shapes.triangle import Triangle
+from cc._shader import Shader
 from cc.util import validate_tri
 from cc.window_input import RegisterInputFunctionality
 
@@ -147,7 +148,7 @@ class Window:
         validate_tri(tri)
         self.tri_buffer.append(tri)
 
-    def draw_circle(self, circle : Circle):
+    def draw_circle(self, circle: Circle):
         """ Validates circle (TODO(Brendan)) and draws upon next update() call.
 
         Args:
@@ -241,7 +242,7 @@ class Window:
         mouse_point = NDCPoint(px, py)
         return mouse_point
 
-    def clear(self, color: Color):
+    def clear(self, color: color):
         """ Clears the window with a certain color. """
         self.__set_active()
         glClearColor(color.r, color.b, color.g, color.a)

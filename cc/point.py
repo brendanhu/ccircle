@@ -1,4 +1,4 @@
-from cc.ds.color import Color
+from cc.color import Color
 
 
 class NDCPoint:

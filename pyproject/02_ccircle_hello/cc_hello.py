@@ -1,42 +1,35 @@
 """ Run this for an adhoc test demonstrating current cc module functionality. """
 import math
 
-from cc.constant import *
-from cc.ds.circle import Circle
-from cc.ds.triangle import *
+from cc.colors import *
+from cc.point import NDCPoint
+from cc.shapes.circle import Circle
+from cc.shapes.triangle import Triangle
 from cc.window import Window
 
 # Create window.
 win = Window()
 
 while win.is_open():
-    win.clear(GRAY)
+    win.clear(DARK_GRAY)
 
     # Triangle on mouse.
     mouse = win.get_mouse_pos()
     cursor_tri = Triangle(
-        NDCPoint(mouse.x, mouse.y, color=PURPLE),
-        NDCPoint(mouse.x + .05, mouse.y - .1, color=PURPLE),
-        NDCPoint(mouse.x - .05, mouse.y - .1, color=PURPLE),
-    )
-
-    # A stationary triangle.
-    static_tri = Triangle(
-        NDCPoint(-1.0, 1.0, color=BLUE),
-        NDCPoint(-1.0, 0.0, color=GREEN),
-        NDCPoint(-0.5, 0.5, color=PURPLE),
+        NDCPoint(mouse.x, mouse.y, color=BLUE2),
+        NDCPoint(mouse.x + .05, mouse.y - .1, color=BLUE3),
+        NDCPoint(mouse.x - .05, mouse.y - .1, color=BLUE4),
     )
 
     # A circle that changes size over time.
     radius = abs(0.2 * math.sin(win.get_time()))
     growing_circle = Circle(
-        NDCPoint(0.0, 0.0, color=GREEN),
-        color=BLUE,
+        NDCPoint(0.0, 0.0, color=RED2),
+        color=BLUE15,
         radius=radius,
     )
 
-    # Specify everything to draw (in order).
-    win.draw_triangle(static_tri)
+    # Specify what to draw in order.
     win.draw_circle(growing_circle)
     win.draw_triangle(cursor_tri)
 

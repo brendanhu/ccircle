@@ -1,4 +1,4 @@
-from cc.ds.point import NDCPoint
+from cc.point import NDCPoint
 
 
 class Triangle:

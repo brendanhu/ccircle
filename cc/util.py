@@ -1,8 +1,8 @@
 """ Utility functions. """
 import numpy as np
 
-from cc.ds.point import NDCPoint
-from cc.ds.triangle import Triangle
+from cc.point import NDCPoint
+from cc.shapes.triangle import Triangle
 
 
 def clamp(x: float, low: float, high: float, fail_on_error: bool = False):

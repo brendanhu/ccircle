@@ -3,7 +3,7 @@ from OpenGL.GL import glCreateProgram, GL_VERTEX_SHADER, GL_FRAGMENT_SHADER, glA
     glGetAttribLocation, glCreateShader, glShaderSource, glCompileShader, glGetShaderiv, glGetShaderInfoLog, \
     GL_COMPILE_STATUS
 
-from cc.constant import VertexAttribute
+from cc._constant import VertexAttribute
 
 
 class Shader:

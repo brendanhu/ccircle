@@ -1,5 +1,5 @@
-from cc.ds.color import Color
-from cc.ds.point import NDCPoint
+from cc.color import Color
+from cc.point import NDCPoint
 
 
 class Circle:
