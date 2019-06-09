@@ -1,21 +1,23 @@
+import ctypes
 import math
 
 import glfw
 import numpy as np
 from OpenGL.GL import GL_TRUE, glGenVertexArrays, glBindVertexArray, glEnableVertexAttribArray, glGenBuffers, \
     glEnable, GL_PROGRAM_POINT_SIZE, glBindBuffer, GL_ARRAY_BUFFER, glBufferData, glVertexAttribPointer, GL_FLOAT, \
-    GL_FALSE, GL_STATIC_DRAW, glClear, GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT, glDrawArrays, GL_TRIANGLES, \
-    glClearColor
-from OpenGL.arrays import ArrayDatatype
+    GL_FALSE, GL_STATIC_DRAW, glClear, GL_COLOR_BUFFER_BIT, glDrawArrays, GL_TRIANGLES, \
+    glClearColor, GL_ELEMENT_ARRAY_BUFFER, glDrawElements
+from OpenGL.arrays import ArrayDatatype, vbo
+from OpenGL.raw.GL.ARB.vertex_buffer_object import GL_STREAM_DRAW_ARB
 
 import cc.util as util
 from cc import *
 from cc import color
 from cc._constant import *
-from cc.shapes.circle import Circle
-from cc.point import NDCPoint
-from cc.shapes.triangle import Triangle
 from cc._shader import Shader
+from cc.point import NDCPoint
+from cc.shapes.circle import Circle
+from cc.shapes.triangle import Triangle
 from cc.util import validate_tri
 from cc.window_input import RegisterInputFunctionality
 
@@ -79,7 +81,7 @@ class Window:
         glEnableVertexAttribArray(self.colors_attr_idx)
         glBindVertexArray(0)
 
-        self.verts_vbo_id, self.colors_vbo_id = glGenBuffers(2)
+        self.verts_vbo_id = glGenBuffers(1)
 
         glEnable(GL_PROGRAM_POINT_SIZE)
 
@@ -101,28 +103,21 @@ class Window:
 
         Returns:
             num_triangles: the number of triangles prepared.
-
-        Notes:
-            Empties tri_buffer ASAP.
-            Though inferior in performance to a single interleaved VBO, conceptually easier to grasp.
-            For further explanation of what is happening here, see http://antongerdelan.net/opengl/vertexbuffers.html
         """
+        # data_array <- tri_buffer
         if not self.tri_buffer:
             return 0
-        verts = np.concatenate([util.vertices_as_array(tri) for tri in self.tri_buffer])
-        colors = np.concatenate([util.colors_as_array(tri) for tri in self.tri_buffer])
         num_triangles = len(self.tri_buffer)
+        data_array = np.concatenate([util.as_interleaved_data_array(tri) for tri in self.tri_buffer])
         self.tri_buffer = []
 
+        # VBO <- data
         glBindVertexArray(self.vao_id)
-        # VBO1: verts in shader's POSITION_IN VertexAttribute
         glBindBuffer(GL_ARRAY_BUFFER, self.verts_vbo_id)
-        glBufferData(GL_ARRAY_BUFFER, ArrayDatatype.arrayByteCount(verts), verts, GL_STATIC_DRAW)
-        glVertexAttribPointer(self.position_attr_idx, 3, GL_FLOAT, GL_FALSE, 0, None)
-        # VBO2: colors in shader's COLOR_IN VertexAttribute
-        glBindBuffer(GL_ARRAY_BUFFER, self.colors_vbo_id)
-        glBufferData(GL_ARRAY_BUFFER, ArrayDatatype.arrayByteCount(colors), colors, GL_STATIC_DRAW)
-        glVertexAttribPointer(self.colors_attr_idx, 3, GL_FLOAT, GL_FALSE, 0, None)
+        glBufferData(GL_ARRAY_BUFFER, ArrayDatatype.arrayByteCount(data_array), data_array, GL_STATIC_DRAW)
+        # TODO(Brendan): magic stride -_-
+        glVertexAttribPointer(self.position_attr_idx, 3, GL_FLOAT, GL_FALSE, 24, ctypes.c_void_p(0))
+        glVertexAttribPointer(self.colors_attr_idx, 3, GL_FLOAT, GL_FALSE, 24, ctypes.c_void_p(12))
 
         return num_triangles
 
@@ -131,7 +126,7 @@ class Window:
         num_triangles = self.__prepare_triangles()
 
         # Draw
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        glClear(GL_COLOR_BUFFER_BIT)
         if num_triangles:
             glDrawArrays(GL_TRIANGLES, 0, 3 * num_triangles)
 

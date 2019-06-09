@@ -52,36 +52,22 @@ def validate_tri(tri: Triangle):
     map(lambda p: validate_point_for_render(p), [tri.p1, tri.p2, tri.p3])
 
 
-def vertices_as_array(tri: Triangle):
-    """ Convert a triangle's vertex data to a numpy array of single-precision floats.
+def as_interleaved_data_array(tri: Triangle):
+    """ Convert a triangle's vertex and color data to an interleaved numpy array of single-precision floats.
 
     Args:
         tri: The triangle.
 
     Returns:
         vertices (ndarray): the triangle's vertices as a numpy array of single-precision floats:
-            [p1x, p1y, p1z, p2x, p2y, p2z, p3x, p3y, p3z]
-
-    Notes:
-        This is mostly useful due to the way we've chosen to store each vertex attribute in a separate VBO.
-            For more information, see :func:cc.window.prepare_triangles
+            [
+                p1x, p1y, p1z, p1r, p1b, p1g,
+                p2x, p2y, p2z, p2r, p2b, p2g,
+                p3x, p3y, p3z, p3r, p3b, p3g,
+            ]
     """
-    return np.array([tri.p1.x, tri.p1.y, tri.p1.z,
-                     tri.p2.x, tri.p2.y, tri.p2.z,
-                     tri.p3.x, tri.p3.y, tri.p3.z], dtype=np.float32)
-
-
-def colors_as_array(tri: Triangle):
-    """ Convert a triangle's color data to a numpy array of single-precision floats.
-
-    Returns:
-        vertices (ndarray): the triangle's vertices as a numpy array of single-precision floats:
-            [p1r, p1g, p1b, p2r, p2g, p2b, p3r, p3g, p3b]
-
-    Notes:
-        This is mostly useful due to the way we've chosen to store each vertex attribute in a separate VBO.
-            For more information, see :func:cc.window.prepare_triangles
-    """
-    return np.array([tri.p1.color.r, tri.p1.color.g, tri.p1.color.b,
-                     tri.p2.color.r, tri.p2.color.g, tri.p2.color.b,
-                     tri.p3.color.r, tri.p3.color.g, tri.p3.color.b], dtype=np.float32)
+    return np.array([
+        tri.p1.x, tri.p1.y, tri.p1.z, tri.p1.color.r, tri.p1.color.g, tri.p1.color.b,
+        tri.p2.x, tri.p2.y, tri.p2.z, tri.p2.color.r, tri.p2.color.g, tri.p2.color.b,
+        tri.p3.x, tri.p3.y, tri.p3.z, tri.p3.color.r, tri.p3.color.g, tri.p3.color.b,
+    ], dtype=np.float32)
