@@ -1,8 +1,5 @@
 class Color:
-    """ A (linear RGB 0-1) color with an optional alpha.
-        Creation via sRGB values (0-255) is supported via Color#from255().
-    """
-
+    """ A (linear RGB 0-1) color with an optional alpha. Create from 0-255 range is supported via Color#from255(). """
     def __init__(self, r: float, g: float, b: float, a: float = 1.0):
         self.r = r
         self.g = g
