@@ -1,4 +1,8 @@
-from cc import gl
+from OpenGL.GL import glCreateProgram, GL_VERTEX_SHADER, GL_FRAGMENT_SHADER, glAttachShader, glDeleteShader, \
+    glLinkProgram, glUseProgram, glGetProgramiv, GL_LINK_STATUS, GL_TRUE, glGetProgramInfoLog, glDeleteProgram, \
+    glGetAttribLocation, glCreateShader, glShaderSource, glCompileShader, glGetShaderiv, glGetShaderInfoLog, \
+    GL_COMPILE_STATUS
+
 from cc.constant import VertexAttribute
 
 
@@ -10,20 +14,20 @@ class Shader:
             vertex: String containing shader source code for the vertex shader.
             fragment: String containing shader source code for the fragment shader.
         """
-        self.program_id = gl.glCreateProgram()
-        vs_id = Shader.add_shader(vertex, gl.GL_VERTEX_SHADER)
-        frag_id = Shader.add_shader(fragment, gl.GL_FRAGMENT_SHADER)
+        self.program_id = glCreateProgram()
+        vs_id = Shader.add_shader(vertex, GL_VERTEX_SHADER)
+        frag_id = Shader.add_shader(fragment, GL_FRAGMENT_SHADER)
 
-        gl.glAttachShader(self.program_id, vs_id)
-        gl.glAttachShader(self.program_id, frag_id)
-        gl.glDeleteShader(vs_id)
-        gl.glDeleteShader(frag_id)
-        gl.glLinkProgram(self.program_id)
-        gl.glUseProgram(self.program_id)
+        glAttachShader(self.program_id, vs_id)
+        glAttachShader(self.program_id, frag_id)
+        glDeleteShader(vs_id)
+        glDeleteShader(frag_id)
+        glLinkProgram(self.program_id)
+        glUseProgram(self.program_id)
 
-        if gl.glGetProgramiv(self.program_id, gl.GL_LINK_STATUS) != gl.GL_TRUE:
-            info = gl.glGetProgramInfoLog(self.program_id)
-            gl.glDeleteProgram(self.program_id)
+        if glGetProgramiv(self.program_id, GL_LINK_STATUS) != GL_TRUE:
+            info = glGetProgramInfoLog(self.program_id)
+            glDeleteProgram(self.program_id)
             raise RuntimeError('Error linking program: %s' % info)
 
     def attribute_index(self, vertex_attribute: VertexAttribute):
@@ -35,7 +39,7 @@ class Shader:
         Returns:
             location (int): Integer describing location (index) of the attribute.
         """
-        return gl.glGetAttribLocation(self.program_id, vertex_attribute.name)
+        return glGetAttribLocation(self.program_id, vertex_attribute.name)
 
     @staticmethod
     def add_shader(source, shader_type):
@@ -50,14 +54,14 @@ class Shader:
         """
         shader_id = None
         try:
-            shader_id = gl.glCreateShader(shader_type)
-            gl.glShaderSource(shader_id, source)
-            gl.glCompileShader(shader_id)
-            if gl.glGetShaderiv(shader_id, gl.GL_COMPILE_STATUS) != gl.GL_TRUE:
-                info = gl.glGetShaderInfoLog(shader_id)
+            shader_id = glCreateShader(shader_type)
+            glShaderSource(shader_id, source)
+            glCompileShader(shader_id)
+            if glGetShaderiv(shader_id, GL_COMPILE_STATUS) != GL_TRUE:
+                info = glGetShaderInfoLog(shader_id)
                 raise RuntimeError('Shader compilation failed: %s' % info)
             return shader_id
         except Exception:
             if shader_id:
-                gl.glDeleteShader(shader_id)
+                glDeleteShader(shader_id)
             raise

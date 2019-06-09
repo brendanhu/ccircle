@@ -1,3 +1,13 @@
+import math
+
+import glfw
+import numpy as np
+from OpenGL.GL import GL_TRUE, glGenVertexArrays, glBindVertexArray, glEnableVertexAttribArray, glGenBuffers, \
+    glEnable, GL_PROGRAM_POINT_SIZE, glBindBuffer, GL_ARRAY_BUFFER, glBufferData, glVertexAttribPointer, GL_FLOAT, \
+    GL_FALSE, GL_STATIC_DRAW, glClear, GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT, glDrawArrays, GL_TRIANGLES, \
+    glClearColor
+from OpenGL.arrays import ArrayDatatype
+
 import cc.util as util
 from cc import *
 from cc.constant import *
@@ -10,8 +20,6 @@ from cc.window_input import RegisterInputFunctionality
 
 
 class Window:
-    tri_buffer = []
-
     """ Window class powered by GLFW.
         Provides intuitive 'wrapper' function calls to circumvent confusing GLFW and GL nuances.
 
@@ -20,6 +28,7 @@ class Window:
             using examples from http://www.opengl-tutorial.org/.
         Per OpenGL Face Culling norms, vertices for front-facing shapes should be specified in counter-clockwise order.
     """
+    tri_buffer = []
 
     def __init__(self, width: int = 1280, height: int = 960, win_title: str = "CC Window", fullscreen: bool = False):
         """ Create window, set context and register input callbacks.
@@ -39,6 +48,8 @@ class Window:
         Notes:
             Initializes self.win
         """
+        if not glfw.init():
+            raise RuntimeError('Could not initialize GLFW')
         self.__set_glfw_hints()
         monitor = glfw.get_primary_monitor() if fullscreen else None
         self.win = glfw.create_window(width=width, height=height, title=win_title, monitor=monitor, share=None)
@@ -57,26 +68,26 @@ class Window:
             Initializes self.verts_vbo_id
             Initializes self.colors_vbo_id
         """
-        self.vao_id = gl.glGenVertexArrays(1)
+        self.vao_id = glGenVertexArrays(1)
 
-        gl.glBindVertexArray(self.vao_id)
+        glBindVertexArray(self.vao_id)
         self.shader = Shader(fragment=FRAGMENT_SHADER, vertex=VERTEX_SHADER)
         self.position_attr_idx = self.shader.attribute_index(VertexAttribute.POSITION_IN)
         self.colors_attr_idx = self.shader.attribute_index(VertexAttribute.COLOR_IN)
-        gl.glEnableVertexAttribArray(self.position_attr_idx)
-        gl.glEnableVertexAttribArray(self.colors_attr_idx)
-        gl.glBindVertexArray(0)
+        glEnableVertexAttribArray(self.position_attr_idx)
+        glEnableVertexAttribArray(self.colors_attr_idx)
+        glBindVertexArray(0)
 
-        self.verts_vbo_id, self.colors_vbo_id = gl.glGenBuffers(2)
+        self.verts_vbo_id, self.colors_vbo_id = glGenBuffers(2)
 
-        gl.glEnable(gl.GL_PROGRAM_POINT_SIZE)
+        glEnable(GL_PROGRAM_POINT_SIZE)
 
     @staticmethod
     def __set_glfw_hints():
         """ Set GLFW hints for OpenGL 3.2+, etc.; hints like COCOA_RETINA_FRAMEBUFFER are ignored off of OSX. """
         glfw.window_hint(glfw.CONTEXT_VERSION_MAJOR, 3)
         glfw.window_hint(glfw.CONTEXT_VERSION_MINOR, 2)
-        glfw.window_hint(glfw.OPENGL_FORWARD_COMPAT, gl.GL_TRUE)
+        glfw.window_hint(glfw.OPENGL_FORWARD_COMPAT, GL_TRUE)
         glfw.window_hint(glfw.OPENGL_PROFILE, glfw.OPENGL_CORE_PROFILE)
         glfw.window_hint(glfw.SAMPLES, 4)
         glfw.window_hint(glfw.DEPTH_BITS, 24)
@@ -102,15 +113,15 @@ class Window:
         num_triangles = len(self.tri_buffer)
         self.tri_buffer = []
 
-        gl.glBindVertexArray(self.vao_id)
+        glBindVertexArray(self.vao_id)
         # VBO1: verts in shader's POSITION_IN VertexAttribute
-        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, self.verts_vbo_id)
-        gl.glBufferData(gl.GL_ARRAY_BUFFER, arrays.ArrayDatatype.arrayByteCount(verts), verts, gl.GL_STATIC_DRAW)
-        gl.glVertexAttribPointer(self.position_attr_idx, 3, gl.GL_FLOAT, gl.GL_FALSE, 0, None)
+        glBindBuffer(GL_ARRAY_BUFFER, self.verts_vbo_id)
+        glBufferData(GL_ARRAY_BUFFER, ArrayDatatype.arrayByteCount(verts), verts, GL_STATIC_DRAW)
+        glVertexAttribPointer(self.position_attr_idx, 3, GL_FLOAT, GL_FALSE, 0, None)
         # VBO2: colors in shader's COLOR_IN VertexAttribute
-        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, self.colors_vbo_id)
-        gl.glBufferData(gl.GL_ARRAY_BUFFER, arrays.ArrayDatatype.arrayByteCount(colors), colors, gl.GL_STATIC_DRAW)
-        gl.glVertexAttribPointer(self.colors_attr_idx, 3, gl.GL_FLOAT, gl.GL_FALSE, 0, None)
+        glBindBuffer(GL_ARRAY_BUFFER, self.colors_vbo_id)
+        glBufferData(GL_ARRAY_BUFFER, ArrayDatatype.arrayByteCount(colors), colors, GL_STATIC_DRAW)
+        glVertexAttribPointer(self.colors_attr_idx, 3, GL_FLOAT, GL_FALSE, 0, None)
 
         return num_triangles
 
@@ -119,9 +130,9 @@ class Window:
         num_triangles = self.__prepare_triangles()
 
         # Draw
-        gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         if num_triangles:
-            gl.glDrawArrays(gl.GL_TRIANGLES, 0, 3 * num_triangles)
+            glDrawArrays(GL_TRIANGLES, 0, 3 * num_triangles)
 
         Window.clear_gl_array_buffer()
         glfw.swap_buffers(self.win)
@@ -233,55 +244,11 @@ class Window:
     def clear(self, color: Color):
         """ Clears the window with a certain color. """
         self.__set_active()
-        gl.glClearColor(color.r, color.b, color.g, color.a)
+        glClearColor(color.r, color.b, color.g, color.a)
 
     def close(self):
         """ Closes the window. """
         glfw.destroy_window(self.win)
-
-    def draw_line(self, x1, y1, x2, y2, thickness=2.0, r=1.0, g=1.0, b=1.0, a=1.0):
-        """ Draws a line from (x1, y1) to (x2, y2) that is thickness pixels thick with color (r, g, b, a).
-
-        Args:
-            x1 (int): The x-coord of the first point defining line segment.
-            y1 (int): The y-coord of the first point defining line segment.
-            x2 (int): The x-coord of the second point defining line segment.
-            y2 (int): The y-coord of the second point defining line segment.
-            thickness (int, optional): The line's thickness in pixels.
-            r (float, optional): The 'red' component of the circle's color.
-            g (float, optional): The 'green' component of the circle's color.
-            b (float, optional): The 'blue' component of the circle's color.
-            a (float, optional): The alpha (transparency) component of the circle.
-        """
-        self.__set_active()
-        gl.glColor4f(r, g, b, a)
-        gl.glLineWidth(thickness)
-        gl.glBegin(gl.GL_LINES)
-        gl.glVertex2f(x1, y1)
-        gl.glVertex2f(x2, y2)
-        gl.glEnd()
-
-    def draw_rect(self, x1, y1, width, height, r=1.0, g=1.0, b=1.0, a=1.0):
-        """ Draws a rectangle with top-left (x1, y1) and bottom-right (x2, y2) with color (r, g, b, a).
-
-        Args:
-            x1 (int): The x-coord of the top-left point of the rectangle.
-            y1 (int): The y-coord of the top-left point of the rectangle.
-            width (int): The width of the rectangle.
-            height (int): The height of the rectangle.
-            r (float, optional): The 'red' component of the circle's color.
-            g (float, optional): The 'green' component of the circle's color.
-            b (float, optional): The 'blue' component of the circle's color.
-            a (float, optional): The alpha (transparency) component of the circle.
-        """
-        self.__set_active()
-        gl.glColor4f(r, g, b, a)
-        gl.glBegin(gl.GL_QUADS)
-        gl.glVertex2f(x1, y1)
-        gl.glVertex2f(x1 + width, y1)
-        gl.glVertex2f(x1 + width, y1 + height)
-        gl.glVertex2f(x1, y1 + height)
-        gl.glEnd()
 
     def hide_cursor(self):
         glfw.set_input_mode(self.win, glfw.CURSOR, glfw.CURSOR_HIDDEN)
@@ -338,6 +305,6 @@ class Window:
     @staticmethod
     def clear_gl_array_buffer():
         """ Restore memory for GL_ARRAY_BUFFER. """
-        # gl.glDisableVertexAttribArray(0)
-        gl.glBindVertexArray(0)
-        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0)
+        # glDisableVertexAttribArray(0)
+        glBindVertexArray(0)
+        glBindBuffer(GL_ARRAY_BUFFER, 0)

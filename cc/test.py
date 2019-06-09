@@ -1,8 +1,10 @@
 """ Run this for an adhoc test demonstrating current cc module functionality. """
+import math
+
 from cc.constant import *
 from cc.ds.circle import Circle
 from cc.ds.triangle import *
-from cc.window import Window, math
+from cc.window import Window
 
 # Create window.
 win = Window()

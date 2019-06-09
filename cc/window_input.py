@@ -1,4 +1,6 @@
-from cc import gl, glfw, logging
+import logging
+
+import glfw
 
 
 class RegisterInputFunctionality:
@@ -26,7 +28,7 @@ def _on_key(glfwWin, key, code, action, mods):
     # Quit: ESCAPE, CMD+W (mac)
     if key == glfw.KEY_ESCAPE or \
             (key == glfw.KEY_W and __super_key_pressed(glfwWin)):
-        glfw.set_window_should_close(glfwWin, gl.GL_TRUE)
+        glfw.set_window_should_close(glfwWin, glfw.TRUE)
 
 
 def __super_key_pressed(glfwWin):

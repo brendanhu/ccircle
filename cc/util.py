@@ -1,5 +1,6 @@
 """ Utility functions. """
-from cc import np
+import numpy as np
+
 from cc.ds.point import NDCPoint
 from cc.ds.triangle import Triangle
 
