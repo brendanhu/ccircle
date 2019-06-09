@@ -4,21 +4,21 @@ import math
 import glfw
 import numpy as np
 from OpenGL.GL import GL_TRUE, glGenVertexArrays, glBindVertexArray, glEnableVertexAttribArray, glGenBuffers, \
-    glEnable, GL_PROGRAM_POINT_SIZE, glBindBuffer, GL_ARRAY_BUFFER, glBufferData, glVertexAttribPointer, GL_FLOAT, \
+    glBindBuffer, GL_ARRAY_BUFFER, glBufferData, glVertexAttribPointer, GL_FLOAT, \
     GL_FALSE, GL_STATIC_DRAW, glClear, GL_COLOR_BUFFER_BIT, glDrawArrays, GL_TRIANGLES, \
-    glClearColor, GL_ELEMENT_ARRAY_BUFFER, glDrawElements
-from OpenGL.arrays import ArrayDatatype, vbo
-from OpenGL.raw.GL.ARB.vertex_buffer_object import GL_STREAM_DRAW_ARB
+    glClearColor
+from OpenGL.arrays import ArrayDatatype
 
 import cc.util as util
 from cc import *
 from cc import color
 from cc._constant import *
 from cc._shader import Shader
-from cc.point import NDCPoint
+from cc._vec4 import Vec4
 from cc.shapes.circle import Circle
 from cc.shapes.triangle import Triangle
 from cc.util import validate_tri
+from cc.vertex import Vertex
 from cc.window_input import RegisterInputFunctionality
 
 
@@ -61,15 +61,14 @@ class Window:
         RegisterInputFunctionality(self.win)
 
     def __gl_setup(self):
-        """ GL Setup: VAO -> Vertex Attribute Locations via Shader's Linker; VBOs
+        """ GL Setup: VAO -> Vertex Attribute Locations via Shader's Linker; VBO
 
         Notes:
             Initializes self.vao_id
             Initializes self.shader
             Initializes self.position_attr_idx
             Initializes self.self.colors_attr_idx
-            Initializes self.verts_vbo_id
-            Initializes self.colors_vbo_id
+            Initializes self.vbo_id
         """
         self.vao_id = glGenVertexArrays(1)
 
@@ -81,9 +80,7 @@ class Window:
         glEnableVertexAttribArray(self.colors_attr_idx)
         glBindVertexArray(0)
 
-        self.verts_vbo_id = glGenBuffers(1)
-
-        glEnable(GL_PROGRAM_POINT_SIZE)
+        self.vbo_id = glGenBuffers(1)
 
     @staticmethod
     def __set_glfw_hints():
@@ -113,7 +110,7 @@ class Window:
 
         # VBO <- data
         glBindVertexArray(self.vao_id)
-        glBindBuffer(GL_ARRAY_BUFFER, self.verts_vbo_id)
+        glBindBuffer(GL_ARRAY_BUFFER, self.vbo_id)
         glBufferData(GL_ARRAY_BUFFER, ArrayDatatype.arrayByteCount(data_array), data_array, GL_STATIC_DRAW)
         # TODO(Brendan): magic stride -_-
         glVertexAttribPointer(self.position_attr_idx, 3, GL_FLOAT, GL_FALSE, 24, ctypes.c_void_p(0))
@@ -135,7 +132,7 @@ class Window:
         glfw.poll_events()
 
     def draw_triangle(self, tri: Triangle):
-        """ Validates triangle and draws upon next update() call.
+        """ Validates triangle, assigns vertex indices, and draws upon next update() call.
 
         Args:
             tri: triangles to draw.
@@ -161,19 +158,19 @@ class Window:
             angle1 = math.tau * (i + 0) / fv
             angle2 = math.tau * (i + 1) / fv
             tri = Triangle(
-                NDCPoint(
-                    circle.center.x,
-                    circle.center.y,
+                Vertex(
+                    Vec4(circle.center.x,
+                         circle.center.y),
                     color=circle.center.color
                 ),
-                NDCPoint(
-                    circle.center.x + circle.radius * math.cos(angle1),
-                    circle.center.y + circle.radius * math.sin(angle1),
+                Vertex(
+                    Vec4(circle.center.x + circle.radius * math.cos(angle1),
+                         circle.center.y + circle.radius * math.sin(angle1)),
                     color=circle.color
                 ),
-                NDCPoint(
-                    circle.center.x + circle.radius * math.cos(angle2),
-                    circle.center.y + circle.radius * math.sin(angle2),
+                Vertex(
+                    Vec4(circle.center.x + circle.radius * math.cos(angle2),
+                         circle.center.y + circle.radius * math.sin(angle2)),
                     color=circle.color
                 ),
             )
@@ -218,13 +215,13 @@ class Window:
         """
         return tuple(glfw.get_framebuffer_size(self.win))
 
-    def get_mouse_pos(self) -> NDCPoint:
+    def get_mouse_pos(self) -> Vec4:
         """ Compute the NDC Point of the mouse position.
             Automatically translates the glfw.get_cursor_pos() results
                 (pixels with respect to the top-left corner of the window) into NDC.
 
         Returns:
-            mouse_point (NDCPoint): (px, py, 0)--the current mouse position.
+            mouse_point (Vec4): (px, py, 0)--the current mouse position.
 
         Notes:
             Note the z is always 0... for now. This will change once projection matrix is added.
@@ -234,7 +231,7 @@ class Window:
         px = 2 * mx / wx - 1
         py = 1 - 2 * my / wy
 
-        mouse_point = NDCPoint(px, py)
+        mouse_point = Vec4(px, py)
         return mouse_point
 
     def clear(self, color: color):

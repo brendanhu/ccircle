@@ -12,9 +12,10 @@
     - [ ] Full OSX support.
         - [x] replace windows-native windowing with GLFW (OS-agnostic windowing)
         - [ ] opengl++ (Mac requires OpenGL 3.2+) -> rewrite primitives rendering
-            - [ ] Indexed drawing (gl.drawElements())
+            - [ ] Indexed VBO
             - [ ] Parent Shape class
             - [ ] Shapes to store VBO id, specify their stride/offset internally.
+            - [ ] The shape API is atrocious lol
             - [ ] Split window.py into separate classes, leaving only public methods.
             - [ ] XXX: 2-VAO paradigm--static and dynamic (using glBufferSubData)--https://stackoverflow.com/a/8923298
             - [ ] Lines

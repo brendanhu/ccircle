@@ -1,7 +1,7 @@
 """ Utility functions. """
 import numpy as np
 
-from cc.point import NDCPoint
+from cc._vec4 import Vec4
 from cc.shapes.triangle import Triangle
 
 
@@ -33,8 +33,8 @@ def clamp_rgba(x: float, fail_on_error: bool = False):
     return clamp(x, 0.0, 1.0, fail_on_error)
 
 
-def validate_point_for_render(p: NDCPoint):
-    """ Validates that an NDCPoint is valid:
+def validate_point_for_render(p: Vec4):
+    """ Validates that an Vec4 is valid:
         - 3-axes of vert within [-1.0, 1.0]
         - color rgba within [0.0, 1.0]
     """

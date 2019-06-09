@@ -1,9 +1,9 @@
 from cc.color import Color
-from cc.point import NDCPoint
+from cc.vertex import Vertex
 
 
 class Circle:
-    """ An NDC-compatible circle comprised of a center NDCPoint, a color, and a radius.
+    """ An NDC-compatible circle comprised of a center Vec4, a color, and a radius.
 
     Args:
         center: the center point of the circle (with optional color).
@@ -12,8 +12,7 @@ class Circle:
 
     XXX(Brendan): accept colors for all verts of triangles.
     """
-    def __init__(self, center: NDCPoint, color: Color, radius: float = 0.1):
-
+    def __init__(self, center: Vertex, color: Color, radius: float = 0.1):
         self.center = center
         self.color = color
         self.radius = radius

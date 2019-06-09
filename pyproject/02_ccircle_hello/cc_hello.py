@@ -1,11 +1,11 @@
 """ Run this for an adhoc test demonstrating current cc module functionality. """
 import math
-import sys
 
 from cc.colors import *
-from cc.point import NDCPoint
+from cc._vec4 import Vec4
 from cc.shapes.circle import Circle
 from cc.shapes.triangle import Triangle
+from cc.vertex import Vertex
 from cc.window import Window
 
 # Create window.
@@ -17,15 +17,15 @@ while win.is_open():
     # Triangle on mouse.
     mouse = win.get_mouse_pos()
     cursor_tri = Triangle(
-        NDCPoint(mouse.x, mouse.y, color=BLUE6),
-        NDCPoint(mouse.x + .05, mouse.y - .1, color=BLUE5),
-        NDCPoint(mouse.x - .05, mouse.y - .1, color=BLUE6),
+        Vertex(Vec4(mouse.x, mouse.y), color=BLUE6),
+        Vertex(Vec4(mouse.x + .05, mouse.y - .1), color=BLUE5),
+        Vertex(Vec4(mouse.x - .05, mouse.y - .1), color=BLUE6),
     )
 
     # A circle that changes size over time.
     radius = abs(0.3 * math.sin(win.get_time()))
     growing_circle = Circle(
-        NDCPoint(0.0, 0.0, color=BLUE),
+        Vertex(Vec4(0.0, 0.0), color=BLUE),
         color=GREEN,
         radius=radius,
     )
