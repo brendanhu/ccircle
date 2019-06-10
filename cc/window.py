@@ -9,15 +9,14 @@ from OpenGL.GL import GL_TRUE, glGenVertexArrays, glBindVertexArray, glEnableVer
     glClearColor
 from OpenGL.arrays import ArrayDatatype
 
-import cc.util as util
 from cc import *
 from cc import color
 from cc._constant import *
 from cc._shader import Shader
 from cc._vec4 import Vec4
+from cc.position import Position
 from cc.shapes.circle import Circle
 from cc.shapes.triangle import Triangle
-from cc.util import validate_tri
 from cc.vertex import Vertex
 from cc.window_input import RegisterInputFunctionality
 
@@ -69,6 +68,7 @@ class Window:
             Initializes self.position_attr_idx
             Initializes self.self.colors_attr_idx
             Initializes self.vbo_id
+            Initializes self.elem_buf_id
         """
         self.vao_id = glGenVertexArrays(1)
 
@@ -81,6 +81,7 @@ class Window:
         glBindVertexArray(0)
 
         self.vbo_id = glGenBuffers(1)
+        self.elem_buf_id = glGenBuffers(1)
 
     @staticmethod
     def __set_glfw_hints():
@@ -105,13 +106,17 @@ class Window:
         if not self.tri_buffer:
             return 0
         num_triangles = len(self.tri_buffer)
-        data_array = np.concatenate([util.as_interleaved_data_array(tri) for tri in self.tri_buffer])
+        data_array = np.concatenate([tri.as_interleaved_data_array() for tri in self.tri_buffer])
         self.tri_buffer = []
 
         # VBO <- data
         glBindVertexArray(self.vao_id)
         glBindBuffer(GL_ARRAY_BUFFER, self.vbo_id)
         glBufferData(GL_ARRAY_BUFFER, ArrayDatatype.arrayByteCount(data_array), data_array, GL_STATIC_DRAW)
+
+        # glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.elem_buf_id)
+        # glBufferData(GL_ELEMENT_ARRAY_BUFFER, len(self.indices)indices.size() * sizeof(unsignedint), & indices[0], GL_STATIC_DRAW)
+
         # TODO(Brendan): magic stride -_-
         glVertexAttribPointer(self.position_attr_idx, 3, GL_FLOAT, GL_FALSE, 24, ctypes.c_void_p(0))
         glVertexAttribPointer(self.colors_attr_idx, 3, GL_FLOAT, GL_FALSE, 24, ctypes.c_void_p(12))
@@ -137,7 +142,8 @@ class Window:
         Args:
             tri: triangles to draw.
         """
-        validate_tri(tri)
+        tri.validate()
+        # TODO(Brendan): assign vertex indices
         self.tri_buffer.append(tri)
 
     def draw_circle(self, circle: Circle):
@@ -159,18 +165,17 @@ class Window:
             angle2 = math.tau * (i + 1) / fv
             tri = Triangle(
                 Vertex(
-                    Vec4(circle.center.x,
-                         circle.center.y),
+                    Position(circle.center.pos.x, circle.center.pos.y),
                     color=circle.center.color
                 ),
                 Vertex(
-                    Vec4(circle.center.x + circle.radius * math.cos(angle1),
-                         circle.center.y + circle.radius * math.sin(angle1)),
+                    Position(circle.center.pos.x + circle.radius * math.cos(angle1),
+                             circle.center.pos.y + circle.radius * math.sin(angle1)),
                     color=circle.color
                 ),
                 Vertex(
-                    Vec4(circle.center.x + circle.radius * math.cos(angle2),
-                         circle.center.y + circle.radius * math.sin(angle2)),
+                    Position(circle.center.pos.x + circle.radius * math.cos(angle2),
+                             circle.center.pos.y + circle.radius * math.sin(angle2)),
                     color=circle.color
                 ),
             )

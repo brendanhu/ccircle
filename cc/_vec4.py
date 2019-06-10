@@ -1,3 +1,6 @@
+from numpy import allclose
+
+
 class Vec4:
     """ An object used to store 4 floats.
         Generally used as an OpenGL homogeneous coordinate (*1) in NDC ([-1.0, 1.0]) where:
@@ -5,7 +8,7 @@ class Vec4:
             If w == 0, then the vector (x,y,z,0) is a direction.
 
     Notes:
-        This isn't needed until 3D, but better than having to refactor a Position class.
+        This isn't needed until 3D.
 
     *1: https://en.wikipedia.org/wiki/Homogeneous_coordinates
     """
@@ -15,9 +18,17 @@ class Vec4:
         self.z = z
         self.w = w
 
-    def __eq__(self, other):
-        return \
-            self.x == other.x and \
-            self.y == other.y and \
-            self.z == other.z and \
-            self.w == other.w
+    def __eq__(self, other) -> bool:
+        """ Equality check.
+            Uses numpy's allclose, which WILL need to be adjusted because floating point arithmetic is silly.
+        """
+        return allclose(self.as_list(), other.as_list())
+
+    def as_list(self):
+        return [
+            self.x,
+            self.y,
+            self.z,
+            self.w,
+        ]
+

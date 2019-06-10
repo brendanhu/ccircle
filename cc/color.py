@@ -1,10 +1,29 @@
-class Color:
-    """ A (linear RGB 0-1) color with an optional alpha. Create from 0-255 range is supported via Color#from255(). """
+from cc._vec4 import Vec4
+
+
+class Color(Vec4):
+    """ A (linear RGB 0-1) color with an optional alpha.
+        Creation via 0-255 values is supported via Color#from255().
+    """
     def __init__(self, r: float, g: float, b: float, a: float = 1.0):
-        self.r = r
-        self.g = g
-        self.b = b
-        self.a = a
+        super().__init__(
+            x=r,
+            y=g,
+            z=b,
+            w=a,
+        )
+        self.r = self.x
+        self.g = self.y
+        self.b = self.z
+        self.a = self.w
+
+    def is_valid(self):
+        """ Validates rgba in [0.0, 1.0]. """
+        return \
+            0.0 <= self.r <= 1.0 and \
+            0.0 <= self.g <= 1.0 and \
+            0.0 <= self.b <= 1.0 and \
+            0.0 <= self.a <= 1.0
 
     @staticmethod
     def from255(r: int, g: int, b: int, a: float = 1.0):
