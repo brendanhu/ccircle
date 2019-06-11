@@ -10,7 +10,6 @@ from cc.window import Window
 
 # Create window.
 win = Window()
-
 while win.is_open():
     win.clear(DARK_GRAY)
 

@@ -24,11 +24,6 @@ class Vec4:
         """
         return allclose(self.as_list(), other.as_list())
 
-    def as_list(self):
-        return [
-            self.x,
-            self.y,
-            self.z,
-            self.w,
-        ]
+    def as_list(self) -> list:
+        return [self.x, self.y, self.z, self.w]
 

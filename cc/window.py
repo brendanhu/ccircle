@@ -1,18 +1,14 @@
-import ctypes
 import math
 
 import glfw
-import numpy as np
-from OpenGL.GL import GL_TRUE, glGenVertexArrays, glBindVertexArray, glEnableVertexAttribArray, glGenBuffers, \
-    glBindBuffer, GL_ARRAY_BUFFER, glBufferData, glVertexAttribPointer, GL_FLOAT, \
-    GL_FALSE, GL_STATIC_DRAW, glClear, GL_COLOR_BUFFER_BIT, glDrawArrays, GL_TRIANGLES, \
-    glClearColor
-from OpenGL.arrays import ArrayDatatype
+from OpenGL.GL import GL_TRUE, glGenVertexArrays, glBindVertexArray, glBindBuffer, \
+    GL_ARRAY_BUFFER, glClearColor
 
 from cc import *
-from cc import color
-from cc._constant import *
+from cc.color import Color
 from cc._shader import Shader
+from cc._shader_source import *
+from cc._triangle_vbo import TriangleVbo
 from cc._vec4 import Vec4
 from cc.position import Position
 from cc.shapes.circle import Circle
@@ -30,7 +26,6 @@ class Window:
             using examples from http://www.opengl-tutorial.org/.
         Per OpenGL Face Culling norms, vertices for front-facing shapes should be specified in counter-clockwise order.
     """
-    tri_buffer = []
 
     def __init__(self, width: int = 1280, height: int = 960, win_title: str = "CC Window", fullscreen: bool = False):
         """ Create window, set context and register input callbacks.
@@ -60,28 +55,11 @@ class Window:
         RegisterInputFunctionality(self.win)
 
     def __gl_setup(self):
-        """ GL Setup: VAO -> Vertex Attribute Locations via Shader's Linker; VBO
-
-        Notes:
-            Initializes self.vao_id
-            Initializes self.shader
-            Initializes self.position_attr_idx
-            Initializes self.self.colors_attr_idx
-            Initializes self.vbo_id
-            Initializes self.elem_buf_id
-        """
+        """ GL Setup: VAO -> Shader -> VBO """
         self.vao_id = glGenVertexArrays(1)
-
         glBindVertexArray(self.vao_id)
         self.shader = Shader(fragment=FRAGMENT_SHADER, vertex=VERTEX_SHADER)
-        self.position_attr_idx = self.shader.attribute_index(VertexAttribute.POSITION_IN)
-        self.colors_attr_idx = self.shader.attribute_index(VertexAttribute.COLOR_IN)
-        glEnableVertexAttribArray(self.position_attr_idx)
-        glEnableVertexAttribArray(self.colors_attr_idx)
-        glBindVertexArray(0)
-
-        self.vbo_id = glGenBuffers(1)
-        self.elem_buf_id = glGenBuffers(1)
+        self.triangle_vbo = TriangleVbo(self.shader)
 
     @staticmethod
     def __set_glfw_hints():
@@ -96,65 +74,31 @@ class Window:
         glfw.window_hint(glfw.FOCUSED, True)
         glfw.window_hint(glfw.COCOA_RETINA_FRAMEBUFFER, glfw.TRUE)
 
-    def __prepare_triangles(self) -> int:
-        """ Prepares triangles from tri_buffer in order, placing their data in vbos and specifying format.
-
-        Returns:
-            num_triangles: the number of triangles prepared.
-        """
-        # data_array <- tri_buffer
-        if not self.tri_buffer:
-            return 0
-        num_triangles = len(self.tri_buffer)
-        data_array = np.concatenate([tri.as_interleaved_data_array() for tri in self.tri_buffer])
-        self.tri_buffer = []
-
-        # VBO <- data
-        glBindVertexArray(self.vao_id)
-        glBindBuffer(GL_ARRAY_BUFFER, self.vbo_id)
-        glBufferData(GL_ARRAY_BUFFER, ArrayDatatype.arrayByteCount(data_array), data_array, GL_STATIC_DRAW)
-
-        # glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.elem_buf_id)
-        # glBufferData(GL_ELEMENT_ARRAY_BUFFER, len(self.indices)indices.size() * sizeof(unsignedint), & indices[0], GL_STATIC_DRAW)
-
-        # TODO(Brendan): magic stride -_-
-        glVertexAttribPointer(self.position_attr_idx, 3, GL_FLOAT, GL_FALSE, 24, ctypes.c_void_p(0))
-        glVertexAttribPointer(self.colors_attr_idx, 3, GL_FLOAT, GL_FALSE, 24, ctypes.c_void_p(12))
-
-        return num_triangles
-
     def update(self):
         """ Draws triangles offered by draw_triangle() on the screen. """
-        num_triangles = self.__prepare_triangles()
-
-        # Draw
-        glClear(GL_COLOR_BUFFER_BIT)
-        if num_triangles:
-            glDrawArrays(GL_TRIANGLES, 0, 3 * num_triangles)
-
+        glBindVertexArray(self.vao_id)
+        self.triangle_vbo.draw()
         Window.clear_gl_array_buffer()
         glfw.swap_buffers(self.win)
         glfw.poll_events()
 
     def draw_triangle(self, tri: Triangle):
-        """ Validates triangle, assigns vertex indices, and draws upon next update() call.
+        """ Offers the triangle to vbo and draws upon next update() call.
 
         Args:
             tri: triangles to draw.
         """
-        tri.validate()
-        # TODO(Brendan): assign vertex indices
-        self.tri_buffer.append(tri)
+        self.triangle_vbo.offer_triangle(tri)
 
     def draw_circle(self, circle: Circle):
-        """ Validates circle (TODO(Brendan)) and draws upon next update() call.
+        """ Offers the circle (multiple triangles) to vbo and draws upon next update() call.
 
         Args:
             circle: the circle to draw.
 
         Notes:
-            This is the old-school OpenGL--less efficien--way to draw a circle. Perhaps conceptually easier?
-                XXX(Brendan): use indexed drawing / GL_TRIANGLE_FAN.
+            This is the old-school OpenGL way to draw a circle. Perhaps conceptually easier?
+            Unsure about performance compared to GL_TRIANGLE_STRIP.
         """
         fv = circle.radius / 4.0
         fv = max(fv, 64)
@@ -179,7 +123,7 @@ class Window:
                     color=circle.color
                 ),
             )
-            self.tri_buffer.append(tri)
+            self.triangle_vbo.offer_triangle(tri)
 
     def is_open(self) -> bool:
         """ Returns whether or not this window is open. """
@@ -239,7 +183,7 @@ class Window:
         mouse_point = Vec4(px, py)
         return mouse_point
 
-    def clear(self, color: color):
+    def clear(self, color: Color):
         """ Clears the window with a certain color. """
         self.__set_active()
         glClearColor(color.r, color.b, color.g, color.a)
@@ -303,6 +247,5 @@ class Window:
     @staticmethod
     def clear_gl_array_buffer():
         """ Restore memory for GL_ARRAY_BUFFER. """
-        # glDisableVertexAttribArray(0)
         glBindVertexArray(0)
         glBindBuffer(GL_ARRAY_BUFFER, 0)
