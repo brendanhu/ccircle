@@ -43,7 +43,10 @@ class TriangleVbo:
             self.vertices.append(v)
 
     def draw(self):
-        """ Draw some triangles. """
+        """ Draw some triangles.
+
+        TODO(Brendan): bad magic numbers.
+        """
         if not self.vertices:
             return
 
@@ -60,7 +63,6 @@ class TriangleVbo:
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW)
 
         # Draw (Window <- GPU).
-        glClear(GL_COLOR_BUFFER_BIT)
         glDrawElements(GL_TRIANGLES, len(self.indices), GL_UNSIGNED_SHORT, ctypes.c_void_p(0))
 
         # Reset local vars.

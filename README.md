@@ -1,6 +1,6 @@
 # CCircle: Learn to code with Python!
 
-## [Setup](index)
+## [Setup](index.md)
 
 ### Highlights:
 * No prior programming experience required.
@@ -12,7 +12,6 @@
     - [ ] Full OSX support.
         - [x] replace windows-native windowing with GLFW (OS-agnostic windowing)
         - [ ] opengl++ (Mac requires OpenGL 3.2+) -> rewrite primitives rendering
-            - [ ] Indexed VBO
             - [ ] Parent Shape class
             - [ ] Shapes to store VBO id, specify their stride/offset internally.
             - [ ] The shape API is atrocious lol
@@ -21,7 +20,8 @@
             - [ ] Lines
             - [ ] Points (?)
             - [ ] Textures
-            - [ ] Fonts
+            - [ ] FPS
+                - [ ] Fonts
     - [ ] Ensure Windows Support once upon OSX rewrite completion.
     - [ ] Ensure Linux Support upon OSX rewrite completion.
 - [ ] Setup.

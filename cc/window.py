@@ -2,7 +2,7 @@ import math
 
 import glfw
 from OpenGL.GL import GL_TRUE, glGenVertexArrays, glBindVertexArray, glBindBuffer, \
-    GL_ARRAY_BUFFER, glClearColor
+    GL_ARRAY_BUFFER, glClearColor, glClear, GL_COLOR_BUFFER_BIT
 
 from cc import *
 from cc.color import Color
@@ -77,7 +77,10 @@ class Window:
     def update(self):
         """ Draws triangles offered by draw_triangle() on the screen. """
         glBindVertexArray(self.vao_id)
+        glClear(GL_COLOR_BUFFER_BIT)
+
         self.triangle_vbo.draw()
+
         Window.clear_gl_array_buffer()
         glfw.swap_buffers(self.win)
         glfw.poll_events()
