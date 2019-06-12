@@ -9,19 +9,19 @@
 
 ### Checklist (Prioritized!):
 - [ ] Windows, OSX, Linux support.
-    - [ ] Full OSX support.
+    - [ ] Full OSX support for existing cc functionality.
         - [x] replace windows-native windowing with GLFW (OS-agnostic windowing)
         - [ ] opengl++ (Mac requires OpenGL 3.2+) -> rewrite primitives rendering
+            - [ ] Textures
+            - [ ] Points (?)
+            - [ ] Lines
             - [ ] Parent Shape class
             - [ ] Shapes to store VBO id, specify their stride/offset internally.
             - [ ] The shape API is atrocious lol
             - [ ] Split window.py into separate classes, leaving only public methods.
-            - [ ] XXX: 2-VAO paradigm--static and dynamic (using glBufferSubData)--https://stackoverflow.com/a/8923298
-            - [ ] Lines
-            - [ ] Points (?)
-            - [ ] Textures
             - [ ] FPS
                 - [ ] Fonts
+            - [ ] XXX: 2-VAO paradigm--static and dynamic (using glBufferSubData)--https://stackoverflow.com/a/8923298
     - [ ] Ensure Windows Support once upon OSX rewrite completion.
     - [ ] Ensure Linux Support upon OSX rewrite completion.
 - [ ] Setup.
