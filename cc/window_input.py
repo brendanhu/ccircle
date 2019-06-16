@@ -1,6 +1,6 @@
-import logging
-
 import glfw
+
+from cc.constant import LOGGER
 
 
 class RegisterInputFunctionality:
@@ -21,7 +21,7 @@ def _on_mouse_button(glfwWin, button, action, mods):
     is_down = True if action == glfw.PRESS else False
     msg = 'down' if is_down else 'up'
     x, y = glfw.get_cursor_pos(glfwWin)
-    logging.debug('Mouse %s at (%d, %d).' % (msg, x, y))
+    LOGGER.debug('Mouse %s at (%d, %d).' % (msg, x, y))
 
 
 def _on_key(glfwWin, key, code, action, mods):

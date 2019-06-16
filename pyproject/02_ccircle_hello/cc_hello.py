@@ -1,6 +1,9 @@
 """ Run this for an adhoc test demonstrating current cc module functionality. """
 import math
 
+from cc import util
+from cc._texture import Texture
+from cc._uv import UV
 from cc.colors import *
 from cc.position import Position
 from cc.shapes.circle import Circle
@@ -10,16 +13,30 @@ from cc.window import Window
 
 # Create window.
 win = Window()
+
+# Create all textures just once.
+hazard_texture = Texture(util.get_cc_image_path('../pyproject/02_ccircle_hello/hazard.png'))
+rainbow_texture = Texture(util.get_cc_image_path('../pyproject/02_ccircle_hello/rainbow.png'))
+
 while win.is_open():
     win.clear(DARK_GRAY)
 
-    # Triangle on mouse.
+    # 'Hazard' textured triangle below mouse (cursor).
     mouse = win.get_mouse_pos()
-    cursor_tri = Triangle(
-        Vertex(Position(mouse.x, mouse.y), color=BLUE6),
-        Vertex(Position(mouse.x + .05, mouse.y - .1), color=BLUE5),
-        Vertex(Position(mouse.x - .05, mouse.y - .1), color=BLUE6),
+    hazard_cursor = Triangle(
+        Vertex(Position(mouse.x, mouse.y), uv=UV(0.5, 1.0)),
+        Vertex(Position(mouse.x + .05, mouse.y - .1), uv=UV(0.0, 0.0)),
+        Vertex(Position(mouse.x - .05, mouse.y - .1), uv=UV(1.0, 0.0)),
+        hazard_texture
     )
+    hazard2 = Triangle(
+        Vertex(Position(0.5, 0.5), uv=UV(0.5, 1.0)),
+        Vertex(Position(0.35, 0.2), uv=UV(0.0, 0.0)),
+        Vertex(Position(0.65, 0.2), uv=UV(1.0, 0.0)),
+        hazard_texture
+    )
+
+    # Static 'hazard' on right.
 
     # A circle that changes size over time.
     radius = abs(0.3 * math.sin(win.get_time()))
@@ -29,9 +46,10 @@ while win.is_open():
         radius=radius,
     )
 
-    # Specify what to draw in order.
+    # Specify what to draw (in order).
+    win.draw_triangle(hazard2)
     win.draw_circle(growing_circle)
-    win.draw_triangle(cursor_tri)
+    win.draw_triangle(hazard_cursor)
 
     # Draw!
     win.update()

@@ -1,5 +1,5 @@
 from OpenGL.GL import glCreateProgram, GL_VERTEX_SHADER, GL_FRAGMENT_SHADER, glAttachShader, glDeleteShader, \
-    glLinkProgram, glUseProgram, glGetProgramiv, GL_LINK_STATUS, GL_TRUE, glGetProgramInfoLog, glDeleteProgram, \
+    glLinkProgram, glGetProgramiv, GL_LINK_STATUS, GL_TRUE, glGetProgramInfoLog, glDeleteProgram, \
     glGetAttribLocation, glCreateShader, glShaderSource, glCompileShader, glGetShaderiv, glGetShaderInfoLog, \
     GL_COMPILE_STATUS
 
@@ -8,13 +8,16 @@ from cc._shader_source import VertexAttribute
 
 class Shader:
     """ Basic graphics Shader. """
-    def __init__(self, vertex: str, fragment: str):
+
+    def __init__(self, vertex: str, fragment: str, is_for_textures: bool = False):
         """
         Args:
             vertex: String containing shader source code for the vertex shader.
             fragment: String containing shader source code for the fragment shader.
+            is_for_textures: Whether this shader will be used for textures.
         """
         self.program_id = glCreateProgram()
+        self.is_for_textures = is_for_textures
         vs_id = Shader.add_shader(vertex, GL_VERTEX_SHADER)
         frag_id = Shader.add_shader(fragment, GL_FRAGMENT_SHADER)
 
@@ -23,7 +26,6 @@ class Shader:
         glDeleteShader(vs_id)
         glDeleteShader(frag_id)
         glLinkProgram(self.program_id)
-        glUseProgram(self.program_id)
 
         if glGetProgramiv(self.program_id, GL_LINK_STATUS) != GL_TRUE:
             info = glGetProgramInfoLog(self.program_id)
@@ -39,7 +41,7 @@ class Shader:
         Returns:
             location (int): Integer describing location (index) of the attribute.
         """
-        return glGetAttribLocation(self.program_id, vertex_attribute.name)
+        return glGetAttribLocation(self.program_id, vertex_attribute.value)
 
     @staticmethod
     def add_shader(source, shader_type):

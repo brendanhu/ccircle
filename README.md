@@ -12,7 +12,6 @@
     - [ ] Full OSX support for existing cc functionality.
         - [x] replace windows-native windowing with GLFW (OS-agnostic windowing)
         - [ ] opengl++ (Mac requires OpenGL 3.2+) -> rewrite primitives rendering
-            - [ ] Textures
             - [ ] Points (?)
             - [ ] Lines
             - [ ] Parent Shape class

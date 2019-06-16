@@ -4,12 +4,12 @@ import glfw
 from OpenGL.GL import GL_TRUE, glGenVertexArrays, glBindVertexArray, glBindBuffer, \
     GL_ARRAY_BUFFER, glClearColor, glClear, GL_COLOR_BUFFER_BIT
 
-from cc import *
-from cc.color import Color
 from cc._shader import Shader
-from cc._shader_source import *
+from cc._shader_source import FRAGMENT_SHADER, VERTEX_SHADER, TEXTURE_FRAGMENT_SHADER
 from cc._triangle_vbo import TriangleVbo
 from cc._vec4 import Vec4
+from cc.color import Color
+from cc.constant import LOGGER
 from cc.position import Position
 from cc.shapes.circle import Circle
 from cc.shapes.triangle import Triangle
@@ -60,6 +60,8 @@ class Window:
         glBindVertexArray(self.vao_id)
         self.shader = Shader(fragment=FRAGMENT_SHADER, vertex=VERTEX_SHADER)
         self.triangle_vbo = TriangleVbo(self.shader)
+        self.tex_shader = Shader(fragment=TEXTURE_FRAGMENT_SHADER, vertex=VERTEX_SHADER, is_for_textures=True)
+        self.textured_triangle_vbo = TriangleVbo(self.tex_shader)
 
     @staticmethod
     def __set_glfw_hints():
@@ -80,6 +82,7 @@ class Window:
         glClear(GL_COLOR_BUFFER_BIT)
 
         self.triangle_vbo.draw()
+        self.textured_triangle_vbo.draw()
 
         Window.clear_gl_array_buffer()
         glfw.swap_buffers(self.win)
@@ -91,7 +94,10 @@ class Window:
         Args:
             tri: triangles to draw.
         """
-        self.triangle_vbo.offer_triangle(tri)
+        if tri.v1.uv:
+            self.textured_triangle_vbo.offer_triangle(tri)
+        else:
+            self.triangle_vbo.offer_triangle(tri)
 
     def draw_circle(self, circle: Circle):
         """ Offers the circle (multiple triangles) to vbo and draws upon next update() call.
@@ -210,13 +216,13 @@ class Window:
     def __validate_window(self):
         if not self.win:
             msg = "Error: GLFW failed to create a window."
-            logging.fatal(msg)
+            LOGGER.fatal(msg)
             self.close_all_windows()
             raise RuntimeError(msg)
         ctx_major = glfw.get_window_attrib(self.win, glfw.CONTEXT_VERSION_MAJOR)
         forward_compat = glfw.get_window_attrib(self.win, glfw.OPENGL_FORWARD_COMPAT)
         if ctx_major >= 3 and forward_compat:
-            logging.warning("Context is forward compatible, no old-school OpenGL (2.x commands) allowed!")
+            LOGGER.debug("Context is forward compatible, no old-school OpenGL (2.x commands) allowed!")
         self.log_window_statistics()
 
     def log_window_statistics(self):
@@ -226,13 +232,13 @@ class Window:
         width, height = self.get_size()
         x2, y2 = (x1 + width, y1 + height)
 
-        logging.debug("OpenGL %d.%d Window" % (ctx_major, ctx_minor))
-        logging.debug('  Position:')
-        logging.debug('    Top-left: (%d, %d)' % (x1, y1))
-        logging.debug('    Size: (%d, %d)' % (width, height))
-        logging.debug('    Bottom right: (%d, %d)' % (x2, y2))
-        logging.debug('    frame size: ' + str(self.get_frame_size()))
-        logging.debug('    framebuffer size: ' + str(self.get_framebuffer_size()))
+        LOGGER.debug("OpenGL %d.%d Window" % (ctx_major, ctx_minor))
+        LOGGER.debug('  Position:')
+        LOGGER.debug('    Top-left: (%d, %d)' % (x1, y1))
+        LOGGER.debug('    Size: (%d, %d)' % (width, height))
+        LOGGER.debug('    Bottom right: (%d, %d)' % (x2, y2))
+        LOGGER.debug('    frame size: ' + str(self.get_frame_size()))
+        LOGGER.debug('    framebuffer size: ' + str(self.get_framebuffer_size()))
 
     @staticmethod
     def close_all_windows():
