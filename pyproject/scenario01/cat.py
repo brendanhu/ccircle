@@ -13,6 +13,8 @@ CellGoal = 2
 
 
 class Cat:
+    NAME = 'pusheen'
+
     def __init__(self, x, y):
         self.x = x
         self.y = y
@@ -27,10 +29,11 @@ class Cat:
         self.facing = West
 
     def draw(self, x, y, s, window):
-        self.image[self.facing].draw(x, y, s, s)
+        window.drawImage(self.image[self.facing], x, y, s, s)
 
-    def getName(self):
-        return 'pusheen'
+    @staticmethod
+    def getName():
+        return Cat.NAME
 
     def update(self, dt):
         pass
@@ -39,7 +42,7 @@ class Cat:
 class Handler:
     def __init__(self, world, cb):
         self.world = world
-        self.cat = world.find('pusheen')
+        self.cat = world.find(Cat.NAME)
         self._success = False
         self._failure = False
         self._moved = False
@@ -73,7 +76,7 @@ class Handler:
             self._moved = False
             self._cb.moveTowardPizza(self)
             cell = self.world.getCell(self.cat.tx, self.cat.ty)
-            if cell == None or cell == CellWall:
+            if not cell or cell == CellWall:
                 self._failure = True
             if cell == CellGoal:
                 self._success = True
@@ -84,7 +87,7 @@ class Handler:
     def isBlocked(self):
         fx, fy = self._getFacingCell()
         result = self.world.getCell(fx, fy)
-        return result == None or result == CellWall
+        return not result or result == CellWall
 
     def isFacingN(self):
         return self.cat.facing == North
@@ -128,21 +131,19 @@ class World:
         else:
             raise Exception('Failed to create cat.World: keyword argument must be either size or layout')
 
-    ''' Add a new free-standing object to the world '''
-
     def addObject(self, obj):
+        """ Add a new free-standing object to the world """
         self.objects.append(obj)
 
-    ''' Clear the world to be size x size empty cells '''
-
+    # noinspection PyAttributeOutsideInit
     def clear(self, size):
+        """ Clear the world to be size x size empty cells """
         self.size = size
-        self.cells = [[CellEmpty] * size for x in range(size)]
+        self.cells = [[CellEmpty] * size for _ in range(size)]
         self.objects = []
 
-    ''' Draw the world to a window '''
-
     def draw(self, window):
+        """ Draw the world to a window """
         size = window.getSize()
         ms = min(size) - 64
         ox = (size[0] - ms) / 2
@@ -150,7 +151,7 @@ class World:
         b = 4
 
         # Background
-        self.imageBG.draw(0, 0, size[0], size[1])
+        window.drawImage(self.imageBG, 0, 0, size[0], size[1])
 
         # Floor
         window.drawRect(ox, oy, ms, ms, 0.2, 0.2, 0.2)
@@ -178,7 +179,7 @@ class World:
                 if cell == CellWall:
                     window.drawRect(px, py, cs, cs, 1.0, 0.0, 0.3)
                 elif cell == CellGoal:
-                    self.imageGoal.draw(px, py, cs, cs)
+                    window.drawImage(self.imageGoal, px, py, cs, cs)
 
         # Free-Standing Objects
         for obj in self.objects:

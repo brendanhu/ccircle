@@ -53,23 +53,28 @@ class Window:
         glfw.swap_buffers(self.win)
         glfw.poll_events()
 
-    def drawTri(self, x1: int, y1: int, x2: int, y2: int, x3: int, y3: int, color):
+    def drawTri(self, x1: int, y1: int, x2: int, y2: int, x3: int, y3: int, r: float, g: float, b: float):
         """ Draw a triangle with corners (x1, y1), (x2, y2), and (x3, y3) and given color.
 
         Notes: Here only as a wrapper around __draw_tri() to reuse materials created with CCircle v0.9.8 (Win64).
         """
+        color = Color(r, g, b)
         v1 = Vertex(self.__pixel_to_position(x1, y1), color)
         v2 = Vertex(self.__pixel_to_position(x2, y2), color)
         v3 = Vertex(self.__pixel_to_position(x3, y3), color)
         tri = Triangle(v1, v2, v3)
         self.__draw_triangle(tri)
 
-    def drawRect(self, x: int, y: int, width: int, height: int, color: Color):
+    def drawTri2(self, x1: int, y1: int, x2: int, y2: int, x3: int, y3: int, color: Color):
+        self.drawTri(x1, y1, x2, y2, x3, y3, color.r, color.g, color.b)
+
+    def drawRect(self, x: int, y: int, width: int, height: int, r: float, g: float, b: float):
         """ Draw a rectangle starting at (x, y) (the top-left corner) that is width pixels wide and height pixels tall
             with given color.
 
         Notes: Here only as a wrapper around __draw_rect() to reuse materials created with CCircle v0.9.8 (Win64).
         """
+        color = Color(r, g, b)
         self.__drawRect(x, y, width, height, color)
 
     def drawImage(self, image: Image, x: int, y: int, width: int, height: int):

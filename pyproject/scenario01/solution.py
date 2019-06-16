@@ -1,5 +1,4 @@
-
-import worlds
+from pyproject.scenario01 import worlds
 # Your solution goes in this file!
 
 '''

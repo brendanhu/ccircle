@@ -45,7 +45,7 @@ while win.is_open():
     # Triangle that moves with the mouse (cursor).
     mouse_pos = win.get_mouse_pos()
     mx, my = mouse_pos.x, mouse_pos.y
-    win.drawTri(
+    win.drawTri2(
         mx, my,
         mx + wx_twentieth, my - wy_twentieth,
         mx - wx_twentieth, my - wy_twentieth,
