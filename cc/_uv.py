@@ -20,7 +20,9 @@ class UV:
             0.0 <= self.u <= 1.0 and \
             0.0 <= self.v <= 1.0
 
-
     def __eq__(self, other) -> bool:
         """ Equality check. """
         return allclose(self.as_list(), other.as_list())
+
+    def __str__(self) -> str:
+        return "[u, v] = [%.4f, %.4f]" % (self.u, self.v)

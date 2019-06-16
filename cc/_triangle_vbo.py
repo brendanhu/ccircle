@@ -41,9 +41,6 @@ class TriangleVbo:
         Notes:
             All vertices should be of the same type, colored or textured.
         """
-        if not ((tri.v1.uv and tri.v2.uv and tri.v2.uv) or
-                (tri.v1.color and tri.v2.color and tri.v3.color)):
-            raise RuntimeError("Triangle's vertices must be all textured OR all colored.")
         self.triangles.append(tri)
 
     def add_triangle_indices(self, tri: Triangle):

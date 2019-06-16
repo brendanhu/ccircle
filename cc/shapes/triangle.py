@@ -8,19 +8,20 @@ class Triangle:
     XXX(Brendan): make TexturedTriangle and ColoredTriangle.
     """
     def __init__(self, v1: Vertex, v2: Vertex, v3: Vertex, texture: Texture = None):
-        if texture and (v1.color or v2.color or v3.color):
-            raise RuntimeError("A textured triangle must have vertices with UVs.")
         self.v1 = v1
         self.v2 = v2
         self.v3 = v3
         self.texture = texture
 
-    def is_valid(self):
-        """ Checks if this triangle is valid. (i.e. if it would be seen on the screen).
-
-        Notes: This is more an optimization.
-        """
-        return \
-            self.v1.is_valid() and \
-            self.v2.is_valid() and \
-            self.v3.is_valid()
+    def is_valid(self) -> bool:
+        """ Confirms the triangle is either textured or colored. """
+        return (
+            self.texture and
+            self.v1.uv and self.v1.uv.is_valid() and
+            self.v2.uv and self.v2.uv.is_valid() and
+            self.v3.uv and self.v3.uv.is_valid()
+        ) or (
+            self.v1.color and self.v1.color.is_valid() and
+            self.v2.color and self.v2.color.is_valid() and
+            self.v3.color and self.v3.color.is_valid()
+        )

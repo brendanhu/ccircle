@@ -17,7 +17,7 @@ class Color(Vec4):
         self.b = self.z
         self.a = self.w
 
-    def is_valid(self):
+    def is_valid(self) -> bool:
         """ Validates rgba in [0.0, 1.0]. """
         return \
             0.0 <= self.r <= 1.0 and \

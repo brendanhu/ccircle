@@ -7,6 +7,7 @@ from cc._uv import UV
 from cc.colors import *
 from cc.position import Position
 from cc.shapes.circle import Circle
+from cc.shapes.rectangle import Rectangle
 from cc.shapes.triangle import Triangle
 from cc.vertex import Vertex
 from cc.window import Window
@@ -30,12 +31,12 @@ while win.is_open():
         hazard_texture
     )
 
-    # Static rainbow triangle on right.
-    rainbow = Triangle(
-        Vertex(Position(0.5, 0.5), uv=UV(0.5, 1.0)),
-        Vertex(Position(0.35, 0.2), uv=UV(0.0, 0.0)),
-        Vertex(Position(0.65, 0.2), uv=UV(1.0, 0.0)),
-        rainbow_texture
+    # Static rainbow rectangle on right.
+    rainbow = Rectangle(
+        top_left=Position(0.5, 0.5),
+        width=0.3,
+        height=0.3,
+        texture=rainbow_texture,
     )
 
     # A circle that changes size over time.
@@ -47,7 +48,7 @@ while win.is_open():
     )
 
     # Specify what to draw (in order).
-    win.draw_triangle(rainbow)
+    win.draw_rectangle(rainbow)
     win.draw_circle(growing_circle)
     win.draw_triangle(hazard_cursor)
 

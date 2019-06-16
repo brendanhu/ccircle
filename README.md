@@ -12,10 +12,8 @@
     - [ ] Full OSX support for existing cc functionality.
         - [x] replace windows-native windowing with GLFW (OS-agnostic windowing)
         - [ ] opengl++ (Mac requires OpenGL 3.2+) -> rewrite primitives rendering
-            - [ ] Points (?)
-            - [ ] Lines
+            - [ ] Textured circles.
             - [ ] Parent Shape class
-            - [ ] Shapes to store VBO id, specify their stride/offset internally.
             - [ ] The shape API is atrocious lol
             - [ ] Split window.py into separate classes, leaving only public methods.
             - [ ] FPS

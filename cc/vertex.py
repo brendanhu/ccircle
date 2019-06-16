@@ -15,17 +15,15 @@ class Vertex:
     """
 
     def __init__(self, pos: Position, color: Color = None, uv: UV = None):
-        if (not color and not uv) or (color and uv):
-            raise RuntimeError("A vertex must have either a color or a uv (neither/both unacceptable).")
         self.pos = pos
         self.color = color
         self.uv = uv
 
-    def is_valid(self):
+    def is_valid(self) -> bool:
         """ Validates this vertex. """
         if self.color:
             return self.pos.is_valid() and self.color.is_valid()
-        return self.pos.is_valid() and self.uv.is_valid()
+        return self.uv and self.uv.is_valid() and self.pos.is_valid()
 
     def as_array(self) -> ndarray:
         """ Transform this vertex into a single-precision ndarray of floats: [XYZRGB] OR [XYZUV]. """
@@ -43,6 +41,9 @@ class Vertex:
         if self.color and other.color:
             return self.pos.__eq__(other.pos)
         return self.pos.__eq__(other.pos) and self.uv.__eq__(other.uv)
+
+    def __str__(self) -> str:
+        return "[pos, color, uv] = [%s, %s, %s]" % (self.pos, self.color, self.uv)
 
     def __hash__(self) -> int:
         return self.pos.__hash__()

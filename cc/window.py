@@ -12,6 +12,7 @@ from cc.color import Color
 from cc.constant import LOGGER
 from cc.position import Position
 from cc.shapes.circle import Circle
+from cc.shapes.rectangle import Rectangle
 from cc.shapes.triangle import Triangle
 from cc.vertex import Vertex
 from cc.window_input import RegisterInputFunctionality
@@ -94,10 +95,23 @@ class Window:
         Args:
             tri: triangles to draw.
         """
-        if tri.v1.uv:
+        if tri.texture:
             self.textured_triangle_vbo.offer_triangle(tri)
         else:
             self.triangle_vbo.offer_triangle(tri)
+
+    def draw_rectangle(self, rect: Rectangle):
+        """ Offers the rectangle's triangles to the vbo and draws upon next update() call.
+
+        Args:
+            rect: rect to draw.
+        """
+        if rect.t1.texture:
+            self.textured_triangle_vbo.offer_triangle(rect.t1)
+            self.textured_triangle_vbo.offer_triangle(rect.t2)
+        else:
+            self.triangle_vbo.offer_triangle(rect.t1)
+            self.triangle_vbo.offer_triangle(rect.t2)
 
     def draw_circle(self, circle: Circle):
         """ Offers the circle (multiple triangles) to vbo and draws upon next update() call.

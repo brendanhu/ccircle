@@ -24,6 +24,9 @@ class Vec4:
         """
         return allclose(self.as_list(), other.as_list())
 
+    def __str__(self) -> str:
+        return "[x, y, z, w] = [%.4f, %.4f, %.4f, %.4f]" % (self.x, self.y, self.z, self.w)
+
     def as_list(self) -> list:
         return [self.x, self.y, self.z, self.w]
 
