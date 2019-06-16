@@ -45,11 +45,11 @@ while win.is_open():
     # Triangle that moves with the mouse (cursor).
     mouse_pos = win.get_mouse_pos()
     mx, my = mouse_pos.x, mouse_pos.y
-    win.drawTri2(
-        mx, my,
-        mx + wx_twentieth, my - wy_twentieth,
-        mx - wx_twentieth, my - wy_twentieth,
-        color=colors.BLUE3
+    win.drawTri(
+        x1=mx, y1=my,
+        x2=mx + wx_twentieth, y2=my + wy_twentieth,
+        x3=mx - wx_twentieth, y3=my + wy_twentieth,
+        r=colors.BLUE3.r, g=colors.BLUE3.g, b=colors.BLUE3.b,
     )
 
     # Draw!

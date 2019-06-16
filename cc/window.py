@@ -65,9 +65,6 @@ class Window:
         tri = Triangle(v1, v2, v3)
         self.__draw_triangle(tri)
 
-    def drawTri2(self, x1: int, y1: int, x2: int, y2: int, x3: int, y3: int, color: Color):
-        self.drawTri(x1, y1, x2, y2, x3, y3, color.r, color.g, color.b)
-
     def drawRect(self, x: int, y: int, width: int, height: int, r: float, g: float, b: float):
         """ Draw a rectangle starting at (x, y) (the top-left corner) that is width pixels wide and height pixels tall
             with given color.
