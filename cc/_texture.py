@@ -1,9 +1,8 @@
 from pathlib import Path
 
-from OpenGL.GL import glGetIntegerv, GL_MAX_TEXTURE_SIZE, GL_MAX_GEOMETRY_TEXTURE_IMAGE_UNITS, glGenTextures, \
-    glBindTexture, GL_TEXTURE_2D, glTexImage2D, GL_UNSIGNED_BYTE, GL_RGBA, \
-    GL_TEXTURE_MAG_FILTER, GL_TEXTURE_MIN_FILTER, GL_TEXTURE_WRAP_S, GL_TEXTURE_WRAP_T, \
-    GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, glGenerateMipmap, glTexParameteri, GL_REPEAT, glPixelStorei, GL_UNPACK_ALIGNMENT
+from OpenGL.GL import glGetIntegerv, GL_MAX_TEXTURE_SIZE, glGenTextures, glBindTexture, GL_TEXTURE_2D, glTexImage2D, \
+    GL_UNSIGNED_BYTE, GL_RGBA, GL_TEXTURE_MAG_FILTER, GL_TEXTURE_MIN_FILTER, GL_TEXTURE_WRAP_S, GL_TEXTURE_WRAP_T, \
+    GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, glGenerateMipmap, glTexParameteri, GL_REPEAT
 from PIL import Image
 from numpy import array, int8
 
@@ -11,10 +10,14 @@ from cc.constant import LOGGER
 
 
 class Texture:
-    """ Load an image into a 2D texture. The file_path is relative to the ccircle directory."""
+    """ Load an image into a 2D texture. """
     def __init__(self, image_path: Path):
         self.id = Texture.__to_texture(image_path)
         pass
+
+    def __eq__(self, other):
+        """ Two textures are equal if they share the same OpenGL-assigned id."""
+        return self.id == other.id
 
     @staticmethod
     def __max_texture_size():
@@ -23,13 +26,8 @@ class Texture:
         return n
 
     @staticmethod
-    def __max_geom_shader_texture_units():
-        """ Get the max texture image units that this GPU supports. """
-        return glGetIntegerv(GL_MAX_GEOMETRY_TEXTURE_IMAGE_UNITS)
-
-    @staticmethod
     def __to_texture(path: Path):
-        """ Convert img to OpenGL texture with trilinear filtering.
+        """ Convert img (BMP, IM, JPEG, PNG, etc.) to an OpenGL texture (with trilinear filtering).
 
         Args:
             path: a pathlib.Path object--the path to the image.
@@ -38,7 +36,7 @@ class Texture:
             texture_id: the id of the texture loaded into OpenGL.
 
         Notes:
-            PIL can open BMP, EPS, FIG, IM, JPEG, MSP, PCX, PNG, PPM, etc.
+            Verifies image dimensions and ensures there is space for another texture in OpenGL.
         """
         try:
             img = Image.open(path).transpose(Image.FLIP_TOP_BOTTOM)
@@ -46,13 +44,21 @@ class Texture:
             LOGGER.critical('Failed to open image file at %s: %s' % (path, str(ex)))
             raise
         LOGGER.debug('%s (size, format) = (%s, %s)' % (path, img.size, img.format))
+
+        # Verify the image size/channels are supported.
         num_channels = len(img.split())
         if num_channels != 4:
             raise RuntimeError('TODO(Brendan) Only 4-channel images supported.')
-
-        img_data = array(list(img.getdata()), int8)
         width, height = img.size
+        max_dimension = Texture.__max_texture_size()
+        if width > max_dimension or height > max_dimension:
+            raise RuntimeError('Image dimensions must be < %s.' % max_dimension)
 
+        # Extract image rgb.
+        img_data = array(list(img.getdata()), int8)
+        img.close()
+
+        # Bind the image data to an OpenGL texture.
         texture_id = glGenTextures(1)
         glBindTexture(GL_TEXTURE_2D, texture_id)
         glTexImage2D(
@@ -66,8 +72,8 @@ class Texture:
             GL_UNSIGNED_BYTE,
             img_data
         )
-        img.close()
 
+        # Trilinear filtering.
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)

@@ -1,5 +1,5 @@
 import ctypes
-from typing import List
+from typing import List, Generator
 
 from OpenGL.GL import GL_ELEMENT_ARRAY_BUFFER, glVertexAttribPointer, GL_FLOAT, GL_FALSE, glDrawElements, \
     GL_TRIANGLES, \
@@ -12,7 +12,6 @@ from cc._shader import Shader
 from cc._shader_source import VertexAttribute
 from cc._vertex_cache import VertexCache
 from cc.shapes.triangle import Triangle
-from cc.vertex import Vertex
 
 
 class TriangleVbo:
@@ -60,10 +59,7 @@ class TriangleVbo:
                 self.vertices.append(v)
 
     def draw(self):
-        """ Draw some triangles.
-
-        TODO(Brendan): bad magic numbers; honestly this function just sucks.
-        """
+        """ Draw some triangles. """
         if not self.triangles:
             return
 
@@ -96,7 +92,7 @@ class TriangleVbo:
         glEnableVertexAttribArray(self.position_attr_idx)
         glEnableVertexAttribArray(self.tex_attr_idx)
 
-        # VBO <- data. TODO(Brendan) do this the right way as described in pydoc.
+        # VBO <- data.
         for draw_chunk in TriangleVbo.chunk_on_same_texture(self.triangles):
             texture = draw_chunk[0].texture
             for tri in draw_chunk:
@@ -166,15 +162,23 @@ class TriangleVbo:
         self.vertex_cache.clear()
 
     @staticmethod
-    def chunk_on_same_texture(tris: List[Triangle]) -> List[List[Triangle]]:
+    def chunk_on_same_texture(tris: List[Triangle]) -> Generator[List[Triangle], List[Triangle], None]:
         """ Split the list into chunks (multiple lists) of triangles for a draw() call.
 
         Returns:
             draw_list (List[List[Triangle]]): a list where each element is all contiguous triangles sharing the same
             texture.
-
-        TODO(Brendan): this using yield
         """
-        # for i in range(0, len(l), n):
-        #     yield l[i:i + n]
-        return [tris]
+        if len(tris) <= 1:
+            yield [tris]
+
+        idx = 0
+        cur_tex = tris[0].texture
+        for i in range(1, len(tris)):
+            other_tex = tris[i].texture
+            if cur_tex != other_tex:
+                cur_tex = other_tex
+                old_idx = idx
+                idx = i
+                yield tris[old_idx: idx]
+        yield tris[idx: len(tris)]

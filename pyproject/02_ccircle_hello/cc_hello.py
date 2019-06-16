@@ -29,14 +29,14 @@ while win.is_open():
         Vertex(Position(mouse.x - .05, mouse.y - .1), uv=UV(1.0, 0.0)),
         hazard_texture
     )
-    hazard2 = Triangle(
+
+    # Static rainbow triangle on right.
+    rainbow = Triangle(
         Vertex(Position(0.5, 0.5), uv=UV(0.5, 1.0)),
         Vertex(Position(0.35, 0.2), uv=UV(0.0, 0.0)),
         Vertex(Position(0.65, 0.2), uv=UV(1.0, 0.0)),
-        hazard_texture
+        rainbow_texture
     )
-
-    # Static 'hazard' on right.
 
     # A circle that changes size over time.
     radius = abs(0.3 * math.sin(win.get_time()))
@@ -47,7 +47,7 @@ while win.is_open():
     )
 
     # Specify what to draw (in order).
-    win.draw_triangle(hazard2)
+    win.draw_triangle(rainbow)
     win.draw_circle(growing_circle)
     win.draw_triangle(hazard_cursor)
 
