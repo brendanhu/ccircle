@@ -91,7 +91,7 @@ class TriangleVbo:
 
         # VBO <- data.
         for draw_chunk in TriangleVbo.chunk_on_same_texture(self.triangles):
-            texture = draw_chunk[0].texture
+            texture = draw_chunk[0].image
             for tri in draw_chunk:
                 self.add_triangle_indices(tri)
 
@@ -170,9 +170,9 @@ class TriangleVbo:
             yield [tris]
 
         idx = 0
-        cur_tex = tris[0].texture
+        cur_tex = tris[0].image
         for i in range(1, len(tris)):
-            other_tex = tris[i].texture
+            other_tex = tris[i].image
             if cur_tex != other_tex:
                 cur_tex = other_tex
                 old_idx = idx

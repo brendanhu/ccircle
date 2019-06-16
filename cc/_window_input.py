@@ -1,6 +1,6 @@
 import glfw
 
-from cc.constant import LOGGER
+from cc._constant import LOGGER
 
 
 class RegisterInputFunctionality:

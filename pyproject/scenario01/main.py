@@ -1,11 +1,11 @@
-import ccircle
+import cc
 import cat
 import worlds
 import solution
 
 solver = solution.Solution()
 
-window = ccircle.Window("Scenario 1: Space Cat Pizza Party!")
+window = cc.Window("Scenario 1: Space Cat Pizza Party!")
 window.toggleMaximized()
 world = cat.World(layout=solver.getLevel())
 handler = cat.Handler(world, solver)

@@ -7,7 +7,7 @@ def hash_combine(seed, hashed):
     return seed
 
 
-def get_cc_image_path(relative_path: str):
-    """ Get the pathlib.Path obj for the path relative to the cc directory."""
-    cc_dir = Path(__file__).resolve().parent
+def get_ccircle_image_path(relative_path: str):
+    """ Get the pathlib.Path obj for the path relative to the ccircle directory."""
+    cc_dir = Path(__file__).resolve().parent.parent
     return cc_dir.joinpath(relative_path)

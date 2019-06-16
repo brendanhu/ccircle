@@ -1,5 +1,5 @@
-from cc._texture import Texture
-from cc.vertex import Vertex
+from cc._vertex import Vertex
+from cc.image import Image
 
 
 class Triangle:
@@ -7,16 +7,19 @@ class Triangle:
 
     XXX(Brendan): make TexturedTriangle and ColoredTriangle.
     """
-    def __init__(self, v1: Vertex, v2: Vertex, v3: Vertex, texture: Texture = None):
+    def __init__(self, v1: Vertex, v2: Vertex, v3: Vertex, image: Image = None):
+        """ A triangle comprised of 3 vertices and an optional image.
+            If an image is desired, the vertices need UV coordinates--how to map the image onto the triangle.
+        """
         self.v1 = v1
         self.v2 = v2
         self.v3 = v3
-        self.texture = texture
+        self.image = image
 
     def is_valid(self) -> bool:
         """ Confirms the triangle is either textured or colored. """
         return (
-            self.texture and
+            self.image and
             self.v1.uv and self.v1.uv.is_valid() and
             self.v2.uv and self.v2.uv.is_valid() and
             self.v3.uv and self.v3.uv.is_valid()

@@ -1,5 +1,5 @@
 """ Wow look at all these colors. """
-from cc.color import Color
+from cc._color import Color
 
 BLACK = Color.from255(0, 0, 0)
 WHITE = Color.from255(255, 255, 255)

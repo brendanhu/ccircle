@@ -1,65 +1,57 @@
-""" Run this for an adhoc test demonstrating current cc module functionality. """
+""" Run this for an adhoc test to demonstrate cc module functionality. """
 import math
 
-from cc import util
-from cc._texture import Texture
-from cc._uv import UV
-from cc.colors import *
-from cc.position import Position
-from cc.shapes.circle import Circle
-from cc.shapes.rectangle import Rectangle
-from cc.shapes.triangle import Triangle
-from cc.vertex import Vertex
+import cc.colors as colors
+from cc.image import Image
 from cc.window import Window
 
 # Create window.
 win = Window()
 
-# Create all textures just once.
-hazard_texture = Texture(util.get_cc_image_path('../pyproject/02_ccircle_hello/hazard.png'))
-rainbow_texture = Texture(util.get_cc_image_path('../pyproject/02_ccircle_hello/rainbow.png'))
+# Misc window info.
+wx, wy = win.get_size()
+cx, cy = wx / 2, wy / 2
+wx_fifth = int(wx / 5)
+wy_fifth = int(wy / 5)
+wx_twentieth = int(wx / 20)
+wy_twentieth = int(wy / 20)
+
+# Load any images just once.
+rainbow_img = Image('pyproject/02_ccircle_hello/rainbow.png')
 
 while win.is_open():
-    win.clear(DARK_GRAY)
+    win.clear(colors.DARK_GRAY)
 
-    # 'Hazard' textured triangle below mouse (cursor).
-    mouse = win.get_mouse_pos()
-    hazard_cursor = Triangle(
-        Vertex(Position(mouse.x, mouse.y), uv=UV(0.5, 1.0)),
-        Vertex(Position(mouse.x + .05, mouse.y - .1), uv=UV(0.0, 0.0)),
-        Vertex(Position(mouse.x - .05, mouse.y - .1), uv=UV(1.0, 0.0)),
-        hazard_texture
-    )
-
-    # Static rainbow rectangle on right.
-    rainbow = Rectangle(
-        top_left=Position(0.5, 0.5),
-        width=0.3,
-        height=0.3,
-        texture=rainbow_texture,
+    # Static rainbow image on right.
+    rainbow = win.drawImage(
+        rainbow_img,
+        x=cx + wx_twentieth,
+        y=wy_twentieth,
+        width=wx_fifth,
+        height=wy_fifth,
     )
 
     # A circle that changes size over time.
-    radius = abs(0.3 * math.sin(win.get_time()))
-    growing_circle = Circle(
-        Vertex(Position(0.0, 0.0), color=BLUE),
-        color=GREEN,
+    max_radius = wx_fifth * 2
+    radius = int(abs(max_radius * math.sin(win.get_time())))
+    win.drawCircle(
+        x=cx,
+        y=cy,
         radius=radius,
+        center_color=colors.BLUE20,
+        outer_color=colors.RED,
     )
 
-    # Specify what to draw (in order).
-    win.draw_rectangle(rainbow)
-    win.draw_circle(growing_circle)
-    win.draw_triangle(hazard_cursor)
+    # Triangle that moves with the mouse (cursor).
+    mouse_pos = win.get_mouse_pos()
+    mx, my = mouse_pos.x, mouse_pos.y
+    win.drawTri(
+        mx, my,
+        mx + wx_twentieth, my - wy_twentieth,
+        mx - wx_twentieth, my - wy_twentieth,
+        color=colors.BLUE3
+    )
 
     # Draw!
     win.update()
 win.close()
-
-# TODO(Brendan): implement below.
-# # Draw a line.
-# win.draw_line(right_side, cy, right_side, cy + wy, 3.0, *GREEN_PACKED)
-
-# # Draw a rectangle.
-# ry = y + wy - ten_percent_y
-# win.draw_rect(x, y, ten_percent_x, ten_percent_y, *RED_PACKED)

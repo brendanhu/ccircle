@@ -1,4 +1,5 @@
-import ccircle
+""" TODO(Brendan): split this into separate files. """
+from cc.image import Image
 import time
 
 North = 0
@@ -10,6 +11,7 @@ CellEmpty = 0
 CellWall = 1
 CellGoal = 2
 
+
 class Cat:
     def __init__(self, x, y):
         self.x = x
@@ -17,10 +19,10 @@ class Cat:
         self.tx = x
         self.ty = y
         self.image = [
-            ccircle.Image('cat_n.png'),
-            ccircle.Image('cat_e.png'),
-            ccircle.Image('cat_s.png'),
-            ccircle.Image('cat_w.png'),
+            Image('pyproject/scenario01/cat_n.png'),
+            Image('pyproject/scenario01/cat_e.png'),
+            Image('pyproject/scenario01/cat_s.png'),
+            Image('pyproject/scenario01/cat_w.png'),
         ]
         self.facing = West
 
@@ -113,10 +115,11 @@ class Handler:
             self.cat.x, self.cat.y = self.cat.tx, self.cat.ty
             self._moved = True
 
+
 class World:
     def __init__(self, **kwargs):
-        self.imageBG = ccircle.Image('space.png')
-        self.imageGoal = ccircle.Image('pizza.png')
+        self.imageBG = Image('space.png')
+        self.imageGoal = Image('pizza.png')
 
         if 'size' in kwargs:
             self.clear(kwargs['size'])
@@ -126,16 +129,19 @@ class World:
             raise Exception('Failed to create cat.World: keyword argument must be either size or layout')
 
     ''' Add a new free-standing object to the world '''
+
     def addObject(self, obj):
         self.objects.append(obj)
 
     ''' Clear the world to be size x size empty cells '''
+
     def clear(self, size):
         self.size = size
         self.cells = [[CellEmpty] * size for x in range(size)]
         self.objects = []
 
     ''' Draw the world to a window '''
+
     def draw(self, window):
         size = window.getSize()
         ms = min(size) - 64
@@ -148,7 +154,7 @@ class World:
 
         # Floor
         window.drawRect(ox, oy, ms, ms, 0.2, 0.2, 0.2)
-        cs = (ms - 2*b) / self.size
+        cs = (ms - 2 * b) / self.size
 
         # Floor grid
         for i in range(1, self.size):
@@ -180,8 +186,8 @@ class World:
             py = oy + b + cs * obj.y
             obj.draw(px, py, cs, window)
 
-    ''' Return the object in the world with the given name '''
     def find(self, name):
+        """ Return the object in the world with the given name """
         for obj in self.objects:
             if hasattr(obj, 'getName') and obj.getName() == name:
                 return obj
@@ -192,11 +198,12 @@ class World:
             return None
         return self.cells[x][y]
 
-    ''' Load a world from a layout string
-           X -> Main Character (a cat!)
-           W -> Wall
-           ! -> Goal (a pizza!) '''
     def load(self, layout):
+        """ Load a world from a layout string
+               X -> Main Character (a cat!)
+               W -> Wall
+               ! -> Goal (a pizza!)
+        """
         data = [x.strip() for x in layout.strip().split('\n')]
         self.clear(len(data[0]))
         for y, row in enumerate(data):
@@ -210,7 +217,7 @@ class World:
                 else:
                     self.cells[x][y] = CellEmpty
 
-    ''' Update the state of the world and the objects therein '''
     def update(self, dt):
+        """ Update the state of the world and the objects therein """
         for obj in self.objects:
             obj.update(dt)

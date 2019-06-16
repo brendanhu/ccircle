@@ -1,18 +1,21 @@
 from pathlib import Path
 
 from OpenGL.GL import glGetIntegerv, GL_MAX_TEXTURE_SIZE, glGenTextures, glBindTexture, GL_TEXTURE_2D, glTexImage2D, \
-    GL_UNSIGNED_BYTE, GL_RGBA, GL_TEXTURE_MAG_FILTER, GL_TEXTURE_MIN_FILTER, GL_TEXTURE_WRAP_S, GL_TEXTURE_WRAP_T, \
-    GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, glGenerateMipmap, glTexParameteri, GL_REPEAT
-from PIL import Image
+    GL_UNSIGNED_BYTE, GL_RGBA, GL_TEXTURE_MAG_FILTER, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, \
+    glGenerateMipmap, glTexParameteri
+from PIL import Image as pilImage
 from numpy import array, int8
 
-from cc.constant import LOGGER
+from cc._constant import LOGGER
+from cc._util import get_ccircle_image_path
 
 
-class Texture:
-    """ Load an image into a 2D texture. """
-    def __init__(self, image_path: Path):
-        self.id = Texture.__to_texture(image_path)
+class Image:
+    """ Load an image into a 2D OpenGL texture using PIL. """
+    def __init__(self, path: str):
+        """ Create an image given a path relative to the ccircle directory. """
+        resolved_path = get_ccircle_image_path(path)
+        self.id = Image.__to_texture(resolved_path)
         pass
 
     def __eq__(self, other):
@@ -39,7 +42,7 @@ class Texture:
             Verifies image dimensions and ensures there is space for another texture in OpenGL.
         """
         try:
-            img = Image.open(path).transpose(Image.FLIP_TOP_BOTTOM)
+            img = pilImage.open(path).transpose(pilImage.FLIP_TOP_BOTTOM)
         except IOError as ex:
             LOGGER.critical('Failed to open image file at %s: %s' % (path, str(ex)))
             raise
@@ -50,7 +53,7 @@ class Texture:
         if num_channels != 4:
             raise RuntimeError('TODO(Brendan) Only 4-channel images supported.')
         width, height = img.size
-        max_dimension = Texture.__max_texture_size()
+        max_dimension = Image.__max_texture_size()
         if width > max_dimension or height > max_dimension:
             raise RuntimeError('Image dimensions must be < %s.' % max_dimension)
 

@@ -1,5 +1,5 @@
-from cc.color import Color
-from cc.vertex import Vertex
+from cc._color import Color
+from cc._vertex import Vertex
 
 
 class Circle:

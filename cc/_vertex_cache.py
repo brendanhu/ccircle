@@ -1,4 +1,4 @@
-from cc.vertex import Vertex
+from cc._vertex import Vertex
 
 
 class VertexCacheReturn:
