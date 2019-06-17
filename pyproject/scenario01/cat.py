@@ -30,7 +30,7 @@ class Cat:
         ]
         self.facing = West
 
-    def draw(self, x, y, s, window):
+    def draw(self, x, y, s, window: Window):
         window.drawImage(self.image[self.facing], x, y, s, s)
 
     @staticmethod
@@ -56,8 +56,10 @@ class Handler:
         wx, wy = window.get_size()
         if self._success:
             window.drawRect(0, 0, wx, wy, 1, 0, 0.5)
+            pass
         elif self._failure:
-            window.drawRect(0, 0, wx, wy, 0, 0, 0.5)
+            # window.drawRect(0, 0, wx, wy, 0, 0, 0.5)
+            pass
 
     def _getFacingCell(self):
         if self.cat.facing == North:
@@ -135,36 +137,36 @@ class World:
 
     # noinspection PyAttributeOutsideInit
     def clear(self, size):
-        """ Clear the world to be size x size empty cells """
+        """ Clear the world to be size x size empty cells. """
         self.size = size
         self.cells = [[CellEmpty] * size for _ in range(size)]
         self.objects = []
 
     def addObject(self, obj):
-        """ Add a new free-standing object to the world """
+        """ Add a new free-standing object to the world. """
         self.objects.append(obj)
 
     def draw(self, window: Window):
-        """ Draw the world to a window """
+        """ Draw the world to a window. """
         size = window.get_size()
         ms = min(size) - 64
         ox = (size[0] - ms) / 2
         oy = (size[1] - ms) / 2
         b = 4
+        cs = (ms - 2 * b) / self.size
 
         # Background
         window.drawImage(self.imageBG, 0, 0, size[0], size[1])
 
-        # Floor
+        # Floor: centered square of side length ms
         window.drawRect(ox, oy, ms, ms, 0.2, 0.2, 0.2)
-        cs = (ms - 2 * b) / self.size
 
         # Floor grid
         for i in range(1, self.size):
             px = ox + b + cs * i
             py = oy + b + cs * i
             window.drawRect(px, oy, 1, ms, 0.3, 0.3, 0.3)
-            window.drawRect(px, oy, ms, 1, 0.3, 0.3, 0.3)
+            window.drawRect(ox, py, ms, 1, 0.3, 0.3, 0.3)
 
         # Border
         window.drawRect(ox, oy, ms, b, 1, 1, 1)

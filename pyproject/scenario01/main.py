@@ -1,10 +1,11 @@
+""" The main file to be run to display graphics. """
 from cc.window import Window
 from pyproject.scenario01 import cat
-from pyproject.scenario01 import solution
+from pyproject.scenario01.solution import Solution
 
-solver = solution.Solution()
-window = Window(win_title="Scenario 1: Space Cat Pizza Party!", fullscreen=True)
-world = cat.World(layout=solver.getLevel())
+solver = Solution()
+window = Window(win_title="Scenario 1: Space Cat Pizza Party!")
+world = cat.World(layout=Solution.getLevel())
 handler = cat.Handler(world, solver)
 
 while window.is_open():

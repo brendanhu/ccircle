@@ -29,7 +29,7 @@ class Window:
         Per OpenGL Face Culling norms, vertices for front-facing shapes should be specified in counter-clockwise order.
     """
 
-    def __init__(self, width: int = 1280, height: int = 960, win_title: str = "CC Window", fullscreen: bool = False):
+    def __init__(self, width: int = 640, height: int = 480, win_title: str = "CC Window", fullscreen: bool = False):
         """ Create window, set context and register input callbacks.
 
         Args:
@@ -42,12 +42,15 @@ class Window:
         self.__gl_setup()
 
     def update(self):
-        """ Draws triangles offered by draw_triangle() on the screen. """
+        """ Draws triangles offered by draw_triangle() on the screen.
+            Textured triangles (images) are drawn first.
+        """
         glBindVertexArray(self._vao_id)
         glClear(GL_COLOR_BUFFER_BIT)
 
-        self._triangle_vbo.draw()
+        # TODO(Brendan): this needs to support texture-on-color-on-texture draw() calls.
         self._textured_triangle_vbo.draw()
+        self._triangle_vbo.draw()
 
         Window.__clear_gl_array_buffer()
         glfw.swap_buffers(self.win)
@@ -87,8 +90,8 @@ class Window:
         if image and color:
             raise RuntimeError('Only color OR texture allowed')
         top_left = self.__pixel_to_position(x, y)
-        ndc_width = abs(self.__width_to_ndc(width))
-        ndc_height = abs(self.__height_to_ndc(height))
+        ndc_width = self.__width_to_ndc(width)
+        ndc_height = self.__height_to_ndc(height)
         rect = Rectangle(top_left, ndc_width, ndc_height, color, image)
         self.__draw_rect(rect)
 
@@ -323,13 +326,13 @@ class Window:
         return converted
 
     def __width_to_ndc(self, w) -> float:
-        """ Fit a pixel width to ndc coords -> [0.0, 2.0]. """
+        """ Fit a width to ndc coords -> [0.0, 2.0]. """
         wx, _ = self.get_size()
         converted_w = 2 * w / wx
         return converted_w
 
     def __height_to_ndc(self, h) -> float:
-        """ Fit a pixel height to ndc coords -> [0.0, 2.0]. """
+        """ Fit a height to ndc coords -> [0.0, 2.0]. """
         _, wy = self.get_size()
         converted_h = 2 * h / wy
         return converted_h

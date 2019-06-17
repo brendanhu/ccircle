@@ -8,13 +8,6 @@ from cc.window import Window
 # Create window.
 win = Window()
 
-# Misc window info.
-wx, wy = win.get_size()
-cx, cy = wx / 2, wy / 2
-wx_fifth = int(wx / 5)
-wy_fifth = int(wy / 5)
-wx_twentieth = int(wx / 20)
-wy_twentieth = int(wy / 20)
 
 # Load any images just once.
 rainbow_img = Image('pyproject/02_ccircle_hello/rainbow.png')
@@ -22,13 +15,22 @@ rainbow_img = Image('pyproject/02_ccircle_hello/rainbow.png')
 while win.is_open():
     win.clear(colors.DARK_GRAY)
 
-    # Static rectangle.
+    # Misc window info.
+    wx, wy = win.get_size()
+    cx, cy = wx / 2, wy / 2
+    wx_fifth = int(wx / 5)
+    wy_fifth = int(wy / 5)
+    wx_twentieth = int(wx / 20)
+    wy_twentieth = int(wy / 20)
+
+    # Static rectangle background.
+    border = 10
     win.drawRect(
-        x=cx + wx_twentieth,
-        y=wy - wy_fifth,
-        width=wx_fifth,
-        height=wy_twentieth,
-        r=colors.BLUE3.r, g=colors.BLUE3.g, b=colors.BLUE3.b,
+        x=border,
+        y=border,
+        width=wx - (2 * border),
+        height=wy - (2 * border),
+        r=colors.GRAY.r, g=colors.GRAY.g, b=colors.GRAY.b,
     )
 
     # Static rainbow image on right.
@@ -41,7 +43,7 @@ while win.is_open():
     )
 
     # A circle that changes size over time.
-    max_radius = wx_fifth * 2
+    max_radius = wx_fifth
     radius = int(abs(max_radius * math.sin(win.get_time())))
     win.drawCircle(
         x=cx,
@@ -58,7 +60,7 @@ while win.is_open():
         x1=mx, y1=my,
         x2=mx + wx_twentieth, y2=my + wy_twentieth,
         x3=mx - wx_twentieth, y3=my + wy_twentieth,
-        r=colors.BLUE3.r, g=colors.BLUE3.g, b=colors.BLUE3.b,
+        r=colors.PURPLE.r, g=colors.PURPLE.g, b=colors.PURPLE.b,
     )
 
     # Draw!

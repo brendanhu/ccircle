@@ -2,7 +2,7 @@ from pathlib import Path
 
 from OpenGL.GL import glGetIntegerv, GL_MAX_TEXTURE_SIZE, glGenTextures, glBindTexture, GL_TEXTURE_2D, glTexImage2D, \
     GL_UNSIGNED_BYTE, GL_RGBA, GL_TEXTURE_MAG_FILTER, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, \
-    glGenerateMipmap, glTexParameteri, GL_RGBA8, GL_RGB, GL_RED
+    glGenerateMipmap, glTexParameteri, GL_RGBA8, GL_RGB, GL_RED, glPixelStorei, GL_PACK_ALIGNMENT, GL_UNPACK_ALIGNMENT
 from PIL import Image as pilImage
 from numpy import array, int8
 
@@ -16,6 +16,7 @@ class Image:
     def __init__(self, path: str):
         """ Create an image given a path relative to the ccircle directory. """
         resolved_path = get_ccircle_image_path(path)
+        self.name = resolved_path.name
         self.id = Image.__to_texture(resolved_path)
         pass
 
@@ -47,7 +48,7 @@ class Image:
         except IOError as ex:
             LOGGER.critical('Failed to open image file at %s: %s' % (path, str(ex)))
             raise
-        LOGGER.debug('%s (size, format) = (%s, %s)' % (path, img.size, img.format))
+        LOGGER.debug('Image: %s %s' % (path.name, img.size))
 
         # Verify the image size/channels are supported.
         num_channels = len(img.split())
@@ -65,6 +66,8 @@ class Image:
         # Bind the image data to an OpenGL texture.
         texture_id = glGenTextures(1)
         glBindTexture(GL_TEXTURE_2D, texture_id)
+        glPixelStorei(GL_PACK_ALIGNMENT, 1)
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1)
         glTexImage2D(
             GL_TEXTURE_2D,
             0,
