@@ -325,11 +325,11 @@ class Window:
     def __width_to_ndc(self, w) -> float:
         """ Fit a pixel width to ndc coords -> [0.0, 2.0]. """
         wx, _ = self.get_size()
-        converted_w = w / (wx * 2)
+        converted_w = 2 * w / wx
         return converted_w
 
     def __height_to_ndc(self, h) -> float:
         """ Fit a pixel height to ndc coords -> [0.0, 2.0]. """
         _, wy = self.get_size()
-        converted_h = h / (wy * 2)
+        converted_h = 2 * h / wy
         return converted_h

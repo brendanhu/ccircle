@@ -21,9 +21,9 @@ class Rectangle:
 
         if not image:
             v1 = Vertex(top_left, color)
-            v2 = Vertex(Position(top_left.y.x + width, top_left.y.y), color)
-            v3 = Vertex(Position(top_left.y.x + width, top_left.y.y + height), color)
-            v4 = Vertex(Position(top_left.y.x, top_left.y.y + height), color)
+            v2 = Vertex(Position(top_left.x + width, top_left.y), color)
+            v3 = Vertex(Position(top_left.x + width, top_left.y - height), color)
+            v4 = Vertex(Position(top_left.x, top_left.y - height), color)
         else:
             v1 = Vertex(top_left, uv=UV(0.0, 1.0))
             v2 = Vertex(Position(top_left.x + width, top_left.y), uv=UV(1.0, 1.0))

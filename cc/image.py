@@ -2,7 +2,7 @@ from pathlib import Path
 
 from OpenGL.GL import glGetIntegerv, GL_MAX_TEXTURE_SIZE, glGenTextures, glBindTexture, GL_TEXTURE_2D, glTexImage2D, \
     GL_UNSIGNED_BYTE, GL_RGBA, GL_TEXTURE_MAG_FILTER, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, \
-    glGenerateMipmap, glTexParameteri
+    glGenerateMipmap, glTexParameteri, GL_RGBA8, GL_RGB, GL_RED
 from PIL import Image as pilImage
 from numpy import array, int8
 
@@ -12,6 +12,7 @@ from cc._util import get_ccircle_image_path
 
 class Image:
     """ Load an image into a 2D OpenGL texture using PIL. """
+
     def __init__(self, path: str):
         """ Create an image given a path relative to the ccircle directory. """
         resolved_path = get_ccircle_image_path(path)
@@ -50,8 +51,8 @@ class Image:
 
         # Verify the image size/channels are supported.
         num_channels = len(img.split())
-        if num_channels != 4:
-            raise RuntimeError('TODO(Brendan) Only 4-channel images supported.')
+        if num_channels == 2:
+            raise RuntimeError('2 channel images not supported.')
         width, height = img.size
         max_dimension = Image.__max_texture_size()
         if width > max_dimension or height > max_dimension:
@@ -67,11 +68,15 @@ class Image:
         glTexImage2D(
             GL_TEXTURE_2D,
             0,
-            GL_RGBA,
+            GL_RGBA8,
             width,
             height,
             0,
-            GL_RGBA,
+            (
+                GL_RGBA if num_channels == 4 else
+                GL_RGB if num_channels == 3 else
+                GL_RED
+            ),
             GL_UNSIGNED_BYTE,
             img_data
         )

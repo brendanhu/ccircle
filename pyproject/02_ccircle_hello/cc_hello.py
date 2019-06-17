@@ -22,8 +22,17 @@ rainbow_img = Image('pyproject/02_ccircle_hello/rainbow.png')
 while win.is_open():
     win.clear(colors.DARK_GRAY)
 
+    # Static rectangle.
+    win.drawRect(
+        x=cx + wx_twentieth,
+        y=wy - wy_fifth,
+        width=wx_fifth,
+        height=wy_twentieth,
+        r=colors.BLUE3.r, g=colors.BLUE3.g, b=colors.BLUE3.b,
+    )
+
     # Static rainbow image on right.
-    rainbow = win.drawImage(
+    win.drawImage(
         rainbow_img,
         x=cx + wx_twentieth,
         y=wy_twentieth,

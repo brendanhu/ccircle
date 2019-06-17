@@ -2,6 +2,8 @@
 from cc.image import Image
 import time
 
+from cc.window import Window
+
 North = 0
 East = 1
 South = 2
@@ -51,11 +53,11 @@ class Handler:
 
     def _draw(self, window):
         self.world.draw(window)
-        wx, wy = window.getSize()
+        wx, wy = window.get_size()
         if self._success:
-            window.drawRect(0, 0, wx, wy, 0, 1, 0, 0.5)
+            window.drawRect(0, 0, wx, wy, 1, 0, 0.5)
         elif self._failure:
-            window.drawRect(0, 0, wx, wy, 1, 0, 0, 0.5)
+            window.drawRect(0, 0, wx, wy, 0, 0, 0.5)
 
     def _getFacingCell(self):
         if self.cat.facing == North:
@@ -121,8 +123,8 @@ class Handler:
 
 class World:
     def __init__(self, **kwargs):
-        self.imageBG = Image('space.png')
-        self.imageGoal = Image('pizza.png')
+        self.imageBG = Image('pyproject/scenario01/space.png')
+        self.imageGoal = Image('pyproject/scenario01/pizza.png')
 
         if 'size' in kwargs:
             self.clear(kwargs['size'])
@@ -131,10 +133,6 @@ class World:
         else:
             raise Exception('Failed to create cat.World: keyword argument must be either size or layout')
 
-    def addObject(self, obj):
-        """ Add a new free-standing object to the world """
-        self.objects.append(obj)
-
     # noinspection PyAttributeOutsideInit
     def clear(self, size):
         """ Clear the world to be size x size empty cells """
@@ -142,9 +140,13 @@ class World:
         self.cells = [[CellEmpty] * size for _ in range(size)]
         self.objects = []
 
-    def draw(self, window):
+    def addObject(self, obj):
+        """ Add a new free-standing object to the world """
+        self.objects.append(obj)
+
+    def draw(self, window: Window):
         """ Draw the world to a window """
-        size = window.getSize()
+        size = window.get_size()
         ms = min(size) - 64
         ox = (size[0] - ms) / 2
         oy = (size[1] - ms) / 2
@@ -161,14 +163,14 @@ class World:
         for i in range(1, self.size):
             px = ox + b + cs * i
             py = oy + b + cs * i
-            window.drawLine(px, oy, px, oy + ms, 1, 0.3, 0.3, 0.3)
-            window.drawLine(ox, py, ox + ms, py, 1, 0.3, 0.3, 0.3)
+            window.drawRect(px, oy, 1, ms, 0.3, 0.3, 0.3)
+            window.drawRect(px, oy, ms, 1, 0.3, 0.3, 0.3)
 
         # Border
-        window.drawRect(ox, oy, ms, b)
-        window.drawRect(ox, oy, b, ms)
-        window.drawRect(size[0] - ox - b, oy, b, ms)
-        window.drawRect(ox, size[1] - oy - b, ms, b)
+        window.drawRect(ox, oy, ms, b, 1, 1, 1)
+        window.drawRect(ox, oy, b, ms, 1, 1, 1)
+        window.drawRect(size[0] - ox - b, oy, b, ms, 1, 1, 1)
+        window.drawRect(ox, size[1] - oy - b, ms, b, 1, 1, 1)
 
         # Grid Objects
         for y in range(self.size):
