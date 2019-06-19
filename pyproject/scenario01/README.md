@@ -1,4 +1,6 @@
-GOAL: Fill in the code in Solution.py for the function 'moveTowardPizza' to ensure that the cat finds the pizza!
+The main.py file should be run to display the scenario.
+
+GOAL: Fill in Solution.py's function 'moveTowardPizza' to ensure that the cat finds the pizza!
 
 Use the following functions to understand the cat's situation:
 

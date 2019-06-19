@@ -55,7 +55,7 @@ class Handler:
     def isBlocked(self):
         fx, fy = self._getFacingCell()
         result = self.world.getCell(fx, fy)
-        return not result or result == Cell.Wall
+        return result in [Cell.Wall, Cell.OutOfBounds]
 
     def isFacingN(self):
         return self.cat.direction == Direction.NORTH
