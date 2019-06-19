@@ -3,11 +3,16 @@ from cc._position import Position
 from cc._uv import UV
 from cc._vertex import Vertex
 from cc.image import Image
+from cc.shapes.shape import Shape
 from cc.shapes.triangle import Triangle
 
 
-class Rectangle:
+class Rectangle(Shape):
     """ A 2D rectangle comprised of 2 triangles sharing 2 vertices. """
+
+    def to_triangles(self):
+        return [self.t1, self.t2]
+
     def __init__(self, top_left: Position, width: float, height: float, color: Color = None, image: Image = None):
         """ Create a rectangle with 1 Vertex, width, height, and optional Image.
             If a texture is given, UVs are figured out internally.
@@ -17,6 +22,7 @@ class Rectangle:
         """
         if color and image:
             raise RuntimeError("Rectangle must either have a color or a texture, not both.")
+        super().__init__(image)
 
         if not image:
             v1 = Vertex(top_left, color)

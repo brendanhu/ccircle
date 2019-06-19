@@ -1,20 +1,26 @@
 from cc._vertex import Vertex
 from cc.image import Image
+from cc.shapes.shape import Shape
 
 
-class Triangle:
+class Triangle(Shape):
     """ An NDC-compatible triangle comprised of 3 Vertices and an optional texture.
 
     XXX(Brendan): make TexturedTriangle and ColoredTriangle.
     """
+
     def __init__(self, v1: Vertex, v2: Vertex, v3: Vertex, image: Image = None):
         """ A triangle comprised of 3 vertices and an optional image.
             If an image is desired, the vertices need UV coordinates--how to map the image onto the triangle.
         """
+        super().__init__()
         self.v1 = v1
         self.v2 = v2
         self.v3 = v3
         self.image = image
+
+    def to_triangles(self):
+        return [self]
 
     def is_valid(self) -> bool:
         """ Confirms the triangle is either textured or colored. """

@@ -9,15 +9,13 @@ from cc._shader_source import VertexAttribute, VertexUniform
 class Shader:
     """ Basic graphics Shader. """
 
-    def __init__(self, vertex: str, fragment: str, is_for_textures: bool = False):
+    def __init__(self, vertex: str, fragment: str):
         """
         Args:
             vertex: String containing shader source code for the vertex shader.
             fragment: String containing shader source code for the fragment shader.
-            is_for_textures: Whether this shader will be used for textures.
         """
         self.program_id = glCreateProgram()
-        self.is_for_textures = is_for_textures
         vs_id = Shader.add_shader(vertex, GL_VERTEX_SHADER)
         frag_id = Shader.add_shader(fragment, GL_FRAGMENT_SHADER)
 

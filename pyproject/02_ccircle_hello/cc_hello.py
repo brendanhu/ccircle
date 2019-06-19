@@ -1,4 +1,6 @@
-""" Run this for an adhoc test to demonstrate cc module functionality. """
+""" Run this for an adhoc test to demonstrate cc module functionality.
+    Demonstrates possibility of arbitrarily complex scenes through a 'simple' scene of texture-on-color-on-texture.
+"""
 import math
 
 import cc.colors as colors
@@ -25,7 +27,7 @@ while win.is_open():
     wx_twentieth = int(wx / 20)
     wy_twentieth = int(wy / 20)
 
-    # Rainbow backdrop.
+    # Layer 1: Rainbow backdrop.
     win.drawImage(
         image=rainbow_img,
         x=0,
@@ -34,7 +36,16 @@ while win.is_open():
         height=wy,
     )
 
-    # Semi-transparent grey box.
+    # Layer 2: Top-left: Static pizza.
+    win.drawImage(
+        image=pizza_img,
+        x=wx_fifth,
+        y=wx_fifth,
+        width=wx_fifth,
+        height=wy_fifth,
+    )
+
+    # Layer 3: Semi-transparent grey box.
     border = wx_twentieth
     win.drawRect(
         x=border,
@@ -44,7 +55,7 @@ while win.is_open():
         r=colors.GRAY.r, g=colors.GRAY.g, b=colors.GRAY.b, a=0.8
     )
 
-    # Bottom-right: A circle that changes size over time.
+    # Layer 4: Bottom-right: A circle that changes size over time.
     max_radius = wx_fifth
     radius = int(abs(max_radius * math.sin(win.get_time())))
     win.drawCircle(
@@ -55,16 +66,7 @@ while win.is_open():
         outer_color=colors.RED,
     )
 
-    # Top-left: Static pizza. TODO(Brendan): this should be on top of the grey rectangle.
-    win.drawImage(
-        image=pizza_img,
-        x=wx_fifth,
-        y=wx_fifth,
-        width=wx_fifth,
-        height=wy_fifth,
-    )
-
-    # Hazard that moves with the mouse (cursor).
+    # Top layer: Hazard triangle that moves with the mouse (cursor).
     mouse_pos = win.get_mouse_pos()
     mx, my = mouse_pos.x, mouse_pos.y
     win.drawImage(

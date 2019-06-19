@@ -50,7 +50,6 @@ class Window:
         glClear(GL_COLOR_BUFFER_BIT)
 
         # TODO(Brendan): this needs to support texture-on-color-on-texture draw() calls.
-        self._textured_triangle_vbo.draw()
         self._triangle_vbo.draw()
 
         Window.__clear_gl_array_buffer()
@@ -69,7 +68,7 @@ class Window:
         tri = Triangle(v1, v2, v3)
         self.__draw_triangle(tri)
 
-    def drawRect(self, x: int, y: int, width: int, height: int, r: float, g: float, b: float, a: float):
+    def drawRect(self, x: int, y: int, width: int, height: int, r: float, g: float, b: float, a: float = 1.0):
         """ Draw a rectangle starting at (x, y) (the top-left corner) that is width pixels wide and height pixels tall
             with given color.
 
@@ -190,10 +189,9 @@ class Window:
         """ GL Setup: VAO -> Shader -> VBO """
         self._vao_id = glGenVertexArrays(1)
         glBindVertexArray(self._vao_id)
-        self._shader = Shader(fragment=FRAGMENT_SHADER, vertex=VERTEX_SHADER)
-        self._triangle_vbo = TriangleVbo(self._shader)
-        self._tex_shader = Shader(fragment=TEXTURE_FRAGMENT_SHADER, vertex=VERTEX_SHADER, is_for_textures=True)
-        self._textured_triangle_vbo = TriangleVbo(self._tex_shader)
+
+        self._triangle_vbo = TriangleVbo()
+
         # Enable transparency.
         glEnable(GL_BLEND)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
@@ -232,10 +230,7 @@ class Window:
         Args:
             tri: triangles to draw.
         """
-        if tri.image:
-            self._textured_triangle_vbo.offer_triangle(tri)
-        else:
-            self._triangle_vbo.offer_triangle(tri)
+        self._triangle_vbo.offer_shape(tri)
 
     def __draw_rect(self, rect: Rectangle):
         """ Offers the rectangle's triangles to the vbo and draws upon next update() call.
@@ -243,12 +238,8 @@ class Window:
         Args:
             rect: rect to draw.
         """
-        if rect.t1.image:
-            self._textured_triangle_vbo.offer_triangle(rect.t1)
-            self._textured_triangle_vbo.offer_triangle(rect.t2)
-        else:
-            self._triangle_vbo.offer_triangle(rect.t1)
-            self._triangle_vbo.offer_triangle(rect.t2)
+        self._triangle_vbo.offer_shape(rect.t1)
+        self._triangle_vbo.offer_shape(rect.t2)
 
     def __draw_circle(self, circle: Circle):
         """ Offers the circle (multiple triangles) to vbo and draws upon next update() call.
@@ -283,7 +274,7 @@ class Window:
                     color=circle.color
                 ),
             )
-            self._triangle_vbo.offer_triangle(tri)
+            self._triangle_vbo.offer_shape(tri)
 
     def __set_active(self):
         glfw.make_context_current(self.win)

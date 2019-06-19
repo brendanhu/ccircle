@@ -9,40 +9,40 @@ from OpenGL.GL import GL_ELEMENT_ARRAY_BUFFER, glVertexAttribPointer, GL_FLOAT, 
 from numpy import concatenate, array, uint16
 
 from cc._shader import Shader
-from cc._shader_source import VertexAttribute, VertexUniform
+from cc._shader_source import VertexAttribute, VertexUniform, FRAGMENT_SHADER, VERTEX_SHADER, TEXTURE_FRAGMENT_SHADER
 from cc._vertex_cache import VertexCache
+from cc.shapes.shape import Shape
 from cc.shapes.triangle import Triangle
 
 
 class TriangleVbo:
     """ A class to track triangles sent to an (indexed) OpenGL VBO. """
 
-    def __init__(self, shader: Shader):
-        self.shader = shader
+    def __init__(self):
+        # Compile and link shaders.
+        self.shader = Shader(fragment=FRAGMENT_SHADER, vertex=VERTEX_SHADER)
+        self.tex_shader = Shader(fragment=TEXTURE_FRAGMENT_SHADER, vertex=VERTEX_SHADER)
 
-        # Vertex Attributes.
-        self.position_attr_idx = shader.attribute_index(VertexAttribute.POSITION_IN)
-        self.colors_attr_idx = shader.attribute_index(VertexAttribute.COLOR_IN)
-        self.uv_attr_idx = shader.attribute_index(VertexAttribute.UV_IN)
-
-        # Vertex Uniforms.
-        if shader.is_for_textures:
-            self.tex_uniform_idx = shader.uniform_index(VertexUniform.TEX)
+        # Vertex Attributes + Uniforms.
+        self.position_attr_idx = self.shader.attribute_index(VertexAttribute.POSITION_IN)
+        self.colors_attr_idx = self.shader.attribute_index(VertexAttribute.COLOR_IN)
+        self.uv_attr_idx = self.shader.attribute_index(VertexAttribute.UV_IN)
+        self.tex_uniform_idx = self.shader.uniform_index(VertexUniform.TEX)
 
         # Create the OpenGL VBOs (1 for vertex/color, 1 for indices), empty at first.
         self.vertex_vbo, self.indices_vbo = glGenBuffers(2)
         self.vertex_cache = VertexCache()
-        self.triangles = []
+        self.shapes = []
         self.vertices = []
         self.indices = []
 
-    def offer_triangle(self, tri: Triangle):
+    def offer_shape(self, shape: Shape):
         """ Offer a triangle to this vbo, and let it sort out uniqueness of its vertices.
 
         Notes:
             All vertices should be of the same type, colored or textured.
         """
-        self.triangles.append(tri)
+        self.shapes.append(shape)
 
     def add_triangle_indices(self, tri: Triangle):
         """ Add all vertices in triangle to indexed VBO:
@@ -58,90 +58,39 @@ class TriangleVbo:
 
     def draw(self):
         """ Draw some triangles. """
-        if not self.triangles:
+        for shape in self.shapes:
+            self.__draw(shape)
+        self.shapes.clear()
+
+    def __draw(self, shape: Shape):
+        """ Draw a shape (texture or colored):
+                TODO(Brendan)
+        """
+        if not shape:
             return
 
-        glUseProgram(self.shader.program_id)
-        if self.shader.is_for_textures:
-            self.__draw_textured()
-        else:
-            self.__draw_colored()
-        glUseProgram(0)
+        # Set variables based on texture or colored shape.
+        texture = shape.image
+        attr2_idx = self.uv_attr_idx if texture else self.colors_attr_idx
+        attr_num_floats = 2 if texture else 4
+        vertex_bytes = 20 if texture else 28
+        shader = self.tex_shader if texture else self.shader
 
-    def __draw_textured(self):
-        """ Draw some textured triangles:
-                1) Enable vertex attrib arrays.
-                2) Fill indexed VBO with triangles' vertices (with dedup).
-                3) Make draw call(s).
-                4) Cleanup.
+        # Use appropriate shader to use.
+        glUseProgram(shader.program_id)
 
-        Notes:
-            There is a necessary draw() call per contiguous-triangles-using-same-texture:
-                i.e. this is 3 draw() calls:
-                    Triangle1(texture1)
-                    Triangle2(texture2)
-                    Triangle3(texture1)
-                i.e. this is 2 draw() calls:
-                    Triangle1(texture1)
-                    Triangle3(texture1)
-                    Triangle2(texture2)
-            """
-        # Enable vertex attrib arrays.
+        # Enable the 2 vertex attrib arrays.
         glEnableVertexAttribArray(self.position_attr_idx)
-        glEnableVertexAttribArray(self.uv_attr_idx)
+        glEnableVertexAttribArray(attr2_idx)
 
         # VBO <- data.
-        for draw_chunk in TriangleVbo.chunk_on_same_texture(self.triangles):
-            texture = draw_chunk[0].image
-            for tri in draw_chunk:
-                self.add_triangle_indices(tri)
-
-            glBindBuffer(GL_ARRAY_BUFFER, self.vertex_vbo)
-            data_array = concatenate([v.as_array() for v in self.vertices])
-            glBufferData(GL_ARRAY_BUFFER, data_array, GL_STATIC_DRAW)
-            glVertexAttribPointer(self.position_attr_idx, 3, GL_FLOAT, GL_FALSE, 20, ctypes.c_void_p(0))
-            glVertexAttribPointer(self.uv_attr_idx, 2, GL_FLOAT, GL_FALSE, 20, ctypes.c_void_p(12))
-
-            # Index buffer <- indices.
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.indices_vbo)
-            indices = array([self.indices], dtype=uint16)
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW)
-
-            # Draw (Window <- GPU).
-            if self.shader.is_for_textures:
-                glActiveTexture(GL_TEXTURE0)
-                glBindTexture(GL_TEXTURE_2D, texture.id)
-            glDrawElements(GL_TRIANGLES, len(self.indices), GL_UNSIGNED_SHORT, ctypes.c_void_p(0))
-
-            # Cleanup for this draw call.
-            self.indices = []
-            self.vertices = []
-            self.vertex_cache.clear()
-
-        # Cleanup after all textured triangles are drawn.
-        self.triangles = []
-        glDisableVertexAttribArray(self.position_attr_idx)
-        glDisableVertexAttribArray(self.uv_attr_idx)
-
-    def __draw_colored(self):
-        """ Draw some colored triangles:
-                1) Enable vertex attrib arrays.
-                2) Fill indexed VBO with triangles' vertices (with dedup).
-                3) Make single draw call.
-                4) Cleanup.
-        """
-        # Enable vertex attrib arrays.
-        glEnableVertexAttribArray(self.position_attr_idx)
-        glEnableVertexAttribArray(self.colors_attr_idx)
-
-        for tri in self.triangles:
+        for tri in shape.to_triangles():
             self.add_triangle_indices(tri)
-        # VBO <- data.
         glBindBuffer(GL_ARRAY_BUFFER, self.vertex_vbo)
         data_array = concatenate([v.as_array() for v in self.vertices])
         glBufferData(GL_ARRAY_BUFFER, data_array, GL_STATIC_DRAW)
-        glVertexAttribPointer(self.position_attr_idx, 3, GL_FLOAT, GL_FALSE, 28, ctypes.c_void_p(0))
-        glVertexAttribPointer(self.colors_attr_idx, 4, GL_FLOAT, GL_FALSE, 28, ctypes.c_void_p(12))
+        glVertexAttribPointer(self.position_attr_idx, 3, GL_FLOAT, GL_FALSE, vertex_bytes, ctypes.c_void_p(0))
+        glVertexAttribPointer(attr2_idx, attr_num_floats, GL_FLOAT, GL_FALSE, vertex_bytes, ctypes.c_void_p(12))
 
         # Index buffer <- indices.
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.indices_vbo)
@@ -149,14 +98,16 @@ class TriangleVbo:
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW)
 
         # Draw (Window <- GPU).
+        if texture:
+            glActiveTexture(GL_TEXTURE0)
+            glBindTexture(GL_TEXTURE_2D, texture.id)
         glDrawElements(GL_TRIANGLES, len(self.indices), GL_UNSIGNED_SHORT, ctypes.c_void_p(0))
 
         # Cleanup.
         glDisableVertexAttribArray(self.position_attr_idx)
-        glDisableVertexAttribArray(self.colors_attr_idx)
-        self.indices = []
-        self.vertices = []
-        self.triangles = []
+        glDisableVertexAttribArray(attr2_idx)
+        self.indices.clear()
+        self.vertices.clear()
         self.vertex_cache.clear()
 
     @staticmethod
