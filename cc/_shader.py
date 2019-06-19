@@ -1,9 +1,9 @@
 from OpenGL.GL import glCreateProgram, GL_VERTEX_SHADER, GL_FRAGMENT_SHADER, glAttachShader, glDeleteShader, \
     glLinkProgram, glGetProgramiv, GL_LINK_STATUS, GL_TRUE, glGetProgramInfoLog, glDeleteProgram, \
     glGetAttribLocation, glCreateShader, glShaderSource, glCompileShader, glGetShaderiv, glGetShaderInfoLog, \
-    GL_COMPILE_STATUS
+    GL_COMPILE_STATUS, glGetUniformLocation
 
-from cc._shader_source import VertexAttribute
+from cc._shader_source import VertexAttribute, VertexUniform
 
 
 class Shader:
@@ -42,6 +42,9 @@ class Shader:
             location (int): Integer describing location (index) of the attribute.
         """
         return glGetAttribLocation(self.program_id, vertex_attribute.value)
+
+    def uniform_index(self, vertex_uniform: VertexUniform):
+        return glGetUniformLocation(self.program_id, vertex_uniform.value)
 
     @staticmethod
     def add_shader(source, shader_type):

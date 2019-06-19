@@ -1,10 +1,9 @@
-from cc.image import Image
-from cc._uv import UV
 from cc._color import Color
 from cc._position import Position
+from cc._uv import UV
+from cc._vertex import Vertex
 from cc.image import Image
 from cc.shapes.triangle import Triangle
-from cc._vertex import Vertex
 
 
 class Rectangle:
@@ -30,5 +29,5 @@ class Rectangle:
             v3 = Vertex(Position(top_left.x + width, top_left.y - height), uv=UV(1.0, 0.0))
             v4 = Vertex(Position(top_left.x, top_left.y - height), uv=UV(0.0, 0.0))
 
-        self.t1 = Triangle(v1, v2, v4, image=image)
+        self.t1 = Triangle(v2, v1, v4, image=image)
         self.t2 = Triangle(v2, v4, v3, image=image)

@@ -1,5 +1,5 @@
-from cc._vec4 import Vec4
 from cc._util import hash_combine
+from cc._vec4 import Vec4
 
 
 class Position(Vec4):

@@ -1,8 +1,8 @@
 from numpy import array, ndarray, float32
 
-from cc._uv import UV
 from cc._color import Color
 from cc._position import Position
+from cc._uv import UV
 
 
 class Vertex:
@@ -28,7 +28,10 @@ class Vertex:
     def as_array(self) -> ndarray:
         """ Transform this vertex into a single-precision ndarray of floats: [XYZRGB] OR [XYZUV]. """
         if self.color:
-            return array([self.pos.x, self.pos.y, self.pos.z, self.color.r, self.color.g, self.color.b], dtype=float32)
+            return array(
+                [self.pos.x, self.pos.y, self.pos.z, self.color.r, self.color.g, self.color.b, self.color.a],
+                dtype=float32
+            )
         return array([self.pos.x, self.pos.y, self.pos.z, self.uv.u, self.uv.v], dtype=float32)
 
     def __eq__(self, other) -> bool:

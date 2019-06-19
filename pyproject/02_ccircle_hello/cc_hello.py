@@ -11,6 +11,8 @@ win = Window()
 
 # Load any images just once.
 rainbow_img = Image('pyproject/02_ccircle_hello/rainbow.png')
+hazard_img = Image('pyproject/02_ccircle_hello/hazard.png')
+pizza_img = Image('pyproject/02_ccircle_hello/pizza.png')
 
 while win.is_open():
     win.clear(colors.DARK_GRAY)
@@ -23,44 +25,54 @@ while win.is_open():
     wx_twentieth = int(wx / 20)
     wy_twentieth = int(wy / 20)
 
-    # Static rectangle background.
-    border = 10
+    # Rainbow backdrop.
+    win.drawImage(
+        image=rainbow_img,
+        x=0,
+        y=0,
+        width=wx,
+        height=wy,
+    )
+
+    # Semi-transparent grey box.
+    border = wx_twentieth
     win.drawRect(
         x=border,
         y=border,
         width=wx - (2 * border),
         height=wy - (2 * border),
-        r=colors.GRAY.r, g=colors.GRAY.g, b=colors.GRAY.b,
+        r=colors.GRAY.r, g=colors.GRAY.g, b=colors.GRAY.b, a=0.8
     )
 
-    # Static rainbow image on right.
-    win.drawImage(
-        rainbow_img,
-        x=cx + wx_twentieth,
-        y=wy_twentieth,
-        width=wx_fifth,
-        height=wy_fifth,
-    )
-
-    # A circle that changes size over time.
+    # Bottom-right: A circle that changes size over time.
     max_radius = wx_fifth
     radius = int(abs(max_radius * math.sin(win.get_time())))
     win.drawCircle(
-        x=cx,
-        y=cy,
+        x=cx + wx_fifth,
+        y=cy + wx_fifth,
         radius=radius,
         center_color=colors.BLUE20,
         outer_color=colors.RED,
     )
 
-    # Triangle that moves with the mouse (cursor).
+    # Top-left: Static pizza. TODO(Brendan): this should be on top of the grey rectangle.
+    win.drawImage(
+        image=pizza_img,
+        x=wx_fifth,
+        y=wx_fifth,
+        width=wx_fifth,
+        height=wy_fifth,
+    )
+
+    # Hazard that moves with the mouse (cursor).
     mouse_pos = win.get_mouse_pos()
     mx, my = mouse_pos.x, mouse_pos.y
-    win.drawTri(
-        x1=mx, y1=my,
-        x2=mx + wx_twentieth, y2=my + wy_twentieth,
-        x3=mx - wx_twentieth, y3=my + wy_twentieth,
-        r=colors.PURPLE.r, g=colors.PURPLE.g, b=colors.PURPLE.b,
+    win.drawImage(
+        image=hazard_img,
+        x=mx - (wx_twentieth / 2),
+        y=my,
+        width=wx_twentieth,
+        height=wy_twentieth,
     )
 
     # Draw!

@@ -9,7 +9,7 @@ from OpenGL.GL import GL_ELEMENT_ARRAY_BUFFER, glVertexAttribPointer, GL_FLOAT, 
 from numpy import concatenate, array, uint16
 
 from cc._shader import Shader
-from cc._shader_source import VertexAttribute
+from cc._shader_source import VertexAttribute, VertexUniform
 from cc._vertex_cache import VertexCache
 from cc.shapes.triangle import Triangle
 
@@ -23,10 +23,11 @@ class TriangleVbo:
         # Vertex Attributes.
         self.position_attr_idx = shader.attribute_index(VertexAttribute.POSITION_IN)
         self.colors_attr_idx = shader.attribute_index(VertexAttribute.COLOR_IN)
+        self.uv_attr_idx = shader.attribute_index(VertexAttribute.UV_IN)
 
         # Vertex Uniforms.
         if shader.is_for_textures:
-            self.tex_attr_idx = shader.attribute_index(VertexAttribute.TEX_IN)
+            self.tex_uniform_idx = shader.uniform_index(VertexUniform.TEX)
 
         # Create the OpenGL VBOs (1 for vertex/color, 1 for indices), empty at first.
         self.vertex_vbo, self.indices_vbo = glGenBuffers(2)
@@ -87,7 +88,7 @@ class TriangleVbo:
             """
         # Enable vertex attrib arrays.
         glEnableVertexAttribArray(self.position_attr_idx)
-        glEnableVertexAttribArray(self.tex_attr_idx)
+        glEnableVertexAttribArray(self.uv_attr_idx)
 
         # VBO <- data.
         for draw_chunk in TriangleVbo.chunk_on_same_texture(self.triangles):
@@ -99,7 +100,7 @@ class TriangleVbo:
             data_array = concatenate([v.as_array() for v in self.vertices])
             glBufferData(GL_ARRAY_BUFFER, data_array, GL_STATIC_DRAW)
             glVertexAttribPointer(self.position_attr_idx, 3, GL_FLOAT, GL_FALSE, 20, ctypes.c_void_p(0))
-            glVertexAttribPointer(self.tex_attr_idx, 2, GL_FLOAT, GL_FALSE, 20, ctypes.c_void_p(12))
+            glVertexAttribPointer(self.uv_attr_idx, 2, GL_FLOAT, GL_FALSE, 20, ctypes.c_void_p(12))
 
             # Index buffer <- indices.
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.indices_vbo)
@@ -120,7 +121,7 @@ class TriangleVbo:
         # Cleanup after all textured triangles are drawn.
         self.triangles = []
         glDisableVertexAttribArray(self.position_attr_idx)
-        glDisableVertexAttribArray(self.tex_attr_idx)
+        glDisableVertexAttribArray(self.uv_attr_idx)
 
     def __draw_colored(self):
         """ Draw some colored triangles:
@@ -139,8 +140,8 @@ class TriangleVbo:
         glBindBuffer(GL_ARRAY_BUFFER, self.vertex_vbo)
         data_array = concatenate([v.as_array() for v in self.vertices])
         glBufferData(GL_ARRAY_BUFFER, data_array, GL_STATIC_DRAW)
-        glVertexAttribPointer(self.position_attr_idx, 3, GL_FLOAT, GL_FALSE, 24, ctypes.c_void_p(0))
-        glVertexAttribPointer(self.colors_attr_idx, 3, GL_FLOAT, GL_FALSE, 24, ctypes.c_void_p(12))
+        glVertexAttribPointer(self.position_attr_idx, 3, GL_FLOAT, GL_FALSE, 28, ctypes.c_void_p(0))
+        glVertexAttribPointer(self.colors_attr_idx, 4, GL_FLOAT, GL_FALSE, 28, ctypes.c_void_p(12))
 
         # Index buffer <- indices.
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.indices_vbo)

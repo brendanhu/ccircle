@@ -3,7 +3,8 @@ import math
 
 import glfw
 from OpenGL.GL import GL_TRUE, glGenVertexArrays, glBindVertexArray, glBindBuffer, \
-    GL_ARRAY_BUFFER, glClearColor, glClear, GL_COLOR_BUFFER_BIT
+    GL_ARRAY_BUFFER, glClearColor, glClear, GL_COLOR_BUFFER_BIT, glEnable, GL_BLEND, GL_ONE_MINUS_SRC_ALPHA, \
+    GL_SRC_ALPHA, glBlendFunc
 
 from cc._color import Color
 from cc._constant import LOGGER
@@ -68,13 +69,13 @@ class Window:
         tri = Triangle(v1, v2, v3)
         self.__draw_triangle(tri)
 
-    def drawRect(self, x: int, y: int, width: int, height: int, r: float, g: float, b: float):
+    def drawRect(self, x: int, y: int, width: int, height: int, r: float, g: float, b: float, a: float):
         """ Draw a rectangle starting at (x, y) (the top-left corner) that is width pixels wide and height pixels tall
             with given color.
 
         Notes: Here only as a wrapper around __draw_rect() to reuse materials created with CCircle v0.9.8 (Win64).
         """
-        color = Color(r, g, b)
+        color = Color(r, g, b, a)
         self.__drawRect(x, y, width, height, color)
 
     def drawImage(self, image: Image, x: int, y: int, width: int, height: int):
@@ -193,6 +194,9 @@ class Window:
         self._triangle_vbo = TriangleVbo(self._shader)
         self._tex_shader = Shader(fragment=TEXTURE_FRAGMENT_SHADER, vertex=VERTEX_SHADER, is_for_textures=True)
         self._textured_triangle_vbo = TriangleVbo(self._tex_shader)
+        # Enable transparency.
+        glEnable(GL_BLEND)
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
     def __glfw_setup(self, fullscreen, height, width, win_title):
         """ Create window, attach to this instance, make active, register input callbacks.

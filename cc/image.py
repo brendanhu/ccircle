@@ -2,9 +2,11 @@ from pathlib import Path
 
 from OpenGL.GL import glGetIntegerv, GL_MAX_TEXTURE_SIZE, glGenTextures, glBindTexture, GL_TEXTURE_2D, glTexImage2D, \
     GL_UNSIGNED_BYTE, GL_RGBA, GL_TEXTURE_MAG_FILTER, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, \
-    glGenerateMipmap, glTexParameteri, GL_RGBA8, GL_RGB, GL_RED, glPixelStorei, GL_PACK_ALIGNMENT, GL_UNPACK_ALIGNMENT
+    glGenerateMipmap, glTexParameteri, glPixelStorei, GL_UNPACK_ALIGNMENT, \
+    GL_TEXTURE_WRAP_S, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE, glTexParameterf
 from PIL import Image as pilImage
-from numpy import array, int8
+from PIL.Image import FLIP_TOP_BOTTOM
+from numpy import fromstring, uint8
 
 from cc._constant import LOGGER
 from cc._util import get_ccircle_image_path
@@ -32,7 +34,7 @@ class Image:
 
     @staticmethod
     def __to_texture(path: Path):
-        """ Convert img (BMP, IM, JPEG, PNG, etc.) to an OpenGL texture (with trilinear filtering).
+        """ Convert img (BMP, IM, JPEG, PNG, etc.) to an OpenGL texture.
 
         Args:
             path: a pathlib.Path object--the path to the image.
@@ -44,49 +46,45 @@ class Image:
             Verifies image dimensions and ensures there is space for another texture in OpenGL.
         """
         try:
-            img = pilImage.open(path).transpose(pilImage.FLIP_TOP_BOTTOM)
+            img = pilImage.open(path)
         except IOError as ex:
             LOGGER.critical('Failed to open image file at %s: %s' % (path, str(ex)))
             raise
-        LOGGER.debug('Image: %s %s' % (path.name, img.size))
 
         # Verify the image size/channels are supported.
-        num_channels = len(img.split())
-        if num_channels == 2:
-            raise RuntimeError('2 channel images not supported.')
         width, height = img.size
         max_dimension = Image.__max_texture_size()
         if width > max_dimension or height > max_dimension:
             raise RuntimeError('Image dimensions must be < %s.' % max_dimension)
 
-        # Extract image rgb.
-        img_data = array(list(img.getdata()), int8)
-        img.close()
+        # Transpose the image and convert to RGBA.
+        img_data = img.transpose(FLIP_TOP_BOTTOM).convert('RGBA')
+        img_data = fromstring(img_data.tobytes(), uint8)
 
         # Bind the image data to an OpenGL texture.
         texture_id = glGenTextures(1)
-        glBindTexture(GL_TEXTURE_2D, texture_id)
-        glPixelStorei(GL_PACK_ALIGNMENT, 1)
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1)
+        glBindTexture(GL_TEXTURE_2D, texture_id)
+        # Stretch texture; mipmaps for minification; clamp.
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR)
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE)
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE)
+
         glTexImage2D(
             GL_TEXTURE_2D,
             0,
-            GL_RGBA8,
+            GL_RGBA,
             width,
             height,
             0,
-            (
-                GL_RGBA if num_channels == 4 else
-                GL_RGB if num_channels == 3 else
-                GL_RED
-            ),
+            GL_RGBA,
             GL_UNSIGNED_BYTE,
             img_data
         )
-
-        # Trilinear filtering.
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR)
         glGenerateMipmap(GL_TEXTURE_2D)
+
+        LOGGER.debug('Loaded %dx%d image: %s' % (width, height, path.name))
+        img.close()
 
         return texture_id
