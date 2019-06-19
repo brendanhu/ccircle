@@ -10,11 +10,10 @@ from cc.window import Window
 # Create window.
 win = Window()
 
-
 # Load any images just once.
-rainbow_img = Image('pyproject/02_ccircle_hello/rainbow.png')
-hazard_img = Image('pyproject/02_ccircle_hello/hazard.png')
-pizza_img = Image('pyproject/02_ccircle_hello/pizza.png')
+rainbow_img = Image('pyproject/image/rainbow.png')
+hazard_img = Image('pyproject/image/hazard.png')
+pizza_img = Image('pyproject/image/pizza.png')
 
 while win.is_open():
     win.clear(colors.DARK_GRAY)

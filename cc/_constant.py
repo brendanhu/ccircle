@@ -2,9 +2,9 @@
 import logging
 
 MODULE_NAME = 'cc'
-LOGGER_LEVEL = 'DEBUG'
+LOGGER_LEVEL = 'INFO'
 
-# Configure Logging: INFO level for root logger, LOGGER_LEVEL for cc module.
+# Configure Logging.
 LOGGER = logging.getLogger(MODULE_NAME)
 maybe_level = logging.getLevelName(LOGGER_LEVEL)
 maybe_level = maybe_level if maybe_level else 'INFO'

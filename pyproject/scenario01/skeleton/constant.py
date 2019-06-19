@@ -1,15 +1,31 @@
-def easy():
-  return '''
+from enum import Enum
+
+
+class Direction(Enum):
+    NORTH = 0
+    EAST = 1
+    SOUTH = 2
+    WEST = 3
+
+
+class Cell(Enum):
+    OutOfBounds = 0
+    Empty = 1
+    Wall = 2
+    Goal = 3
+
+
+class Layout(Enum):
+    EASY = '''
     X-W---
     --WWWW
     --W---
     W---W-
     ---WW-
     WWWW!-
-  '''
+    '''
 
-def medium():
-  return '''
+    MEDIUM = '''
     -W-W-W-W-W
     ----------
     -WWWWWWW--
@@ -20,10 +36,9 @@ def medium():
     -W-----W!-
     -WWWWW-W-W
     -------W-W
-  '''
+    '''
 
-def hard():
-  s = '''
+    HARD = '''
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     C   |     |     | |         |   |     |   |   |     | |     |
     + +-+ + + + +-+ + + +-+-+ + +-+ + +-+ +-+ + + + +-+ + + +-+ +
@@ -85,10 +100,4 @@ def hard():
     + +-+-+-+ +-+ + +-+ + + + + +-+ + + +-+ + +-+-+-+-+ +-+-+ + +
     |         |   |     |   | |     | |     |           |     | P
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-  '''
-
-  s = '\n'.join([x.strip() for x in s.strip().split('\n')])
-  s = s.replace('+', 'W')
-  s = s.replace('-', 'W')
-  s = s.replace('|', 'W')
-  return s
+    '''
