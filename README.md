@@ -15,8 +15,6 @@
             - [ ] Get Scenario1 working.
                 - [ ] Certain things from [Image api](https://mathcircle.github.io/ccircle/apidoc_image).
             - [ ] Textured circles.
-            - [ ] Parent Shape class
-            - [ ] The shape API is atrocious lol
             - [ ] Split window.py into separate classes, leaving only public methods.
             - [ ] FPS
                 - [ ] Fonts
