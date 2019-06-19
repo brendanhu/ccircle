@@ -1,5 +1,4 @@
 """ User-facing window class that creates a window to draw on and interact with. """
-import math
 
 import glfw
 from OpenGL.GL import GL_TRUE, glGenVertexArrays, glBindVertexArray, glBindBuffer, \
@@ -19,13 +18,8 @@ from cc.shapes.triangle import Triangle
 
 
 class Window:
-    """ Window class powered by GLFW.
+    """ Window class powered by GLFW, using OpenGL 3.2+.
         Provides intuitive 'wrapper' function calls to circumvent confusing GLFW and GL nuances.
-
-    Notes:
-        Written for OpenGL 3.2+ (required for Mac: https://developer.apple.com/opengl/OpenGL-Capabilities-Tables.pdf)
-            using examples from http://www.opengl-tutorial.org/.
-        Per OpenGL Face Culling norms, vertices for front-facing shapes should be specified in counter-clockwise order.
     """
 
     def __init__(self, width: int = 640, height: int = 480, win_title: str = "CC Window", fullscreen: bool = False):
@@ -47,7 +41,6 @@ class Window:
         glBindVertexArray(self._vao_id)
         glClear(GL_COLOR_BUFFER_BIT)
 
-        # TODO(Brendan): this needs to support texture-on-color-on-texture draw() calls.
         self._indexed_vbo.draw()
 
         Window.__clear_gl_array_buffer()
@@ -82,16 +75,6 @@ class Window:
             about its origin.
         """
         self.__drawRect(x, y, width, height, image=image)
-
-    def __drawRect(self, x: int, y: int, width: int, height: int, color: Color = None, image: Image = None):
-        """ Draw a rectangle with either a color or texture. """
-        if image and color:
-            raise RuntimeError('Only color OR texture allowed')
-        top_left = self.__pixel_to_position(x, y)
-        ndc_width = self.__width_to_ndc(width)
-        ndc_height = self.__height_to_ndc(height)
-        rect = Rectangle(top_left, ndc_width, ndc_height, color, image)
-        self.__draw_rect(rect)
 
     def drawCircle(self, x: int, y: int, radius: int, center_color: Color, outer_color: Color = None):
         """ Draw a centered at (x, y) with radius radius (in pixels) and given color(s).
@@ -154,6 +137,7 @@ class Window:
 
     @staticmethod
     def close_all_windows():
+        """ Closes all glfw windows. """
         glfw.terminate()
 
     @staticmethod
@@ -175,12 +159,15 @@ class Window:
         glfw.destroy_window(self.win)
 
     def hide_cursor(self):
+        """ Hide the cursor on the window. """
         glfw.set_input_mode(self.win, glfw.CURSOR, glfw.CURSOR_HIDDEN)
 
     def show_cursor(self):
+        """ Show the cursor on the window. """
         glfw.set_input_mode(self.win, glfw.CURSOR, glfw.CURSOR_NORMAL)
 
     def toggle_maximized(self):
+        """ Maximize the window. """
         glfw.maximize_window(self.win)
 
     def __gl_setup(self):
@@ -195,11 +182,7 @@ class Window:
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
     def __glfw_setup(self, fullscreen, height, width, win_title):
-        """ Create window, attach to this instance, make active, register input callbacks.
-
-        Notes:
-            Initializes self.win
-        """
+        """ Create window, attach to this instance, make active, register input callbacks. """
         if not glfw.init():
             raise RuntimeError('Could not initialize GLFW')
         self.__set_glfw_hints()
@@ -230,6 +213,19 @@ class Window:
         """
         self._indexed_vbo.offer_shape(tri)
 
+    def __drawRect(self, x: int, y: int, width: int, height: int, color: Color = None, image: Image = None):
+        """ Draw a rectangle with either a color or texture.
+
+        Notes: Here only as a wrapper around __draw_rect() to reuse materials created with CCircle v0.9.8 (Win64).
+        """
+        if image and color:
+            raise RuntimeError('Only color OR texture allowed')
+        top_left = self.__pixel_to_position(x, y)
+        ndc_width = self.__width_to_ndc(width)
+        ndc_height = self.__height_to_ndc(height)
+        rect = Rectangle(top_left, ndc_width, ndc_height, color, image)
+        self.__draw_rect(rect)
+
     def __draw_rect(self, rect: Rectangle):
         """ Offers the rectangle's triangles to the vbo and draws upon next update() call.
 
@@ -249,30 +245,7 @@ class Window:
             This is the old-school OpenGL way to draw a circle. Perhaps conceptually easier?
             Unsure about performance compared to GL_TRIANGLE_STRIP.
         """
-        fv = circle.radius / 4.0
-        fv = max(fv, 64)
-        num_tris = int(fv)
-
-        for i in range(num_tris):
-            angle1 = math.tau * (i + 0) / fv
-            angle2 = math.tau * (i + 1) / fv
-            tri = Triangle(
-                Vertex(
-                    Position(circle.center.pos.x, circle.center.pos.y),
-                    color=circle.center.color
-                ),
-                Vertex(
-                    Position(circle.center.pos.x + circle.radius * math.cos(angle1),
-                             circle.center.pos.y + circle.radius * math.sin(angle1)),
-                    color=circle.color
-                ),
-                Vertex(
-                    Position(circle.center.pos.x + circle.radius * math.cos(angle2),
-                             circle.center.pos.y + circle.radius * math.sin(angle2)),
-                    color=circle.color
-                ),
-            )
-            self._indexed_vbo.offer_shape(tri)
+        self._indexed_vbo.offer_shape(circle)
 
     def __set_active(self):
         glfw.make_context_current(self.win)

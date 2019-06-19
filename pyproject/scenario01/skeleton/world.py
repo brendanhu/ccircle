@@ -11,16 +11,13 @@ class World:
         self.imageBG = Image('pyproject/scenario01/image/space.png')
         self.imageGoal = Image('pyproject/scenario01/image/pizza.png')
 
-        self.size = 0
-        self.cells = []
-        self.objects = []
         self.load(Solution.getLevel())
 
-    def clear(self, size):
+    def __clear(self, size):
         """ Clear the world to be size x size empty cells. """
         self.size = size
         self.cells = [[Cell.Empty] * size for _ in range(size)]
-        self.objects.clear()
+        self.objects = []
 
     def addObject(self, obj):
         """ Add a new free-standing object to the world. """
@@ -90,7 +87,7 @@ class World:
                [P, !] -> Goal (a pizza!)
         """
         data = [x.strip() for x in layout.value.strip().split('\n')]
-        self.clear(len(data[0]))
+        self.__clear(len(data[0]))
         for y, row in enumerate(data):
             for x, cell in enumerate(row):
                 if cell in ['W', '|', '+']:
