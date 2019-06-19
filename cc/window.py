@@ -9,9 +9,7 @@ from OpenGL.GL import GL_TRUE, glGenVertexArrays, glBindVertexArray, glBindBuffe
 from cc._color import Color
 from cc._constant import LOGGER
 from cc._position import Position
-from cc._shader import Shader
-from cc._shader_source import FRAGMENT_SHADER, VERTEX_SHADER, TEXTURE_FRAGMENT_SHADER
-from cc._triangle_vbo import TriangleVbo
+from cc._triangle_vbo import IndexedVbo
 from cc._vertex import Vertex
 from cc._window_input import RegisterInputFunctionality
 from cc.image import Image
@@ -50,7 +48,7 @@ class Window:
         glClear(GL_COLOR_BUFFER_BIT)
 
         # TODO(Brendan): this needs to support texture-on-color-on-texture draw() calls.
-        self._triangle_vbo.draw()
+        self._indexed_vbo.draw()
 
         Window.__clear_gl_array_buffer()
         glfw.swap_buffers(self.win)
@@ -186,11 +184,11 @@ class Window:
         glfw.maximize_window(self.win)
 
     def __gl_setup(self):
-        """ GL Setup: VAO -> Shader -> VBO """
+        """ GL Setup: VAO, VBO, glBlend """
         self._vao_id = glGenVertexArrays(1)
         glBindVertexArray(self._vao_id)
 
-        self._triangle_vbo = TriangleVbo()
+        self._indexed_vbo = IndexedVbo()
 
         # Enable transparency.
         glEnable(GL_BLEND)
@@ -230,7 +228,7 @@ class Window:
         Args:
             tri: triangles to draw.
         """
-        self._triangle_vbo.offer_shape(tri)
+        self._indexed_vbo.offer_shape(tri)
 
     def __draw_rect(self, rect: Rectangle):
         """ Offers the rectangle's triangles to the vbo and draws upon next update() call.
@@ -238,8 +236,8 @@ class Window:
         Args:
             rect: rect to draw.
         """
-        self._triangle_vbo.offer_shape(rect.t1)
-        self._triangle_vbo.offer_shape(rect.t2)
+        self._indexed_vbo.offer_shape(rect.t1)
+        self._indexed_vbo.offer_shape(rect.t2)
 
     def __draw_circle(self, circle: Circle):
         """ Offers the circle (multiple triangles) to vbo and draws upon next update() call.
@@ -274,7 +272,7 @@ class Window:
                     color=circle.color
                 ),
             )
-            self._triangle_vbo.offer_shape(tri)
+            self._indexed_vbo.offer_shape(tri)
 
     def __set_active(self):
         glfw.make_context_current(self.win)

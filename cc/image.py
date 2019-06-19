@@ -37,13 +37,13 @@ class Image:
         """ Convert img (BMP, IM, JPEG, PNG, etc.) to an OpenGL texture.
 
         Args:
-            path: a pathlib.Path object--the path to the image.
+            path: the path to the image.
 
         Returns:
             texture_id: the id of the texture loaded into OpenGL.
 
         Notes:
-            Verifies image dimensions and ensures there is space for another texture in OpenGL.
+            Verifies image dimensions and (TODO(Brendan)) ensures there is space for another texture in OpenGL.
         """
         try:
             img = pilImage.open(path)
@@ -65,12 +65,6 @@ class Image:
         texture_id = glGenTextures(1)
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1)
         glBindTexture(GL_TEXTURE_2D, texture_id)
-        # Stretch texture; mipmaps for minification; clamp.
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR)
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE)
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE)
-
         glTexImage2D(
             GL_TEXTURE_2D,
             0,
@@ -82,6 +76,12 @@ class Image:
             GL_UNSIGNED_BYTE,
             img_data
         )
+
+        # Stretch texture; mipmaps for minification; clamp.
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE)
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE)
         glGenerateMipmap(GL_TEXTURE_2D)
 
         LOGGER.debug('Loaded %dx%d image: %s' % (width, height, path.name))

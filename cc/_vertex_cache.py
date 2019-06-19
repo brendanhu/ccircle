@@ -11,12 +11,9 @@ class VertexCacheReturn:
 
 
 class VertexCache:
-    """ A fake 'cache' that tracks mapping a unique Vertex to indexed VBO. Also:
-            - Prevents duplicate vertices from being sent to GPU.
-    Notes:
-        Lifetime of mapped vertex is a single frame, reset manually via clear().
+    """ A 'cache' that tracks unique vertices for a shape. Used to prevent duplicate vertices from being sent to GPU.
 
-    XXX(Brendan): this abstraction could do something cool if we wanted.
+    XXX(Brendan): this abstraction could do something cool.
     """
 
     def __init__(self):
