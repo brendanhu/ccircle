@@ -7,6 +7,7 @@ class Color(Vec4):
     """ A (linear RGB 0-1) color with an optional alpha.
         Creation via 0-255 values is supported via Color#from255().
     """
+
     def __init__(self, r: float, g: float, b: float, a: float = 1.0):
         super().__init__(
             x=r,

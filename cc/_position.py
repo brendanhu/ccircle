@@ -4,6 +4,7 @@ from cc._vec4 import Vec4
 
 class Position(Vec4):
     """ A 2D position. """
+
     def __init__(self, x: float, y: float):
         super().__init__(x, y, 1.0, 1.0)
 

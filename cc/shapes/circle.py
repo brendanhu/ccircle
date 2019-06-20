@@ -28,7 +28,7 @@ class Circle(Shape):
 
     def to_triangles(self):
         return self.tris
-    
+
     def __calculate_triangles(self) -> List[Triangle]:
         """ Calculate the triangles needed to draw this circle on the screen.
 

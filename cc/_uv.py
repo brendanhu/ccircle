@@ -3,6 +3,7 @@ from numpy import ndarray, array, float32, allclose
 
 class UV:
     """ Abstraction for vertex UV (how to map a texture to this vertex). """
+
     def __init__(self, u: float, v: float):
         self.u = u
         self.v = v

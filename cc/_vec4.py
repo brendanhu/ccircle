@@ -14,6 +14,7 @@ class Vec4:
 
     *1: https://en.wikipedia.org/wiki/Homogeneous_coordinates
     """
+
     def __init__(self, x: float, y: float, z: float = 0.0, w: float = 1.0):
         self.x = x
         self.y = y

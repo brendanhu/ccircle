@@ -52,7 +52,7 @@ void main(void) {{
     fout_color = {rgba};
 }}
 """.format(
-   rgba=IntraShaderVariable.RGBA.value,
+    rgba=IntraShaderVariable.RGBA.value,
 )
 # UV Texture Fragment shader. Note that the .format()ed string has escaped '{' and '}'.
 TEXTURE_FRAGMENT_SHADER = """

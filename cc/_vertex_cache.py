@@ -5,6 +5,7 @@ class VertexCacheReturn:
     """ The return value from VertexCache#lookup().
         Gives the index of the vertex and whether it has already been seen (added to vbo already).
     """
+
     def __init__(self, index: int, seen: bool):
         self.index = index
         self.seen = seen

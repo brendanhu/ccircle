@@ -8,7 +8,7 @@ from OpenGL.GL import GL_TRUE, glGenVertexArrays, glBindVertexArray, glBindBuffe
 from cc._color import Color
 from cc._constant import LOGGER
 from cc._position import Position
-from cc._triangle_vbo import IndexedVbo
+from cc._indexed_vbo import IndexedVbo
 from cc._vertex import Vertex
 from cc._window_input import RegisterInputFunctionality
 from cc.image import Image
