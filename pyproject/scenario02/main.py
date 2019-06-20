@@ -2,12 +2,13 @@ import pyproject.scenario02.problem as problem
 import pyproject.scenario02.solution as solution
 from cc.colors import DARK_GRAY
 from cc.window import Window
+from pyproject.scenario02.constant import WIN_SIZE
 from pyproject.scenario02.util import accountPanel, marketPanel
 
 trader = solution.StockTrader()
 account, market = problem.create(trader)
-
-window = Window(1600, 900, 'Scenario 2: Beating the Stock Market')
+width, height = WIN_SIZE
+window = Window(width, height, 'Scenario 2: Beating the Stock Market')
 window.toggle_maximized()
 window.hide_cursor()
 wx, wy = window.get_size()

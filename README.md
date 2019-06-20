@@ -35,10 +35,9 @@
     - [ ] Full OSX support for existing cc functionality.
         - [x] replace windows-native windowing with GLFW (OS-agnostic windowing)
         - [ ] opengl++ (Mac requires OpenGL 3.2+) -> rewrite primitives rendering
-            - [ ] Get Scenario02 working with cc. 
-            - [ ] Textured circles.
             - [ ] Split window.py into separate classes, leaving only public methods.
             - [ ] XXX: [2-VAO paradigm](https://stackoverflow.com/a/8923298)--static and dynamic.
+            - [ ] XXX: textured circles.
     - [ ] Ensure Windows Support once upon OSX rewrite completion.
     - [ ] Ensure Linux Support upon OSX rewrite completion.
 - [ ] Setup.
