@@ -1,11 +1,10 @@
-from pathlib import Path
-
 from OpenGL.GL import glGetIntegerv, GL_MAX_TEXTURE_SIZE, glGenTextures, glBindTexture, GL_TEXTURE_2D, glTexImage2D, \
     GL_UNSIGNED_BYTE, GL_RGBA, GL_TEXTURE_MAG_FILTER, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, \
     glGenerateMipmap, glTexParameteri, glPixelStorei, GL_UNPACK_ALIGNMENT, \
     GL_TEXTURE_WRAP_S, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE, glTexParameterf
 from PIL import Image as pilImage
 from PIL.Image import FLIP_TOP_BOTTOM
+from PIL.Image import Image as PILImage
 from numpy import fromstring, uint8
 
 from cc._constant import LOGGER
@@ -13,13 +12,14 @@ from cc._util import get_ccircle_image_path
 
 
 class Image:
-    """ Load an image into a 2D OpenGL texture using PIL. """
+    """ An image bound to a 2D OpenGL texture. """
 
     def __init__(self, path: str):
         """ Create an image given a path relative to the ccircle directory. """
         resolved_path = get_ccircle_image_path(path)
-        self.name = resolved_path.name
-        self.id = Image.__to_texture(resolved_path)
+        img = Image.__open_image(resolved_path)
+        LOGGER.debug('Loading image: %s' % resolved_path.name)
+        self.id = Image.bind_to_texture(img)
         pass
 
     def __eq__(self, other):
@@ -33,11 +33,20 @@ class Image:
         return n
 
     @staticmethod
-    def __to_texture(path: Path):
+    def __open_image(path) -> PILImage:
+        """ Lazily open the file given by the path as a PIL Image."""
+        try:
+            return pilImage.open(path)
+        except IOError as ex:
+            LOGGER.critical('Failed to open image file at %s: %s' % (path, str(ex)))
+            raise
+
+    @staticmethod
+    def bind_to_texture(img: PILImage):
         """ Convert img (BMP, IM, JPEG, PNG, etc.) to an OpenGL texture.
 
         Args:
-            path: the path to the image.
+            img: a PIL Image object.
 
         Returns:
             texture_id: the id of the texture loaded into OpenGL.
@@ -45,12 +54,6 @@ class Image:
         Notes:
             Verifies image dimensions and (TODO(Brendan)) ensures there is space for another texture in OpenGL.
         """
-        try:
-            img = pilImage.open(path)
-        except IOError as ex:
-            LOGGER.critical('Failed to open image file at %s: %s' % (path, str(ex)))
-            raise
-
         # Verify the image size/channels are supported.
         width, height = img.size
         max_dimension = Image.__max_texture_size()
@@ -84,7 +87,6 @@ class Image:
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE)
         glGenerateMipmap(GL_TEXTURE_2D)
 
-        LOGGER.debug('Loaded %dx%d image: %s' % (width, height, path.name))
         img.close()
 
         return texture_id

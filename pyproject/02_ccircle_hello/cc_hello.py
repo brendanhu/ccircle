@@ -4,16 +4,18 @@
 import math
 
 import cc.colors as colors
+from cc.font import Font
 from cc.image import Image
 from cc.window import Window
 
 # Create window.
 win = Window()
 
-# Load any images just once.
+# Load any images or fonts just once.
 rainbow_img = Image('pyproject/image/rainbow.png')
 hazard_img = Image('pyproject/image/hazard.png')
 pizza_img = Image('pyproject/image/pizza.png')
+nova_hello = Font('../res/NovaFlat.ttf', 'hello')
 
 while win.is_open():
     win.clear(colors.DARK_GRAY)
@@ -74,6 +76,15 @@ while win.is_open():
         y=my,
         width=wx_twentieth,
         height=wy_twentieth,
+    )
+
+    # Draw some text.
+    win.drawImage(
+        image=nova_hello,
+        x=0,
+        y=0,
+        width=nova_hello.width,
+        height=nova_hello.height,
     )
 
     # Draw!
