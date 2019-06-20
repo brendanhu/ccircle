@@ -1,7 +1,17 @@
-from cc._color import Color
+import random
+
+from cc.color import Color
 from cc.font import Font
 from cc.text import Text
 from cc.window import Window
+
+letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+
+def genSymbol():
+    return (random.choice(letters)
+            + random.choice(letters)
+            + random.choice(letters))
 
 
 def lerp(x, y, t):

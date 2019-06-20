@@ -2,7 +2,7 @@ import PIL.Image as PILImage
 from PIL import ImageDraw
 from numpy import *
 
-from cc._color import Color
+from cc.color import Color
 from cc._constant import RGBA
 from cc.colors import CLEAR
 from cc.font import Font

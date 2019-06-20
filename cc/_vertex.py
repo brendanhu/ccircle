@@ -1,6 +1,6 @@
 from numpy import array, ndarray, float32
 
-from cc._color import Color
+from cc.color import Color
 from cc._position import Position
 from cc._uv import UV
 

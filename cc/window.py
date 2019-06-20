@@ -5,7 +5,7 @@ from OpenGL.GL import GL_TRUE, glGenVertexArrays, glBindVertexArray, glBindBuffe
     GL_ARRAY_BUFFER, glClearColor, glClear, GL_COLOR_BUFFER_BIT, glEnable, GL_BLEND, GL_ONE_MINUS_SRC_ALPHA, \
     GL_SRC_ALPHA, glBlendFunc
 
-from cc._color import Color
+from cc.color import Color
 from cc._constant import LOGGER
 from cc._position import Position
 from cc._indexed_vbo import IndexedVbo

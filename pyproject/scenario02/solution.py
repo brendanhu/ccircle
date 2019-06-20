@@ -3,7 +3,7 @@
 
 class StockTrader:
     def __init__(self):
-        # Set variables if you want
+        # If you want to keep track of any variables, you can initialize them here using self.variable_name = value
         pass
 
     @staticmethod
@@ -17,12 +17,12 @@ class StockTrader:
 
     @staticmethod
     def getPauseTime():
-        """ Controls how fast the simulation runs; 0 = fastest """
+        """ Controls how fast the simulation runs; 0 = fastest. """
         return 0.1
 
     @staticmethod
     def getSeed():
-        """ Use different numbers to get different random variations of the simulation """
+        """ Use different numbers to get different random variations of the simulation. """
         return 1337
 
     # noinspection PyMethodMayBeStatic

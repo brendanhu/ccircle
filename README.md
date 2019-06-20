@@ -1,5 +1,6 @@
 # [CCircle](index.md): Learn to code with Python!
 
+## Layout:
 
 ## Highlights:
 * No prior programming experience required.
@@ -31,18 +32,16 @@
 
 
 ## Bhu Checklist (Prioritized!):
-- [ ] Windows, OSX, Linux support; cc module <- ccircle functionality.
-    - [ ] Full OSX support for existing cc functionality.
-        - [x] replace windows-native windowing with GLFW (OS-agnostic windowing)
-        - [ ] opengl++ (Mac requires OpenGL 3.2+) -> rewrite primitives rendering
-            - [ ] Split window.py into separate classes, leaving only public methods.
-            - [ ] XXX: [2-VAO paradigm](https://stackoverflow.com/a/8923298)--static and dynamic.
-            - [ ] XXX: textured circles.
-    - [ ] Ensure Windows Support once upon OSX rewrite completion.
-    - [ ] Ensure Linux Support upon OSX rewrite completion.
+- [x] Full OSX support for existing cc functionality.
+    - [x] replace windows-native windowing with GLFW (OS-agnostic windowing)
+    - [x] opengl++ (Mac requires OpenGL 3.2+) -> rewrite primitives rendering
+        - [ ] XXX: [2-VAO paradigm](https://stackoverflow.com/a/8923298)--static and dynamic.
+        - [ ] XXX: textured circles.
+- [ ] Ensure Windows Support upon OSX rewrite completion.
 - [ ] Setup.
     - [ ] Get Github Pages site up.
     - [ ] Organize current setup (in docs/setup); improve experience.
     - [ ] Pretend to be new, make youtube video of setup: 'Intro to Software Development'.
     - [ ] Walk through it with someone, take notes for improvement.
 - [ ] All topics covered under Highlights.
+- [ ] XXX: *nix support.

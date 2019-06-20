@@ -1,18 +1,6 @@
 import random
 
-letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-
-
-def genSymbol():
-    return (random.choice(letters)
-            + random.choice(letters)
-            + random.choice(letters))
-
-
-def sign(x):
-    if x < 0.0:
-        return -1.0
-    return 1.0
+from pyproject.scenario02.skeleton.util import genSymbol
 
 
 class Account:

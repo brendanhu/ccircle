@@ -1,7 +1,7 @@
 import math
 from typing import List
 
-from cc._color import Color
+from cc.color import Color
 from cc._position import Position
 from cc._vertex import Vertex
 from cc.shapes.shape import Shape
