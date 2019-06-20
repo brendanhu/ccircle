@@ -1,14 +1,12 @@
-import pyproject.scenario02.problem as problem
+import pyproject.scenario02.skeleton.problem as problem
 import pyproject.scenario02.solution as solution
 from cc.colors import DARK_GRAY
 from cc.window import Window
-from pyproject.scenario02.constant import WIN_SIZE
-from pyproject.scenario02.util import accountPanel, marketPanel
+from pyproject.scenario02.skeleton.util import accountPanel, marketPanel
 
 trader = solution.StockTrader()
 account, market = problem.create(trader)
-width, height = WIN_SIZE
-window = Window(width, height, 'Scenario 2: Beating the Stock Market')
+window = Window(win_title='Scenario 2: Beating the Stock Market')
 window.toggle_maximized()
 window.hide_cursor()
 wx, wy = window.get_size()
@@ -28,6 +26,6 @@ while window.is_open():
     if (now - last) >= trader.getPauseTime():
         last = now
         trader.trade(account, market)
-        market._update()
+        market.update()
         day += 1
     window.update()

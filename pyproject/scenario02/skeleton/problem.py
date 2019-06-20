@@ -46,7 +46,7 @@ class Stock:
         self.price = 100.0 * random.uniform(0, 1)
         self.history = [self.price]
 
-    def _update(self):
+    def update(self):
         self.history.append(self.price)
         t = max(0.01, min(0.9, self.chaos))
         price = 100.0 * random.uniform(0, 1)
@@ -65,9 +65,9 @@ class StockMarket:
         if not sym in self._stocks:
             raise Exception('There are no stocks with symbol %s!' % sym)
 
-    def _update(self):
+    def update(self):
         for sym, stock in self._stocks.items():
-            stock._update()
+            stock.update()
 
     def buy(self, account, sym, quantity):
         self._checkSym(sym)

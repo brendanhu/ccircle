@@ -1,3 +1,5 @@
+TODO(Brendan): write a real readme.
+
 --- ACCOUNT ------------------------------------------------------------------
 
 account.getBalance() -> Real Number

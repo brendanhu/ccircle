@@ -1,7 +1,7 @@
 from cc.window import Window
 from pyproject.scenario01.skeleton.cat import Cat
 from pyproject.scenario01.skeleton.constant import Direction, Cell
-from pyproject.scenario01.skeleton.world import World
+from pyproject.scenario01.skeleton._world import World
 from pyproject.scenario01.solution import Solution
 
 

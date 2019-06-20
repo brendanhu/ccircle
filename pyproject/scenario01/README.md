@@ -1,3 +1,5 @@
+TODO(Brendan): write a real readme.
+
 The main.py file should be run to display the scenario.
 
 GOAL: Fill in Solution.py's function 'moveTowardPizza' to ensure that the cat finds the pizza!

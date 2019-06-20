@@ -18,6 +18,7 @@ class Solution:
         """ Smaller pause time = faster simulation. """
         return 0.01
 
+    # noinspection PyMethodMayBeStatic
     def moveTowardPizza(self, cat: Cat):
         """ Your code here! """
         pass
