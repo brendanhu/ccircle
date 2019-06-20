@@ -1,11 +1,12 @@
-""" Run this for an adhoc test to demonstrate cc module functionality.
-    Demonstrates possibility of arbitrarily complex scenes through a 'simple' scene of texture-on-color-on-texture.
+""" Run this to demonstrate the cc module's functionality.
+    Demonstrates possibility of arbitrarily complex scenes through a 'simple' scene of texture-on-color-on-texture,
+    and an fps counter.
 """
 import math
 
 import cc.colors as colors
-from cc.font import Font
 from cc.image import Image
+from cc.text import Text
 from cc.window import Window
 
 # Create window.
@@ -15,8 +16,10 @@ win = Window()
 rainbow_img = Image('pyproject/image/rainbow.png')
 hazard_img = Image('pyproject/image/hazard.png')
 pizza_img = Image('pyproject/image/pizza.png')
-nova_hello = Font('../res/NovaFlat.ttf', 'hello')
+nova_flat_26 = Text.load_ttf_font('pyproject/res/NovaFlat.ttf', 26)
 
+last_update_and_fps = [0.0, 0.0]
+last_frame_time = win.get_time()
 while win.is_open():
     win.clear(colors.DARK_GRAY)
 
@@ -46,13 +49,13 @@ while win.is_open():
         height=wy_fifth,
     )
 
-    # Layer 3: Semi-transparent grey box.
-    border = wx_twentieth
+    # Layer 3: Semi-transparent gray box.
+    gray_box_border = wx_twentieth
     win.drawRect(
-        x=border,
-        y=border,
-        width=wx - (2 * border),
-        height=wy - (2 * border),
+        x=gray_box_border,
+        y=gray_box_border,
+        width=wx - (2 * gray_box_border),
+        height=wy - (2 * gray_box_border),
         r=colors.GRAY.r, g=colors.GRAY.g, b=colors.GRAY.b, a=0.8
     )
 
@@ -78,14 +81,20 @@ while win.is_open():
         height=wy_twentieth,
     )
 
-    # Draw some text.
-    win.drawImage(
-        image=nova_hello,
-        x=0,
-        y=0,
-        width=nova_hello.width,
-        height=nova_hello.height,
+    # FPS counter = 1/(time since last frame).
+    cur_time = win.get_time()
+    update_frequency_seconds = 0.25
+    if int(cur_time) > 0 and (cur_time - last_update_and_fps[0] > update_frequency_seconds):
+        dt = cur_time - last_frame_time
+        last_update_and_fps[1] = 1 / dt
+        last_update_and_fps[0] = cur_time
+    fps_text = Text(text=f'FPS: {last_update_and_fps[1]:3.0f}', font=nova_flat_26, color=colors.DARK_GRAY)
+    win.drawText(
+        text=fps_text,
+        x=wx - fps_text.width - gray_box_border,
+        y=wy - fps_text.height - gray_box_border
     )
+    last_frame_time = cur_time
 
     # Draw!
     win.update()

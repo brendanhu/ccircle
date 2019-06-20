@@ -1,6 +1,7 @@
 """ Wow look at all these colors. """
 from cc._color import Color
 
+CLEAR = Color.from255(0, 0, 0, 0)
 BLACK = Color.from255(0, 0, 0)
 WHITE = Color.from255(255, 255, 255)
 WHITE2 = Color.from255(250, 235, 215)

@@ -1,3 +1,5 @@
+from typing import Tuple
+
 from cc._vec4 import Vec4
 
 
@@ -27,10 +29,18 @@ class Color(Vec4):
 
     @staticmethod
     def from255(r: int, g: int, b: int, a: float = 1.0):
-        """ Create a color via sRGB values. Alpha should still be within [0.0, 1.0]"""
+        """ Create a color via sRGB [0-255] values. Alpha should still be within [0.0, 1.0]"""
         return Color(
             r / 255.0,
             g / 255.0,
             b / 255.0,
             a
         )
+
+    def to255Tuple(self) -> Tuple[int, int, int, int]:
+        """ Convert a color to its sRGB [0-255] values with no alpha. """
+        return \
+            int(self.r * 255), \
+            int(self.g * 255), \
+            int(self.b * 255), \
+            int(self.a * 255)

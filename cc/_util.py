@@ -8,6 +8,9 @@ def hash_combine(seed, hashed):
 
 
 def get_ccircle_image_path(relative_path: str):
-    """ Get the pathlib.Path obj for the path relative to the ccircle directory."""
-    cc_dir = Path(__file__).resolve().parent.parent
-    return cc_dir.joinpath(relative_path)
+    """ Get the pathlib.Path obj for the path relative to the ccircle directory.
+
+    TODO(Brendan): Throws an exception for file not found.
+    """
+    ccircle_dir = Path(__file__).resolve().parent.parent
+    return ccircle_dir.joinpath(relative_path)

@@ -1,3 +1,5 @@
+from typing import List, Tuple
+
 from numpy import allclose
 
 
@@ -27,6 +29,5 @@ class Vec4:
     def __str__(self) -> str:
         return "[x, y, z, w] = [%.4f, %.4f, %.4f, %.4f]" % (self.x, self.y, self.z, self.w)
 
-    def as_list(self) -> list:
+    def as_list(self) -> List[float]:
         return [self.x, self.y, self.z, self.w]
-

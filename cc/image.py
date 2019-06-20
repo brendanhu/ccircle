@@ -7,7 +7,7 @@ from PIL.Image import FLIP_TOP_BOTTOM
 from PIL.Image import Image as PILImage
 from numpy import fromstring, uint8
 
-from cc._constant import LOGGER
+from cc._constant import LOGGER, RGBA
 from cc._util import get_ccircle_image_path
 
 
@@ -61,7 +61,7 @@ class Image:
             raise RuntimeError('Image dimensions must be < %s.' % max_dimension)
 
         # Transpose the image and convert to RGBA.
-        img_data = img.transpose(FLIP_TOP_BOTTOM).convert('RGBA')
+        img_data = img.transpose(FLIP_TOP_BOTTOM).convert(RGBA)
         img_data = fromstring(img_data.tobytes(), uint8)
 
         # Bind the image data to an OpenGL texture.

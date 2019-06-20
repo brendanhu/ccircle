@@ -15,6 +15,7 @@ from cc.image import Image
 from cc.shapes.circle import Circle
 from cc.shapes.rectangle import Rectangle
 from cc.shapes.triangle import Triangle
+from cc.text import Text
 
 
 class Window:
@@ -69,11 +70,20 @@ class Window:
         self.__drawRect(x, y, width, height, color)
 
     def drawImage(self, image: Image, x: int, y: int, width: int, height: int):
-        """ Draw the image window at the point (x, y) and with size width x height pixels.
+        """ Draw the image on the window at the point (x, y) and with size width x height pixels.
 
         TODO(Brendan): The optional angle parameter can be used to draw the image with a rotation of angle degrees
             about its origin.
         """
+        self.__drawRect(x, y, width, height, image=image)
+
+    def drawText(self, text: Text, x: int, y: int):
+        """ Draws the text on the window at the point (x, y) with fixed width and height
+                as determined by the font renderer in text.py.
+        """
+        width = text._width
+        height = text._height
+        image = text
         self.__drawRect(x, y, width, height, image=image)
 
     def drawCircle(self, x: int, y: int, radius: int, center_color: Color, outer_color: Color = None):

@@ -38,8 +38,6 @@ Hard ![scenario01_hard](screenshots/scenario01_hard.png)
             - [ ] Get Scenario02 working with cc. 
             - [ ] Textured circles.
             - [ ] Split window.py into separate classes, leaving only public methods.
-            - [ ] FPS
-                - [ ] Fonts
             - [ ] XXX: [2-VAO paradigm](https://stackoverflow.com/a/8923298)--static and dynamic.
     - [ ] Ensure Windows Support once upon OSX rewrite completion.
     - [ ] Ensure Linux Support upon OSX rewrite completion.
