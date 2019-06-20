@@ -1,5 +1,3 @@
-import time
-
 import pyproject.scenario02.problem as problem
 import pyproject.scenario02.solution as solution
 from cc.colors import DARK_GRAY
@@ -12,19 +10,18 @@ account, market = problem.create(trader)
 window = Window(1600, 900, 'Scenario 2: Beating the Stock Market')
 wx, wy = window.get_size()
 
-# TODO(Brendan): after fonts work.
-fMenu = cc.Font('../res/NovaFlat.ttf')
-fMono = cc.Font('../res/FiraMono.ttf')
+fMenu_path = 'pyproject/res/NovaFlat.ttf'
+fMono_path = 'pyproject/res/FiraMono.ttf'
 
 day = 1
-last = time.time() - trader.getPauseTime()
+last = window.get_time() - trader.getPauseTime()
 while window.is_open():
     window.clear(DARK_GRAY)
 
-    accountPanel(window, fMenu, fMono, account, wy, day)
-    marketPanel(window, fMenu, market, wx, wy, day)
+    accountPanel(window, fMenu_path, fMono_path, account, wy, day)
+    marketPanel(window, fMenu_path, market, wx, wy, day)
 
-    now = time.time()
+    now = window.get_time()
     if (now - last) >= trader.getPauseTime():
         last = now
         trader.trade(account, market)

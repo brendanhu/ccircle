@@ -5,6 +5,7 @@
 import math
 
 import cc.colors as colors
+from cc.font import Font
 from cc.image import Image
 from cc.text import Text
 from cc.window import Window
@@ -16,7 +17,7 @@ win = Window()
 rainbow_img = Image('pyproject/image/rainbow.png')
 hazard_img = Image('pyproject/image/hazard.png')
 pizza_img = Image('pyproject/image/pizza.png')
-nova_flat_26 = Text.load_ttf_font('pyproject/res/NovaFlat.ttf', 26)
+nova_flat_26 = Font('pyproject/res/NovaFlat.ttf', 26)
 
 last_update_and_fps = [0.0, 0.0]
 last_frame_time = win.get_time()
