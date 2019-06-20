@@ -15,6 +15,11 @@ class Font:
     font_cache = dict()
 
     def __init__(self, font_path: str, pt: int):
+        """
+        Params:
+            font_path: the path to the font, relative to the ccircle directory.
+            pt: the size of the font in points.
+        """
         self.pt = pt
         self.ttf_font = self._get_or_load_font(font_path, pt)
 
@@ -27,12 +32,12 @@ class Font:
         resolved_path = get_ccircle_image_path(font_path)
         resolved_path_str = str(resolved_path)
         cache_key = (resolved_path_str, pt)
-        maybe_font = self.font_cache.get(cache_key)
-        if not maybe_font:
-            font = Font._load_ttf_font(resolved_path, pt)
-            self.font_cache[cache_key] = font
-            maybe_font = font
-        return maybe_font
+        font = self.font_cache.get(cache_key)
+        if not font:
+            new_font = Font._load_ttf_font(resolved_path, pt)
+            self.font_cache[cache_key] = new_font
+            font = new_font
+        return font
 
     @staticmethod
     def _load_ttf_font(resolved_path: Path, pt) -> FreeTypeFont:

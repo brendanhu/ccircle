@@ -8,6 +8,8 @@ trader = solution.StockTrader()
 account, market = problem.create(trader)
 
 window = Window(1600, 900, 'Scenario 2: Beating the Stock Market')
+window.toggle_maximized()
+window.hide_cursor()
 wx, wy = window.get_size()
 
 fMenu_path = 'pyproject/res/NovaFlat.ttf'

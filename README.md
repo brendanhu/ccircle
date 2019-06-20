@@ -25,9 +25,9 @@
 
 ## Screenshots:
 ### Scenario01 
-Easy ![scenario01_easy](screenshots/scenario01_easy.png)
-Medium ![scenario01_medium](screenshots/scenario01_medium.png)
-Hard ![scenario01_hard](screenshots/scenario01_hard.png)
+![](screenshots/scenario01_easy.png)
+### Scenario02
+![](screenshots/scenario02.png)
 
 
 ## Bhu Checklist (Prioritized!):
