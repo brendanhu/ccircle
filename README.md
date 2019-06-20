@@ -24,9 +24,9 @@
 
 
 ## Screenshots:
-### Scenario01 
+### Scenario 1
 ![](screenshots/scenario01_easy.png)
-### Scenario02
+### Scenario 2
 ![](screenshots/scenario02.png)
 
 

@@ -1,6 +1,5 @@
 import PIL.Image as PILImage
 from PIL import ImageDraw
-from PIL.ImageFont import FreeTypeFont
 from numpy import *
 
 from cc._color import Color
