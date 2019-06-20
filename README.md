@@ -1,7 +1,5 @@
 # [CCircle](index.md): Learn to code with Python!
 
-## Layout:
-
 ## Highlights:
 * No prior programming experience required.
 * Through games, learn the fundamentals of a breadth of computer science topics:
@@ -23,6 +21,15 @@
   
 <sup>1: As much as possible without re-inventing the wheel.<sup>
 
+## Project Layout (Student Perspective):
+The following describes this project's directory structure as it concerns a student (you):
+* **cc**: The code for the cc python module.
+* **pyproject**: The projects you will work on (likely to be moved to another repository soon).
+  * **scenarioXX**: All code for a scenario XX. The only file you will write code in is solution.py.
+    * **skeleton**: Skeleton code given by the professor.
+    * **README.md**: A document detailing the scenario. 
+    * **scenarioXX.py**: The python file to run to test out your code / display the window.
+    * **solution.py**: A file with an incomplete function for you to complete. 
 
 ## Screenshots:
 ### Scenario 1
