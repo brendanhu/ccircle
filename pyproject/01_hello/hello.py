@@ -30,5 +30,6 @@ for greeting in hello_world:
 def make_greeting():
     return random.choice(hello).capitalize() + ' ' + random.choice(world) + '!'
 
+
 for i in range(10):
     print(make_greeting())

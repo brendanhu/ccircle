@@ -21,14 +21,14 @@ function ensure_glfw_shared_library() {
     local canonical_dylib_name='libglfw.3.3.dylib'
     local installed_dylib_base="/usr/local/Cellar/glfw/3.3/lib"
     local installed_dylib_file="$installed_dylib_base/$canonical_dylib_name"
-    [[ -f $installed_dylib_file ]] || { echo >&2 "Was expecting glfw dylib at location $installed_dylib_file"; \
+    [[ -f ${installed_dylib_file} ]] || { echo >&2 "Was expecting glfw dylib at location $installed_dylib_file"; \
     exit 1;}
 
      # Check for the 'correctly' named dylib, and exit if exists.
     if [[ ! -f "$installed_dylib_base/$required_dylib_name" ]]; then
         local command="ln -sf $installed_dylib_base/$canonical_dylib_name $installed_dylib_base/$required_dylib_name"
         echo >&2 "Creating a symlink for expected pyGlfw filename: $command"
-        eval "$command"
+        eval "${command}"
     fi
 
     echo >&2 "glfw shared library install confirmed."
