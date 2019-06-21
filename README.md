@@ -1,6 +1,27 @@
-# [CCircle](index.md): Learn to code with Python!
+# CCircle: Learn to code with Python!
 
-## Highlights:
+* [Setup](#Setup)
+* [Screenshots](#Screenshots)
+* [Highlights](#Highlights)
+* [Ccircle_Structure](#Ccircle_Structure)
+* [TODO](#TODO)
+
+
+## Setup
+1. [This page](index.md) will guide you through setting up Python and an IDE (PyCharm) on your computer.
+2. The install script provided in `ccircle/cc/install` will setup up python dependencies.
+
+TODO(Brendan): this should be one step.
+
+
+## Screenshots
+### Scenario 1
+![](cc/screenshots/scenario01_easy.png)
+### Scenario 2
+![](cc/screenshots/scenario02.png)
+
+
+## Highlights
 * No prior programming experience required.
 * Through games, learn the fundamentals of a breadth of computer science topics:
   * Object Oriented Programming (OOP)
@@ -21,34 +42,32 @@
   
 <sup>1: As much as possible without re-inventing the wheel.<sup>
 
-## Project Layout (Student Perspective):
+
+## Ccircle_Structure
 The following describes this project's directory structure as it concerns a student (you):
-* **cc**: The code for the cc python module. You shouldn't modify anything in this directory.
-* **cc_student**: Contains all exercises (labs/scenarios/projects) you will work on.
-  * **assets**: Things like fonts and images we will use for various labs/projects.
-  * **docs**: Documents (PDFs, markdown notes) to be read for various labs/projects.
-  * **hello_world**: Hello-world-type python files (that demonstrate functionality or validate system setup).
-  * **scenarioXX**: All code for a scenario XX. The only file you will write code in is solution.py.
-    * **skeleton**: Skeleton code given by the professor.
-    * **README.md**: A document detailing the scenario. 
-    * **scenarioXX.py**: The python file to run to test out your code / display the window.
-    * **solution.py**: A file with an incomplete function for you to complete. 
-  * **incomplete**: Incomplete exercises.
-* **screenshots**: Screenshots used for the webpage.
-
-## Screenshots:
-### Scenario 1
-![](cc/screenshots/scenario01_easy.png)
-### Scenario 2
-![](cc/screenshots/scenario02.png)
+* **ccircle**: The base directory.
+  * **cc**: The code for the cc python module. You shouldn't modify anything in this directory.
+    * **install**: Install scripts.
+  * **cc_student**: Contains all exercises (labs/scenarios/projects) you will work on.
+    * **assets**: Things like fonts and images we will use for various labs/projects.
+    * **docs**: Documents (PDFs, markdown notes) to be read for various labs/projects.
+    * **hello_world**: Hello-world-type python files (that demonstrate functionality or validate system setup).
+    * **scenarioXX**: All code for a scenario XX. The only file you will write code in is solution.py.
+      * **skeleton**: Skeleton code given by the professor.
+      * **README.md**: A document detailing the scenario.
+      * **scenarioXX.py**: The python file to run to test out your code / display the window.
+      * **solution.py**: A file with an incomplete function for you to complete.
+    * **incomplete**: Incomplete exercises.
+  * **screenshots**: Screenshots used for the webpage.
 
 
-## Bhu Checklist (Prioritized!):
+## TODO
 - [x] Full OSX support for existing cc functionality.
     - [x] replace windows-native windowing with GLFW (OS-agnostic windowing)
     - [x] opengl++ (Mac requires OpenGL 3.2+) -> rewrite primitives rendering
         - [ ] XXX: [2-VAO paradigm](https://stackoverflow.com/a/8923298)--static and dynamic.
         - [ ] XXX: textured circles.
+- [ ] Unit Tests (against stored image).
 - [ ] Ensure Windows Support upon OSX rewrite completion.
 - [ ] Setup.
     - [ ] Get Github Pages site up.
