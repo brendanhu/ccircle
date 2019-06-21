@@ -1,5 +1,6 @@
 # CCircle: Learn to code with Python!
 
+## Table of Contents
 * [Setup](#Setup)
 * [Screenshots](#Screenshots)
 * [Highlights](#Highlights)
