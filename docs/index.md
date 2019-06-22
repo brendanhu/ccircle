@@ -1,24 +1,28 @@
+* TOC
+{:toc}
+
 ## Setup
 > Step-by-step instructions--with screenshots--to get you running Ccircle effortlessly.
 
-### [Ccircle.Setup](environment_setup/index.md)
+[Ccircle.Setup](environment_setup/index.md)
 
 ## Updating Ccircle
 > How to get new instructor code.
-* ### [Ccircle.Update](environment_setup/git/pull_staff_changes/pullStaffChanges.md)
+
+[Ccircle.Update](environment_setup/git/pull_staff_changes/pullStaffChanges.md)
 
 
-## Student Resources
-> Hand-built reference PDF and exercises.
+## Resources
+> Hand-built reference PDF and exercises for students.
 
-* ### [Python Quick Reference](Python_Quick_Reference.pdf)
-* ### Labs:
-  * #### [Python Lists, Functions and Objects](labs/lab03.md)
-  * #### [Python Dictionaries](labs/lab04.md)
+* [Python Quick Reference](Python_Quick_Reference.pdf)
+* Labs:
+  * [Python Lists, Functions and Objects](labs/lab03.md)
+  * [Python Dictionaries](labs/lab04.md)
 
 
-## Ccircle Codebase
-The following gives a brief summary of the codebase's directory structure as it concerns a student (you):
+## Ccircle Codebase Explained
+The following gives a brief summary of the `ccircle` directory structure as it concerns a student (you):
 * [ccircle](https://github.com/brendanhu/ccircle/tree/master/cc):
     The base directory.
   * [cc](https://github.com/brendanhu/ccircle/tree/master/cc):
@@ -48,10 +52,10 @@ The following gives a brief summary of the codebase's directory structure as it 
     The raw versions of documents to be read for various labs/projects; they are presented in a prettier form via Github Pages.
 
 
-## Git
+## Git Walkthroughs
 > If you want to save your work on the could, you can try using git!
 
-* ### [Registering for GitHub](environment_setup/git/github_register/githubRegister.md)
-* ### [Downloading Git](environment_setup/git/git_download/git_download.md)
-* ### [Saving Code Online Using Git](environment_setup/git/git_push/saveToGit.md)
-* ### [Pulling Saved Code From GitHub On a Different Computer](environment_setup/git/git_new_clone/gitNewClone.md)
+* [Registering for GitHub](environment_setup/git/github_register/githubRegister.md)
+* [Downloading Git](environment_setup/git/git_download/git_download.md)
+* [Saving Code Online Using Git](environment_setup/git/git_push/saveToGit.md)
+* [Pulling Saved Code From GitHub On a Different Computer](environment_setup/git/git_new_clone/gitNewClone.md)
