@@ -1,5 +1,5 @@
 # CCircle.Docs.Index
-> ##### Previous -> [Coding Circle](../../README.md)<hr>
+> ##### Previous -> [Coding Circle](../README.md)<hr>
 
 ## Setup
 > Step-by-step setup guide (with screenshots!) to get you running Ccircle.

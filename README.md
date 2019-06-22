@@ -1,4 +1,4 @@
-![](res/screenshots/coding_circle.jpeg)
+![](screenshots/coding_circle.jpeg)
 >Learn to code via interactive games!
 <hr>
 
@@ -10,14 +10,14 @@
 
 
 ## Setup
-See the [setup](res/docs/environment_setup/index.md) section of [the docs](res/docs/index.md).
+See the [setup](docs/environment_setup/index.md) section of [the docs](docs/index.md).
 
 
 ## Screenshots
 ### Scenario 1
-![](res/screenshots/scenario01_easy.png)
+![](screenshots/scenario01_easy.png)
 ### Scenario 2
-![](res/screenshots/scenario02.png)
+![](screenshots/scenario02.png)
 
 
 ## Highlights
