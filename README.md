@@ -1,18 +1,20 @@
-# CCircle: Learn to code with Python!
+![](cc/screenshots/coding_circle.jpeg)
+>Learn to code via interactive games!
+<hr>
 
-## Table of Contents
+### Table of Contents
 * [Setup](#Setup)
 * [Screenshots](#Screenshots)
 * [Highlights](#Highlights)
-* [Ccircle_Structure](#Ccircle_Structure)
-* [TODO](#TODO)
+* [Codebase](#Codebase)
 
 
 ## Setup
+*Currently only confirmed for Mac OS.*
 1. [This page](index.md) will guide you through setting up Python and an IDE (PyCharm) on your computer.
 2. The install script provided in `ccircle/cc/install` will setup up python dependencies.
 
-TODO(Brendan): this should be one step.
+TODO(Brendan): this should be one (OS-agnostic) step...
 
 
 ## Screenshots
@@ -25,18 +27,21 @@ TODO(Brendan): this should be one step.
 ## Highlights
 * No prior programming experience required.
 * Through games, learn the fundamentals of a breadth of computer science topics:
-  * Object Oriented Programming (OOP)
-  * Data Structures
-  * Audio Synthesis
-  * AI
-  * Machine Learning
-  * Security / Cryptography 
-  * Sandbox 2D Game Development
-  * Multi-player Game Development: Client/Server (http & tcp)
-  * Various 3D Graphics topics:
-    * Quaternions and matrix math
-    * Ray-tracing
-    * Bounding Boxes and Object collision
+    * Object Oriented Programming (OOP)
+    * Sandbox 2D Game Development
+    * Multi-player Game Development: Client/Server (http & tcp)
+    * TODO
+        * Audio Synthesis
+        * Data Structures
+        * Databases
+        * AI
+        * Machine Learning
+        * Security / Cryptography 
+        * Various 3D Graphics topics:
+            * Quaternions and matrix math
+            * Ray-tracing
+            * Bounding Boxes and Object collision
+        
 * Learn to use a professional development toolchain.
 * Everything is written from scratch in Python<sup>1</sup>, 
     so you can explore 'how does this work?' as much as you want.
@@ -44,8 +49,8 @@ TODO(Brendan): this should be one step.
 <sup>1: As much as possible without re-inventing the wheel.<sup>
 
 
-## Ccircle_Structure
-The following describes this project's directory structure as it concerns a student (you):
+## Codebase 
+The following describes this codebase's directory structure as it concerns a student (you):
 * **ccircle**: The base directory.
   * **cc**: The code for the cc python module. You shouldn't modify anything in this directory.
     * **install**: Install scripts.
@@ -71,9 +76,15 @@ The following describes this project's directory structure as it concerns a stud
 - [ ] Unit Tests (against stored image).
 - [ ] Ensure Windows Support upon OSX rewrite completion.
 - [ ] Setup.
-    - [ ] Get Github Pages site up.
+    - [ ] Get Github Pages site up, perhaps use GitBooks?.
+    - [ ] Slack community.
     - [ ] Organize current setup (in docs/setup); improve experience.
     - [ ] Pretend to be new, make youtube video of setup: 'Intro to Software Development'.
     - [ ] Walk through it with someone, take notes for improvement.
 - [ ] All topics covered under Highlights.
+  - [ ] XXX: 
+    - [ ] Adapt things from [intro to python pdf](https://python.swaroopch.com/problem_solving.html)
+    - [ ] Scenario or walkthrough like 
+        [Writing a Program that Edits my Videos](https://www.youtube.com/watch?v=0ZeO0IQaJ-A)
+        - [ ] Slack community.
 - [ ] XXX: *nix support.
