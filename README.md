@@ -69,11 +69,11 @@ The following describes this codebase's directory structure as it concerns a stu
 - [ ] Unit Tests (against stored image).
 - [ ] Ensure Windows Support upon OSX rewrite completion.
 - [ ] Setup.
-    - [ ] Get Github Pages site up, perhaps use GitBooks?.
-    - [ ] Slack community.
-    - [ ] Organize current setup (in docs/setup); improve experience.
+    - [ ] Template /generate endpoint instead of cloning repo.
+    - [ ] Use GitBooks?.
     - [ ] Pretend to be new, make youtube video of setup: 'Intro to Software Development'.
     - [ ] Walk through it with someone, take notes for improvement.
+    - [ ] Slack community.
 - [ ] All topics covered under Highlights.
   - [ ] XXX: 
     - [ ] Adapt things from [intro to python pdf](https://python.swaroopch.com/problem_solving.html)
