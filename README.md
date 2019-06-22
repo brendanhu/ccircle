@@ -10,7 +10,7 @@
 
 
 ## Setup
-See the setup section of [the docs](res/docs/index.md).
+See the [setup](res/docs/environment_setup/index.md) section of [the docs](res/docs/index.md).
 
 
 ## Screenshots
