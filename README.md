@@ -1,4 +1,4 @@
-![](cc/screenshots/coding_circle.jpeg)
+![](res/screenshots/coding_circle.jpeg)
 >Learn to code via interactive games!
 <hr>
 
@@ -10,25 +10,24 @@
 
 
 ## Setup
-*Currently only confirmed for Mac OS.*
-1. [This page](index.md) will guide you through setting up Python and an IDE (PyCharm) on your computer.
-2. The install script provided in `ccircle/cc/install` will setup up python dependencies.
-
-TODO(Brendan): this should be one (OS-agnostic) step...
+See the setup section of [the docs](res/docs/index.md).
 
 
 ## Screenshots
 ### Scenario 1
-![](cc/screenshots/scenario01_easy.png)
+![](res/screenshots/scenario01_easy.png)
 ### Scenario 2
-![](cc/screenshots/scenario02.png)
+![](res/screenshots/scenario02.png)
 
 
 ## Highlights
 * No prior programming experience required.
-* Through games, learn the fundamentals of a breadth of computer science topics:
+* Learn to use a professional development toolchain.
+* Almost everything is written in Python,
+    so you can explore 'how does this work?' as much as you want.
+* Learn the fundamentals of a breadth of computer science topics:
     * Object Oriented Programming (OOP)
-    * Sandbox 2D Game Development
+    * 2D Game Development (Modern OpenGL 3.2+)
     * Multi-player Game Development: Client/Server (http & tcp)
     * TODO
         * Audio Synthesis
@@ -41,13 +40,7 @@ TODO(Brendan): this should be one (OS-agnostic) step...
             * Quaternions and matrix math
             * Ray-tracing
             * Bounding Boxes and Object collision
-        
-* Learn to use a professional development toolchain.
-* Everything is written from scratch in Python<sup>1</sup>, 
-    so you can explore 'how does this work?' as much as you want.
   
-<sup>1: As much as possible without re-inventing the wheel.<sup>
-
 
 ## Codebase 
 The following describes this codebase's directory structure as it concerns a student (you):
