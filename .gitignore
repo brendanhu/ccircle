@@ -1,3 +1,6 @@
 .idea/
 .DS_Store
 **/__pycache__/*
+
+docs/Gemfile.lock
+docs/_site
