@@ -1,5 +1,5 @@
 # CCircle.Setup.Mac
-> ##### Previous -> [CCircle.Setup.Index](../index.md)<hr>
+> ##### Previous -> [CCircle.Setup.Index](../index.md)
 
 ### TODO(Brendan): Install Python+PyCharm.
 ### [1 : Download CCircle Repository](../pull_ccircle/pull_ccircle.md)

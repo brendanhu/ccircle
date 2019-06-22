@@ -1,5 +1,5 @@
 # CCircle.Setup.4 : Downloading Git
-> ##### Previous -> [CCircle.Docs.Index](../../../index.md)<hr>
+> ##### Previous -> [CCircle.Docs.Index](../../../index.md)
 
 * First, [download 64-bit Git for Windows](https://git-scm.com/download/win)
   Run the download when it finishes.

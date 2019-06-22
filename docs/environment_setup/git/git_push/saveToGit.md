@@ -1,5 +1,5 @@
 # CCircle.Git: Saving Code Online Using Git
-> ##### Previous -> [CCircle.Docs.Index](../../../index.md)<hr>
+> ##### Previous -> [CCircle.Docs.Index](../../../index.md)
 
 * Open the ccircle project in PyCharm, right click "ccircle" in the Project pane, and select "New" -> "Python Package".
   Use your first name as the package's name:

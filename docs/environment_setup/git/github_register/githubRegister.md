@@ -1,5 +1,5 @@
 # CCircle.Git : Registering for GitHub
-> ##### Previous -> [CCircle.Docs.Index](../../../index.md)<hr>
+> ##### Previous -> [CCircle.Docs.Index](../../../index.md)
 
 * ![1](image/ghsetup01.jpg)
 

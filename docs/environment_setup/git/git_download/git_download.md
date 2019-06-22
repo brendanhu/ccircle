@@ -1,5 +1,5 @@
 # CCircle.Git: Downloading git.
-> ##### Previous -> [CCircle.Docs.Index](../../../index.md)<hr>
+> ##### Previous -> [CCircle.Docs.Index](../../../index.md)
 
 ## Mac
 * This is done for you automatically when you

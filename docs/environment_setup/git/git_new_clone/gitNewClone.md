@@ -1,5 +1,5 @@
 # CCircle.Git.Resources : Pulling Saved Code From GitHub On a Different Computer
-> ##### Previous -> [CCircle.Docs.Index](../../../index.md)<hr>
+> ##### Previous -> [CCircle.Docs.Index](../../../index.md)
 
 * Open PyCharm and spotlight search (Ctrl+Shift+a) "checkout from version control"
     ![newClone1](image/newClone1.png)

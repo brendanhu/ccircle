@@ -1,4 +1,4 @@
-![](screenshots/coding_circle.jpeg)
+![](docs/screenshots/coding_circle.jpeg)
 >Learn to code via interactive games!
 <hr>
 
@@ -9,15 +9,18 @@
 * [Codebase](#Codebase)
 
 
-## Setup
-See the [setup](docs/environment_setup/index.md) section of [the docs](docs/index.md).
+## Setup / Documentation
+* See the
+    [setup](https://brendanhu.com/ccircle/environment_setup/)
+    section of
+    [the docs](https://brendanhu.com/ccircle/).
 
 
 ## Screenshots
 ### Scenario 1
-![](screenshots/scenario01_easy.png)
+![](docs/screenshots/scenario01_easy.png)
 ### Scenario 2
-![](screenshots/scenario02.png)
+![](docs/screenshots/scenario02.png)
 
 
 ## Highlights

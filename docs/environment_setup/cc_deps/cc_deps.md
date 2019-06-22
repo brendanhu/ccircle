@@ -10,7 +10,7 @@
     ![ccircle_module_2](image/cc_deps_2.png)
 
 * If everything went smoothly, you can run one of the scenarios, for example `scenario01.py`:
-    ![scenario01_easy](../../../screenshots/scenario01_easy.png)
+    ![scenario01_easy](../../screenshots/scenario01_easy.png)
     
 ## Windows
 Sorry, the windows installer isn't built yet!

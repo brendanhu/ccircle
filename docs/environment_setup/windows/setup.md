@@ -1,5 +1,5 @@
 # CCircle.Setup.Windows
-> ##### Previous -> [CCircle.Setup.Index](../index.md)<hr>
+> ##### Previous -> [CCircle.Setup.Index](../index.md)
 
 ### [1 : Installing Python](01_python/install_python.md)
 ### [2 : Installing PyCharm](02_pycharm/install_pycharm.md)

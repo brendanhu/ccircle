@@ -1,5 +1,5 @@
 # CCircle.Update: Pulling Staff Changes to CCircle
-> ##### Previous -> [CCircle.Docs.Index](../../../index.md)<hr>
+> ##### Previous -> [CCircle.Docs.Index](../../../index.md)
 
 * Spotlight search "remotes" and add an entry named "staff" that points to the URL "https://github.com/mathcircle/ccircle.git".
     ![pull1](image/pull1.png)
