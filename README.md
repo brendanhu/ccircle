@@ -2,12 +2,6 @@
 >Learn to code via interactive games!
 <hr>
 
-### Table of Contents
-* [Setup](#Setup)
-* [Screenshots](#Screenshots)
-* [Highlights](#Highlights)
-* [Codebase](#Codebase)
-
 
 ## Setup / Documentation
 * See the
@@ -44,8 +38,6 @@
             * Ray-tracing
             * Bounding Boxes and Object collision
   
-
-
 
 ## TODO
 - [x] Full OSX support for existing cc functionality.
