@@ -45,22 +45,6 @@
             * Bounding Boxes and Object collision
   
 
-## Codebase 
-The following describes this codebase's directory structure as it concerns a student (you):
-* **ccircle**: The base directory.
-  * **cc**: The code for the cc python module. You shouldn't modify anything in this directory.
-    * **install**: Install scripts.
-  * **cc_student**: Contains all exercises (labs/scenarios/projects) you will work on.
-    * **assets**: Things like fonts and images we will use for various labs/projects.
-    * **docs**: Documents (PDFs, markdown notes) to be read for various labs/projects.
-    * **hello_world**: Hello-world-type python files (that demonstrate functionality or validate system setup).
-    * **scenarioXX**: All code for a scenario XX. The only file you will write code in is solution.py.
-      * **skeleton**: Skeleton code given by the professor.
-      * **README.md**: A document detailing the scenario.
-      * **scenarioXX.py**: The python file to run to test out your code / display the window.
-      * **solution.py**: A file with an incomplete function for you to complete.
-    * **incomplete**: Incomplete exercises.
-  * **screenshots**: Screenshots used for the webpage.
 
 
 ## TODO
