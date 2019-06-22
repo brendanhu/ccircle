@@ -40,7 +40,7 @@ The following gives a brief summary of the `ccircle` directory structure as it c
       * [skeleton](https://github.com/brendanhu/ccircle/tree/master/cc_student/scenario01/skeleton):
         Skeleton code given by the professor.
       * [**README.md**](https://github.com/brendanhu/ccircle/blob/master/cc_student/scenario01/README.md):
-        A document detailing the scenario.
+        A document detailing the scenario. **You should read this first before attempting the scenario!**
       * [scenarioXX.py](https://github.com/brendanhu/ccircle/blob/master/cc_student/scenario01/scenario01.py):
         The python file to run to test out your code / display the window.
       * [solution.py](https://github.com/brendanhu/ccircle/blob/master/cc_student/scenario01/solution.py):
@@ -49,7 +49,8 @@ The following gives a brief summary of the `ccircle` directory structure as it c
         Incomplete exercises that I'm getting to. If you're snooping around and you see something
         interesting you want finished then send me an email; i am easily swayed by (even mild) enthusiasm.
   * [docs](https://github.com/brendanhu/ccircle/tree/master/docs):
-    The raw versions of documents to be read for various labs/projects; they are presented in a prettier form via Github Pages.
+    The raw versions of documents to be read for various labs/projects;
+    they are presented in a prettier form thanks to Github Pages.
 
 
 ## Git Walkthroughs
