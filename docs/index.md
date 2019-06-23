@@ -54,7 +54,7 @@ The following gives a brief summary of the `ccircle` directory structure as it c
 
 
 ## Git Walkthroughs
-> If you want to save your work on the could, you can try using git!
+> If you want to save your work on the cloud, you can try using git!
 
 * [Registering for GitHub](environment_setup/git/github_register/githubRegister.md)
 * [Downloading Git](environment_setup/git/git_download/git_download.md)
