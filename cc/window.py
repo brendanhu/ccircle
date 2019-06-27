@@ -1,4 +1,6 @@
 """ User-facing window class that creates a window to draw on and interact with. """
+from functools import reduce
+from typing import List
 
 import glfw
 from OpenGL.GL import GL_TRUE, glGenVertexArrays, glBindVertexArray, glBindBuffer, \
@@ -78,13 +80,30 @@ class Window:
         self.__drawRect(x, y, width, height, image=image)
 
     def drawText(self, text: Text, x: int, y: int):
-        """ Draws the text on the window at the point (x, y) with fixed width and height
+        """ Draws the texts on the window at the point (x, y) with fixed width and height
                 as determined by the font renderer in text.py.
         """
-        width = text._width
-        height = text._height
+        width = text.width
+        height = text.height
         image = text
         self.__drawRect(x, y, width, height, image=image)
+
+    def drawTextsCentered(self, y: int, texts: List[Text]):
+        """ Draws the texts, in order, horizontally centered on the window at height y with fixed width and height
+                as determined by the font renderer in text.py.
+        """
+        cx = self.get_size()[0] / 2
+        widths = [x.width for x in texts]
+        text_width = reduce((lambda x, y: x + y), widths)
+        render_x = cx - (text_width / 2)
+        offset = 0
+        for text in texts:
+            self.drawText(
+                text=text,
+                x=render_x + offset,
+                y=y
+            )
+            offset += text.width
 
     def drawCircle(self, x: int, y: int, radius: int, center_color: Color, outer_color: Color = None):
         """ Draw a centered at (x, y) with radius radius (in pixels) and given color(s).

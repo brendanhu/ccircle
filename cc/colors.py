@@ -123,4 +123,4 @@ GAINSBORO = Color.from255(220, 220, 220)
 SMOKE = Color.from255(245, 245, 245)
 
 CC_DARK_BLUE = Color.from255(68, 90, 103)
-CC_LIGHT_BLUE = Color.from255(125,161,167)
+CC_LIGHT_BLUE = Color.from255(125, 161, 167)

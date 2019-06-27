@@ -37,37 +37,16 @@ circle_rsb = Text(text=f'CIRCLE', font=ralewaySemiBold_70, color=colors.CC_LIGHT
 last_update_and_fps = [0.0, 0.0]
 last_frame_time = win.get_time()
 
-
-def draw_text_centered(texts: List[Text], y: int):
-    """ Draw text horizontally centered with the window.
-
-    TODO(Brendan): move this.
-    """
-    cx = win.get_size()[0] / 2
-
-    widths = [x.width for x in texts]
-    text_width = reduce((lambda x, y: x + y), widths)
-    render_x = cx - (text_width / 2)
-    offset = 0
-    for text in texts:
-        win.drawText(
-            text=text,
-            x=render_x + offset,
-            y=y
-        )
-        offset += text.width
-
-
 while win.is_open():
     win.clear(colors.WHITE)
 
     # Misc window info.
     wx, wy = win.get_size()
     cx, cy = wx / 2, wy / 2
-    wx_fifth = int(wx / 5)
-    wy_fifth = int(wy / 5)
-    wx_twentieth = int(wx / 20)
-    wy_twentieth = int(wy / 20)
+    wx_fifth = wx // 5
+    wy_fifth = wy // 5
+    wx_twentieth = wx // 20
+    wy_twentieth = wy // 20
 
     # Layer 1: Rainbow backdrop on bottlm half the screen.
     win.drawImage(
@@ -142,12 +121,11 @@ while win.is_open():
     spacing = 10
     start_y = cy - (coding_aller.height + coding_rsb.height + coding_reb.height) - (4 * spacing)
     y = start_y
-    draw_text_centered(texts=[coding_aller, circle_aller], y=y)
+    win.drawTextsCentered(texts=[coding_aller, circle_aller], y=y)
     y += coding_aller.height + spacing
-    draw_text_centered(texts=[coding_rsb, circle_rsb], y=y)
+    win.drawTextsCentered(texts=[coding_rsb, circle_rsb], y=y)
     y += coding_rsb.height + spacing
-    draw_text_centered(texts=[coding_reb, circle_reb], y=y)
-
+    win.drawTextsCentered(texts=[coding_reb, circle_reb], y=y)
 
     # Draw!
     win.update()
