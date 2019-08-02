@@ -5,9 +5,9 @@
 
 ## Setup / Documentation
 * See the
-    [setup](https://brendanhu.com/ccircle/environment_setup/)
+    [setup](docs/environment_setup/index.md)
     section of
-    [the docs](https://brendanhu.com/ccircle/).
+    [the docs](docs/index.md).
 
 
 ## Screenshots
