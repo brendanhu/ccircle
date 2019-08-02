@@ -24,4 +24,4 @@
   before we open it.  
   ![6](image/pychsetup06.jpg)
 
-### Next -> [CCircle.Setup.cc](../../cc_deps/cc_deps.md)
+### Next -> [CCircle.Setup.cc](../../mac/cc_deps/cc_deps.md)

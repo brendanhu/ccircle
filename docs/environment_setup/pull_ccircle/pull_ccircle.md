@@ -24,4 +24,4 @@
     ![pullccircle11](image/pullccircle11.png)
 * Congratulations, you now have the ccircle repository on your computer!
 
-### Next -> [CCircle.Setup.cc](../cc_deps/cc_deps.md)
+### Next -> [CCircle.Setup.cc](../mac/cc_deps/cc_deps.md)
