@@ -6,7 +6,7 @@
     ![pullccircle02](image/pullccircle02.png)
 * Click the triangle dropdown to the right of the "Check out from Version Control" menu, and select "Git":
     ![pullccircle03](image/pullccircle03.png)
-* Put https://github.com/mathcircle/ccircle.git for the "Git Repository URL:" and ensure the "Directory Name" is "ccircle". Then click the "Test" button:
+* Put https://github.com/mithridatize/ccircle.git for the "Git Repository URL:" and ensure the "Directory Name" is "ccircle". Then click the "Test" button:
     ![pullccircle04](image/pullccircle04.png)
 * A dialog should show that your connection was successful. Click "OK".
     ![pullccircle05](image/pullccircle05.png)
