@@ -4,10 +4,7 @@
 
 
 ## Setup / Documentation
-* See the
-    [setup](docs/environment_setup/index.md)
-    section of
-    [the docs](docs/index.md).
+* See the Setup section of [the docs](https://mithridatize.github.io/ccircle/).
 
 
 ## Screenshots
