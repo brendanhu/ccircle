@@ -5,3 +5,5 @@ if "%PROCESSOR_ARCHITECTURE%"=="AMD64" (
   echo 'Installer not built for 32-bit installs. Ask Brendan for help.'
   pause
 )
+
+python -m pip install glfw pyopengl numpy pillow

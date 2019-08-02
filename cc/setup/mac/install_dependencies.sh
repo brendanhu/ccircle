@@ -51,10 +51,27 @@ function ensure_pyopengl() {
 
     echo >&2 "PyOpenGL install confirmed."
 }
+
+# Install numpy.
+function ensure_numpy() {
+    { pip freeze | grep numpy >/dev/null 2>&1; } || { echo >&2 "Installing numpy..."; \
+    pip install numpy; }
+
+    echo >&2 "numpy install confirmed."
+}
+
+# Install pillow.
+function ensure_pillow() {
+    { pip freeze | grep pillow >/dev/null 2>&1; } || { echo >&2 "Installing pillow..."; \
+    pip install pillow; }
+
+    echo >&2 "pillow install confirmed."
+}
 ################# MAIN #####################
 ensure_brew # OSX Package manager.
 ensure_glfw_shared_library # OS-specific shared library.
 ensure_pyglfw # Python bindings for glfw.
 ensure_pyopengl
+ensure_numpy
 
 echo -e >&2 "\n---Ccircle dependencies confirmed.---"
