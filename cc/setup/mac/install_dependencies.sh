@@ -21,7 +21,7 @@ function ensure_glfw_shared_library() {
     # First, ensure the dylib is in the canonical install location.
     local required_dylib_name='libglfw3.dylib'
     local canonical_dylib_name='libglfw.3.3.dylib'
-    local installed_dylib_base="/usr/local/Cellar/glfw/3.3/lib"
+    local installed_dylib_base="/usr/local/Cellar/glfw/3.3.2/lib"
     local installed_dylib_file="$installed_dylib_base/$canonical_dylib_name"
     [[ -f ${installed_dylib_file} ]] || { echo >&2 "Was expecting glfw dylib at location $installed_dylib_file"; \
     exit 1;}
@@ -38,32 +38,32 @@ function ensure_glfw_shared_library() {
 
 # Install glfw: https://pypi.org/project/glfw/.
 function ensure_pyglfw() {
-    { pip freeze | grep glfw >/dev/null 2>&1; } || { echo >&2 "Installing python bindings for glfw..."; \
-    pip install glfw; }
+    { pip3 freeze | grep glfw >/dev/null 2>&1; } || { echo >&2 "Installing python bindings for glfw..."; \
+    pip3 install glfw; }
 
     echo >&2 "glfw (python bindings) install confirmed."
 }
 
 # Install pyOpenGL.
 function ensure_pyopengl() {
-    { pip freeze | grep PyOpenGL >/dev/null 2>&1; } || { echo >&2 "Installing PyOpenGL..."; \
-    pip install PyOpenGL; }
+    { pip3 freeze | grep PyOpenGL >/dev/null 2>&1; } || { echo >&2 "Installing PyOpenGL..."; \
+    pip3 install PyOpenGL; }
 
     echo >&2 "PyOpenGL install confirmed."
 }
 
 # Install numpy.
 function ensure_numpy() {
-    { pip freeze | grep numpy >/dev/null 2>&1; } || { echo >&2 "Installing numpy..."; \
-    pip install numpy; }
+    { pip3 freeze | grep numpy >/dev/null 2>&1; } || { echo >&2 "Installing numpy..."; \
+    pip3 install numpy; }
 
     echo >&2 "numpy install confirmed."
 }
 
 # Install pillow.
 function ensure_pillow() {
-    { pip freeze | grep pillow >/dev/null 2>&1; } || { echo >&2 "Installing pillow..."; \
-    pip install pillow; }
+    { pip3 freeze | grep pillow >/dev/null 2>&1; } || { echo >&2 "Installing pillow..."; \
+    pip3 install pillow; }
 
     echo >&2 "pillow install confirmed."
 }
@@ -73,5 +73,6 @@ ensure_glfw_shared_library # OS-specific shared library.
 ensure_pyglfw # Python bindings for glfw.
 ensure_pyopengl
 ensure_numpy
+ensure_pillow
 
 echo -e >&2 "\n---Ccircle dependencies confirmed.---"
