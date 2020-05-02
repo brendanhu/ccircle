@@ -52,6 +52,14 @@ function ensure_pyopengl() {
     echo >&2 "PyOpenGL install confirmed."
 }
 
+# Install pyOpenGL-accelerate.
+function ensure_pyopengl_accelerate() {
+    { pip3 freeze | grep PyOpenGL-accelerate >/dev/null 2>&1; } || { echo >&2 "Installing PyOpenGL-accelerate..."; \
+    pip3 install PyOpenGL-accelerate; }
+
+    echo >&2 "PyOpenGL-accelerate install confirmed."
+}
+
 # Install numpy.
 function ensure_numpy() {
     { pip3 freeze | grep numpy >/dev/null 2>&1; } || { echo >&2 "Installing numpy..."; \
@@ -72,6 +80,7 @@ ensure_brew # OSX Package manager.
 ensure_glfw_shared_library # OS-specific shared library.
 ensure_pyglfw # Python bindings for glfw.
 ensure_pyopengl
+ensure_pyopengl_accelerate
 ensure_numpy
 ensure_pillow
 

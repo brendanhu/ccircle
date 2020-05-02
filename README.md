@@ -37,23 +37,18 @@
   
 
 ## TODO
-- [x] Full OSX support for existing cc functionality.
-    - [x] replace windows-native windowing with GLFW (OS-agnostic windowing)
-    - [x] opengl++ (Mac requires OpenGL 3.2+) -> rewrite primitives rendering
-        - [ ] XXX: [2-VAO paradigm](https://stackoverflow.com/a/8923298)--static and dynamic.
-        - [ ] XXX: textured circles.
-- [ ] Unit Tests (against stored image).
 - [ ] Ensure Windows Support upon OSX rewrite completion.
+- [ ] Unit Tests (against stored image).
 - [ ] Setup.
     - [ ] Template /generate endpoint instead of cloning repo.
-    - [ ] Use GitBooks?.
+    - [ ] Documentation via GitBooks.
     - [ ] Pretend to be new, make youtube video of setup: 'Intro to Software Development'.
     - [ ] Walk through it with someone, take notes for improvement.
     - [ ] Slack community.
 - [ ] All topics covered under Highlights.
+  - [ ] Pokemon puzzle league & AI
   - [ ] XXX: 
     - [ ] Adapt things from [intro to python pdf](https://python.swaroopch.com/problem_solving.html)
     - [ ] Scenario or walkthrough like 
         [Writing a Program that Edits my Videos](https://www.youtube.com/watch?v=0ZeO0IQaJ-A)
         - [ ] Slack community.
-- [ ] XXX: *nix support.
