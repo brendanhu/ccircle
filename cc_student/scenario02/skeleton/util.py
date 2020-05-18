@@ -31,7 +31,7 @@ def draw_text(window: Window, font_path: str, txt: str, x, y, font_pt=16, color=
     color = Color(color[0], color[1], color[2])
     font = Font(font_path, font_pt)
     text = Text(txt, font, color)
-    window.drawText(text, x, y)
+    window.draw_text(text, x, y)
 
 
 def accountPanel(window: Window, fMenu_path: str, fMono_path: str, account, wy, day):

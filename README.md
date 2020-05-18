@@ -46,9 +46,11 @@
     - [ ] Walk through it with someone, take notes for improvement.
     - [ ] Slack community.
 - [ ] All topics covered under Highlights.
+  - [ ] Scenario 3: rush hour.
+  - [ ] EDM DJ name generator (phonetics model -> kshmr is good)
+  - [ ] Make [snowball fight](https://www.youtube.com/watch?v=x0z-qhnMuc0)! 
   - [ ] Pokemon puzzle league & AI
   - [ ] XXX: 
     - [ ] Adapt things from [intro to python pdf](https://python.swaroopch.com/problem_solving.html)
     - [ ] Scenario or walkthrough like 
         [Writing a Program that Edits my Videos](https://www.youtube.com/watch?v=0ZeO0IQaJ-A)
-        - [ ] Slack community.

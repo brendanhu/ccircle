@@ -50,6 +50,7 @@ class Window:
         glfw.swap_buffers(self.win)
         glfw.poll_events()
 
+    # noinspection PyPep8Naming
     def drawTri(self, x1: int, y1: int, x2: int, y2: int, x3: int, y3: int, r: float, g: float, b: float):
         """ Draw a triangle with corners (x1, y1), (x2, y2), and (x3, y3) and given color.
 
@@ -62,6 +63,7 @@ class Window:
         tri = Triangle(v1, v2, v3)
         self.__draw_triangle(tri)
 
+    # noinspection PyPep8Naming
     def drawRect(self, x: int, y: int, width: int, height: int, r: float, g: float, b: float, a: float = 1.0):
         """ Draw a rectangle starting at (x, y) (the top-left corner) that is width pixels wide and height pixels tall
             with given color.
@@ -71,7 +73,7 @@ class Window:
         color = Color(r, g, b, a)
         self.__drawRect(x, y, width, height, color)
 
-    def drawImage(self, image: Image, x: int, y: int, width: int, height: int):
+    def draw_image(self, image: Image, x: int, y: int, width: int, height: int):
         """ Draw the image on the window at the point (x, y) and with size width x height pixels.
 
         TODO(Brendan): The optional angle parameter can be used to draw the image with a rotation of angle degrees
@@ -79,7 +81,7 @@ class Window:
         """
         self.__drawRect(x, y, width, height, image=image)
 
-    def drawText(self, text: Text, x: int, y: int):
+    def draw_text(self, text: Text, x: int, y: int):
         """ Draws the texts on the window at the point (x, y) with fixed width and height
                 as determined by the font renderer in text.py.
         """
@@ -88,24 +90,24 @@ class Window:
         image = text
         self.__drawRect(x, y, width, height, image=image)
 
-    def drawTextsCentered(self, y: int, texts: List[Text]):
+    def draw_texts_centered(self, y: int, texts: List[Text]):
         """ Draws the texts, in order, horizontally centered on the window at height y with fixed width and height
                 as determined by the font renderer in text.py.
         """
         cx = self.get_size()[0] / 2
         widths = [x.width for x in texts]
-        text_width = reduce((lambda x, y: x + y), widths)
+        text_width = reduce((lambda a, b: a + b), widths)
         render_x = cx - (text_width / 2)
         offset = 0
         for text in texts:
-            self.drawText(
+            self.draw_text(
                 text=text,
                 x=render_x + offset,
                 y=y
             )
             offset += text.width
 
-    def drawCircle(self, x: int, y: int, radius: int, center_color: Color, outer_color: Color = None):
+    def draw_circle(self, x: int, y: int, radius: int, center_color: Color, outer_color: Color = None):
         """ Draw a centered at (x, y) with radius radius (in pixels) and given color(s).
             The color of the circle is interpolated from center_color and outer_color, if different.
 
@@ -242,6 +244,7 @@ class Window:
         """
         self._indexed_vbo.offer_shape(tri)
 
+    # noinspection PyPep8Naming
     def __drawRect(self, x: int, y: int, width: int, height: int, color: Color = None, image: Image = None):
         """ Draw a rectangle with either a color or texture.
 

@@ -1,7 +1,7 @@
 from pathlib import Path
 
 
-def hash_combine(seed, hashed):
+def hash_combine(seed, hashed) -> int:
     """ 'Adds' a hash to a seed, returning the new hash. """
     seed ^= hashed + 0x9e3779b9 + (seed << 6) + (seed >> 2)
     return seed

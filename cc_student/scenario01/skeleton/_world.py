@@ -8,10 +8,10 @@ from cc_student.scenario01.solution import Solution
 
 class World:
     def __init__(self):
-        self.imageBG = Image('cc_student/scenario01/assets/images/space.png')
-        self.imageGoal = Image('cc_student/scenario01/assets/images/pizza.png')
+        self.imageBG = Image.from_path('cc_student/scenario01/assets/images/space.png')
+        self.imageGoal = Image.from_path('cc_student/scenario01/assets/images/pizza.png')
 
-        self.load(Solution.getLevel())
+        self.load(Solution.get_level())
 
     def __clear(self, size):
         """ Clear the world to be size x size empty cells. """
@@ -19,7 +19,7 @@ class World:
         self.cells = [[Cell.Empty] * size for _ in range(size)]
         self.objects = []
 
-    def addObject(self, obj):
+    def add_object(self, obj):
         """ Add a new free-standing object to the world. """
         self.objects.append(obj)
 
@@ -33,7 +33,7 @@ class World:
         cs = (ms - 2 * b) / self.size
 
         # Background
-        window.drawImage(self.imageBG, 0, 0, size[0], size[1])
+        window.draw_image(self.imageBG, 0, 0, size[0], size[1])
 
         # Floor: centered square of side length ms
         window.drawRect(ox, oy, ms, ms, 0.2, 0.2, 0.2)
@@ -60,7 +60,7 @@ class World:
                 if cell == Cell.Wall:
                     window.drawRect(px, py, cs, cs, 1.0, 0.0, 0.3)
                 elif cell == Cell.Goal:
-                    window.drawImage(self.imageGoal, px, py, cs, cs)
+                    window.draw_image(self.imageGoal, px, py, cs, cs)
 
         # Free-Standing Objects
         for obj in self.objects:
@@ -69,13 +69,16 @@ class World:
             obj.draw(px, py, cs, window)
 
     def find(self, name):
-        """ Return the object in the world with the given name """
+        """ Return the object in the world with the given name.
+
+         TODO(Brendan): safe call get_name.
+        """
         for obj in self.objects:
-            if hasattr(obj, 'getName') and obj.getName() == name:
+            if obj.get_name() == name:
                 return obj
         return None
 
-    def getCell(self, x, y) -> Cell:
+    def get_cell(self, x, y) -> Cell:
         if x < 0 or y < 0 or x >= self.size or y >= self.size:
             return Cell.OutOfBounds
         return self.cells[x][y]
@@ -93,7 +96,7 @@ class World:
                 if cell in ['W', '|', '+']:
                     self.cells[x][y] = Cell.Wall
                 elif cell in ['X', 'C']:
-                    self.addObject(Cat(x, y))
+                    self.add_object(Cat(x, y))
                 elif cell in ['!', 'P']:
                     self.cells[x][y] = Cell.Goal
                 else:

@@ -5,8 +5,6 @@
     TODO(Brendan): this is growing out of control!
 """
 import math
-from functools import reduce
-from typing import List
 
 import cc.colors as colors
 from cc.font import Font
@@ -16,11 +14,12 @@ from cc.window import Window
 
 # Create window.
 win = Window()
+win.hide_cursor()
 
 # Load any images or fonts just once.
-rainbow_img = Image('cc_student/assets/images/rainbow.png')
-hazard_img = Image('cc_student/assets/images/hazard.png')
-pizza_img = Image('cc_student/assets/images/pizza.png')
+rainbow_img = Image.from_path('cc_student/assets/images/rainbow.png')
+hazard_img = Image.from_path('cc_student/assets/images/hazard.png')
+pizza_img = Image.from_path('cc_student/assets/images/pizza.png')
 nova_flat_26 = Font('cc_student/assets/fonts/NovaFlat.ttf', 26)
 aller_Lt_70 = Font('cc_student/assets/fonts/Aller_Lt.ttf', 70)
 ralewayExtraBold_70 = Font('cc_student/assets/fonts/Raleway-ExtraBold.ttf', 70)
@@ -48,8 +47,8 @@ while win.is_open():
     wx_twentieth = wx // 20
     wy_twentieth = wy // 20
 
-    # Layer 1: Rainbow backdrop on bottlm half the screen.
-    win.drawImage(
+    # Layer 1: Rainbow backdrop on bottom half the screen.
+    win.draw_image(
         image=rainbow_img,
         x=0,
         y=cy,
@@ -58,7 +57,7 @@ while win.is_open():
     )
 
     # Layer 2: Bottom-left: Static pizza.
-    win.drawImage(
+    win.draw_image(
         image=pizza_img,
         x=wx_fifth,
         y=cy + wy_fifth,
@@ -79,7 +78,7 @@ while win.is_open():
     # Layer 4: Bottom-right: A circle that changes size over time.
     max_radius = wx_fifth
     radius = int(abs(max_radius * math.sin(win.get_time())))
-    win.drawCircle(
+    win.draw_circle(
         x=cx + wx_fifth,
         y=cy + wx_fifth,
         radius=radius,
@@ -89,8 +88,8 @@ while win.is_open():
 
     # Top layer: Hazard triangle that moves with the mouse (cursor).
     mouse_pos = win.get_mouse_pos()
-    mx, my = mouse_pos.x, mouse_pos.y
-    win.drawImage(
+    mx, my = int(mouse_pos.x), int(mouse_pos.y)
+    win.draw_image(
         image=hazard_img,
         x=mx - (wx_twentieth / 2),
         y=my,
@@ -111,7 +110,7 @@ while win.is_open():
         font=nova_flat_26,
         color=colors.DARK_GRAY
     )
-    win.drawText(
+    win.draw_text(
         text=fps_text,
         x=wx - fps_text.width - gray_box_border,
         y=wy - fps_text.height - gray_box_border
@@ -121,12 +120,13 @@ while win.is_open():
     spacing = 10
     start_y = cy - (coding_aller.height + coding_rsb.height + coding_reb.height) - (4 * spacing)
     y = start_y
-    win.drawTextsCentered(texts=[coding_aller, circle_aller], y=y)
+    win.draw_texts_centered(texts=[coding_aller, circle_aller], y=y)
     y += coding_aller.height + spacing
-    win.drawTextsCentered(texts=[coding_rsb, circle_rsb], y=y)
+    win.draw_texts_centered(texts=[coding_rsb, circle_rsb], y=y)
     y += coding_rsb.height + spacing
-    win.drawTextsCentered(texts=[coding_reb, circle_reb], y=y)
+    win.draw_texts_centered(texts=[coding_reb, circle_reb], y=y)
 
     # Draw!
     win.update()
 win.close()
+exit(0)

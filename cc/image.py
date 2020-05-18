@@ -5,26 +5,44 @@ from OpenGL.GL import glGetIntegerv, GL_MAX_TEXTURE_SIZE, glGenTextures, glBindT
 from PIL import Image as pilImage
 from PIL.Image import FLIP_TOP_BOTTOM
 from PIL.Image import Image as PILImage
-from numpy import fromstring, uint8
+from numpy import fromstring, uint8, ndarray
 
 from cc._constant import LOGGER, RGBA
 from cc._util import get_ccircle_image_path
 
 
 class Image:
-    """ An image bound to a 2D OpenGL texture. """
 
-    def __init__(self, path: str):
-        """ Create an image given a path relative to the ccircle directory. """
-        resolved_path = get_ccircle_image_path(path)
-        img = Image.__open_image(resolved_path)
-        LOGGER.debug('Loading image: %s' % resolved_path.name)
-        self.id = Image.bind_to_texture(img)
-        pass
+    def __init__(self, texture_id: int):
+        """ An RGB image bound to a 2D OpenGL texture.
+            Should be created from a classmethod builder:
+                @from_path or @from_numpy_array
+        """
+        self.id = texture_id
 
     def __eq__(self, other):
         """ Two textures are equal if they share the same OpenGL-assigned id."""
         return self.id == other.id
+
+    @classmethod
+    def from_path(cls, path: str):
+        """ Create an image given a path relative to the ccircle directory. """
+        resolved_path = get_ccircle_image_path(path)
+        img = Image.__open_image(resolved_path)
+        LOGGER.debug('Loading image: %s' % resolved_path.name)
+        texture_id = Image.bind_to_texture(img)
+        return cls(texture_id)
+
+    @classmethod
+    def from_numpy_array(cls, pixel_array: ndarray):
+        """ Create a ccircle image from a numpy array.
+
+        Returns:
+            texture_id: the id of the texture loaded into OpenGL.
+        """
+        pillow_image = pilImage.fromarray(pixel_array)
+        texture_id = Image.bind_to_texture(pillow_image)
+        return cls(texture_id)
 
     @staticmethod
     def __max_texture_size():
@@ -42,7 +60,7 @@ class Image:
             raise
 
     @staticmethod
-    def bind_to_texture(img: PILImage):
+    def bind_to_texture(img: PILImage) -> int:
         """ Convert img (BMP, IM, JPEG, PNG, etc.) to an OpenGL texture.
 
         Args:

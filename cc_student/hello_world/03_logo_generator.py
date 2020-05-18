@@ -36,8 +36,8 @@ def font_size_comparator(font_path):
 
     def parametrized_bisect_left_comparator(text, font_size):
         font = Font(font_path, font_size)
-        x, y = font.text_size(text)
-        if x < max_x:
+        width, _ = font.text_size(text)
+        if width < max_x:
             return BisectRetVal.HIGHER
         else:
             return BisectRetVal.LOWER
@@ -45,7 +45,7 @@ def font_size_comparator(font_path):
     return parametrized_bisect_left_comparator
 
 
-def getLargestFont(font_path, text) -> Font:
+def get_largest_font(font_path, text) -> Font:
     """ For given text, determine the largest font size that will fit the text on the current window. """
     max_font_size = binary_search_text_size(text, font_size_comparator(font_path))
     return Font(font_path, max_font_size)
@@ -57,9 +57,9 @@ LOGO_BACKGROUND_COLOR = colors.WHITE
 LOGO_COLOR = colors.CC_LIGHT_BLUE
 
 # Load fonts and text just once.
-aller_Lt_max = getLargestFont('cc_student/assets/fonts/Aller_Lt.ttf', LOGO_TEXT)
-ralewayExtraBold_max = getLargestFont('cc_student/assets/fonts/Raleway-ExtraBold.ttf', LOGO_TEXT)
-ralewaySemiBold_max = getLargestFont('cc_student/assets/fonts/Raleway-SemiBold.ttf', LOGO_TEXT)
+aller_Lt_max = get_largest_font('cc_student/assets/fonts/Aller_Lt.ttf', LOGO_TEXT)
+ralewayExtraBold_max = get_largest_font('cc_student/assets/fonts/Raleway-ExtraBold.ttf', LOGO_TEXT)
+ralewaySemiBold_max = get_largest_font('cc_student/assets/fonts/Raleway-SemiBold.ttf', LOGO_TEXT)
 mithrid_aller = Text(text=LOGO_TEXT, font=aller_Lt_max, color=LOGO_COLOR)
 mithrid_reb = Text(text=LOGO_TEXT, font=ralewayExtraBold_max, color=LOGO_COLOR)
 mithrid_rsb = Text(text=LOGO_TEXT, font=ralewaySemiBold_max, color=LOGO_COLOR)
@@ -75,11 +75,12 @@ while win.is_open():
     # text_heights + (4 * spacing) = wy
     spacing = (wy - (mithrid_aller.height + mithrid_reb.height + mithrid_rsb.height)) // 4
     y = spacing
-    win.drawTextsCentered(texts=[mithrid_aller], y=y)
+    win.draw_texts_centered(texts=[mithrid_aller], y=y)
     y += mithrid_aller.height + spacing
-    win.drawTextsCentered(texts=[mithrid_rsb], y=y)
+    win.draw_texts_centered(texts=[mithrid_rsb], y=y)
     y += mithrid_rsb.height + spacing
-    win.drawTextsCentered(texts=[mithrid_reb], y=y)
+    win.draw_texts_centered(texts=[mithrid_reb], y=y)
 
     win.update()
 win.close()
+exit(0)

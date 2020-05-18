@@ -9,16 +9,16 @@ class Solution:
         pass
 
     @staticmethod
-    def getLevel() -> Layout:
+    def get_level() -> Layout:
         """ Choose your level here. """
         return Layout.EASY
 
     @staticmethod
-    def getPauseTime() -> float:
+    def get_pause_time() -> float:
         """ Smaller pause time = faster simulation. """
         return 0.01
 
     # noinspection PyMethodMayBeStatic
-    def moveTowardPizza(self, cat: Cat):
+    def move_towards_pizza(self, cat: Cat):
         """ Your code here! """
         pass

@@ -50,7 +50,7 @@ class StockMarket:
             raise Exception('Quantity must be a positive integer!')
 
     def _checkSym(self, sym):
-        if not sym in self._stocks:
+        if sym not in self._stocks:
             raise Exception('There are no stocks with symbol %s!' % sym)
 
     def update(self):

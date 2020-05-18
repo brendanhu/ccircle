@@ -11,8 +11,8 @@ class Ball:
         self.fy += fy
 
     def draw(self, window):
-        window.drawCircle(self.x, self.y, self.size, 0, 0, 0, 0.25)
-        window.drawCircle(self.x, self.y, self.size - 2, 1.0, 0, 0, 0.75)
+        window.draw_circle(self.x, self.y, self.size, 0, 0, 0, 0.25)
+        window.draw_circle(self.x, self.y, self.size - 2, 1.0, 0, 0, 0.75)
 
     def update(self, dt):
         # Compute acceleration using a = F / m (Newton's second law)

@@ -12,19 +12,19 @@ class Cat:
         self.tx = x
         self.ty = y
         self.images_by_direction = {
-            Direction.NORTH: Image('cc_student/scenario01/assets/images/cat_n.png'),
-            Direction.EAST: Image('cc_student/scenario01/assets/images/cat_e.png'),
-            Direction.SOUTH: Image('cc_student/scenario01/assets/images/cat_s.png'),
-            Direction.WEST: Image('cc_student/scenario01/assets/images/cat_w.png'),
+            Direction.NORTH: Image.from_path('cc_student/scenario01/assets/images/cat_n.png'),
+            Direction.EAST: Image.from_path('cc_student/scenario01/assets/images/cat_e.png'),
+            Direction.SOUTH: Image.from_path('cc_student/scenario01/assets/images/cat_s.png'),
+            Direction.WEST: Image.from_path('cc_student/scenario01/assets/images/cat_w.png'),
         }
         self.direction = Direction.WEST
 
     def draw(self, x, y, s, window: Window):
         image = self.images_by_direction.get(self.direction)
-        window.drawImage(image, x, y, s, s)
+        window.draw_image(image, x, y, s, s)
 
     @staticmethod
-    def getName():
+    def get_name():
         return Cat.NAME
 
     def update(self, dt):

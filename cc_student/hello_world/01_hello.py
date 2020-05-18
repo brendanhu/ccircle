@@ -33,3 +33,5 @@ def make_greeting():
 
 for i in range(10):
     print(make_greeting())
+
+exit(0)

@@ -25,7 +25,7 @@ class Handler:
         elif self._failure:
             self.window.drawRect(0, 0, wx, wy, 1, 0, 0, 0.5)
 
-    def _getFacingCell(self):
+    def _get_facing_cell(self):
         if Direction.NORTH == self.cat.direction:
             return self.cat.tx, self.cat.ty - 1
         if Direction.EAST == self.cat.direction:
@@ -39,49 +39,49 @@ class Handler:
     def _update(self):
         now = self.window.get_time()
         elapsed = now - self._lastMove
-        if elapsed > Solution.getPauseTime() and not self._failure and not self._success:
+        if elapsed > Solution.get_pause_time() and not self._failure and not self._success:
             self._lastMove = now
             self._moved = False
-            self._cb.moveTowardPizza(self.cat)
-            cell = self.world.getCell(self.cat.tx, self.cat.ty)
+            self._cb.move_towards_pizza(self.cat)
+            cell = self.world.get_cell(self.cat.tx, self.cat.ty)
             if cell in [Cell.Wall, Cell.OutOfBounds]:
                 self._failure = True
             if cell == Cell.Goal:
                 self._success = True
 
-    def hasPizza(self):
+    def has_pizza(self):
         return self.world.cells[self.cat.tx][self.cat.ty] == '!'
 
-    def isBlocked(self):
-        fx, fy = self._getFacingCell()
-        result = self.world.getCell(fx, fy)
+    def is_blocked(self):
+        fx, fy = self._get_facing_cell()
+        result = self.world.get_cell(fx, fy)
         return result in [Cell.Wall, Cell.OutOfBounds]
 
-    def isFacingN(self):
+    def is_facing_north(self):
         return self.cat.direction == Direction.NORTH
 
-    def isFacingE(self):
+    def is_facing_east(self):
         return self.cat.direction == Direction.EAST
 
-    def isFacingS(self):
+    def is_facing_south(self):
         return self.cat.direction == Direction.SOUTH
 
-    def isFacingW(self):
+    def is_facing_west(self):
         return self.cat.direction == Direction.WEST
 
-    def smellsPizza(self):
-        fx, fy = self._getFacingCell()
-        result = self.world.getCell(fx, fy)
+    def can_smell_pizza(self):
+        fx, fy = self._get_facing_cell()
+        result = self.world.get_cell(fx, fy)
         return result == Cell.Goal
 
-    def turnLeft(self):
+    def turn_left(self):
         self.cat.direction = (self.cat.direction + 3) % 4
 
-    def turnRight(self):
+    def turn_right(self):
         self.cat.direction = (self.cat.direction + 1) % 4
 
     def walk(self):
         if not self._moved:
-            self.cat.tx, self.cat.ty = self._getFacingCell()
+            self.cat.tx, self.cat.ty = self._get_facing_cell()
             self.cat.x, self.cat.y = self.cat.tx, self.cat.ty
             self._moved = True

@@ -29,3 +29,5 @@ while window.is_open():
         market.update()
         day += 1
     window.update()
+window.close()
+exit(0)

@@ -39,7 +39,7 @@ class Color(Vec4):
         )
 
     def to255Tuple(self) -> Tuple[int, int, int, int]:
-        """ Convert a color to its sRGB [0-255] values with no alpha. """
+        """ Convert a color to its sRGB [0-255] values. """
         return \
             int(self.r * 255), \
             int(self.g * 255), \

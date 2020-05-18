@@ -1,3 +1,6 @@
+TODO(Brendan): scenario04 is broken right now, as it is still in the form from when we were all on a shared LAN in the 
+        computer lab.
+
 --- CONNECTION OBJECT --------------------------------------------------------------------------------------------------
 
     connection.create() returns a connection object that you can use to send/receive messages to/from the game server

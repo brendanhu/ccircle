@@ -15,6 +15,7 @@ class Cell(Enum):
     Goal = 3
 
 
+# noinspection SpellCheckingInspection
 class Layout(Enum):
     EASY = '''
     X-W---
