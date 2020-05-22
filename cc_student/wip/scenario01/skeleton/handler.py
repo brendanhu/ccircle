@@ -1,8 +1,8 @@
 from cc.window import Window
-from cc_student.scenario01.skeleton.cat import Cat
-from cc_student.scenario01.skeleton.constant import Direction, Cell
-from cc_student.scenario01.skeleton._world import World
-from cc_student.scenario01.solution import Solution
+from cc_student.wip.scenario01.skeleton.cat import Cat
+from cc_student.wip.scenario01.skeleton.constant import Direction, Cell
+from cc_student.wip.scenario01.skeleton._world import World
+from cc_student.wip.scenario01.solution import Solution
 
 
 class Handler:

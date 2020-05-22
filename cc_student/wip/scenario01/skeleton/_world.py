@@ -1,9 +1,9 @@
 from cc.image import Image
 from cc.window import Window
-from cc_student.scenario01.skeleton.cat import Cat
-from cc_student.scenario01.skeleton.constant import Cell
-from cc_student.scenario01.skeleton.constant import Layout
-from cc_student.scenario01.solution import Solution
+from cc_student.wip.scenario01.skeleton.cat import Cat
+from cc_student.wip.scenario01.skeleton.constant import Cell
+from cc_student.wip.scenario01.skeleton.constant import Layout
+from cc_student.wip.scenario01.solution import Solution
 
 
 class World:

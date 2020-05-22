@@ -1,7 +1,7 @@
 """ The main file to be run to display the scenario. """
 from cc.window import Window
-from cc_student.scenario01.skeleton.handler import Handler
-from cc_student.scenario01.solution import Solution
+from cc_student.wip.scenario01.skeleton.handler import Handler
+from cc_student.wip.scenario01.solution import Solution
 
 level = Solution.get_level().name
 win_title = "%s Scenario 1: Space Cat Pizza Party!" % level

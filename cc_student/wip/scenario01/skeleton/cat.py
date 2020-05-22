@@ -1,6 +1,6 @@
 from cc.image import Image
 from cc.window import Window
-from cc_student.scenario01.skeleton.constant import Direction
+from cc_student.wip.scenario01.skeleton.constant import Direction
 
 
 class Cat:

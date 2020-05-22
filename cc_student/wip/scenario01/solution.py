@@ -1,6 +1,6 @@
 """ Your solution goes in this file! See README.md for more information. """
-from cc_student.scenario01.skeleton.cat import Cat
-from cc_student.scenario01.skeleton.constant import Layout
+from cc_student.wip.scenario01.skeleton.cat import Cat
+from cc_student.wip.scenario01.skeleton.constant import Layout
 
 
 class Solution:

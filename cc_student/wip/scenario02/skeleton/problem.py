@@ -1,6 +1,6 @@
 import random
 
-from cc_student.scenario02.skeleton.util import genSymbol
+from cc_student.wip.scenario02.skeleton.util import genSymbol
 
 
 class Account:

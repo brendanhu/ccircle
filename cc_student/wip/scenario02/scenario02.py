@@ -1,8 +1,8 @@
-import cc_student.scenario02.skeleton.problem as problem
-import cc_student.scenario02.solution as solution
+import cc_student.wip.scenario02.skeleton.problem as problem
+import cc_student.wip.scenario02.solution as solution
 from cc.colors import DARK_GRAY
 from cc.window import Window
-from cc_student.scenario02.skeleton.util import accountPanel, marketPanel
+from cc_student.wip.scenario02.skeleton.util import accountPanel, marketPanel
 
 trader = solution.StockTrader()
 account, market = problem.create(trader)

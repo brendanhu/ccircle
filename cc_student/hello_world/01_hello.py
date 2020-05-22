@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import random
 
 hello_world = [
