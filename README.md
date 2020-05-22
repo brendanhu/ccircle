@@ -37,8 +37,9 @@
   
 
 ## TODO
-- [ ] Ensure Windows Support upon OSX rewrite completion.
+- [ ] continue ccircle python package distribution prep [here](https://setuptools.readthedocs.io/en/latest/setuptools.html#distributing-a-setuptools-based-project)
 - [ ] Unit Tests (against stored image).
+- [ ] Ensure Windows Support upon OSX rewrite completion.
 - [ ] Setup.
     - [ ] Template /generate endpoint instead of cloning repo.
     - [ ] Documentation via GitBooks.

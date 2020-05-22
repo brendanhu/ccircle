@@ -7,7 +7,7 @@ from PIL.Image import FLIP_TOP_BOTTOM
 from PIL.Image import Image as PILImage
 from numpy import fromstring, uint8, ndarray
 
-from cc._constant import LOGGER, RGBA
+from cc.constant import LOGGER, RGBA
 from cc._util import get_ccircle_image_path
 
 

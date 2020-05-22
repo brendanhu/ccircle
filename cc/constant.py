@@ -1,9 +1,11 @@
 """ Constants for the ccircle (cc) module. """
-MODULE_NAME = 'cc'
-
-# Configure Logging.
 import logging
 
+MODULE_NAME = 'ccircle'
+VERSION = '0.1'
+REQUIREMENTS_FILE = 'requirements.txt'
+
+# Configure logging.
 LOGGER_LEVEL = 'INFO'
 LOGGER = logging.getLogger(MODULE_NAME)
 maybe_level = logging.getLevelName(LOGGER_LEVEL)
