@@ -4,8 +4,18 @@
 
 
 ## Setup / Documentation
-* See the Setup section of [the docs](https://mithridatize.github.io/ccircle/).
+> Note: Setup has only been validated against arm64 OSX.
 
+1. Ensure system has `asdf`.
+   1. `brew install coreutils curl git asdf`
+2. Ensure system has poetry (via asdf).
+   1. `asdf ensure-versions`
+3. Install dependencies via `poetry`
+   1. `poetry install`
+4. Validate your setup
+   1. TODO: `` 
+
+> TODO(Brendan): Move this info to the setup section of [the docs](https://mithridatize.github.io/ccircle/).
 
 ## Screenshots
 ### Scenario 1
@@ -37,7 +47,19 @@
   
 
 ## TODO
-- Pipfile
+- Hackathon stuff
+    - [x] swap dependency mgmt to poetry
+    - [ ] upgrade dependencies to work on arm64
+      - [x] upgrade deps minimally 
+      - [ ] confirm upgrade via _
+  - [ ] upgrade from python 3.7?)
+  - [ ] MVP game UI
+    - [ ] Similar scenario as trading, except w/ freight marketplace
+  - [ ] game AI
+  - [ ] compare game AI results to user's algo
+  - [ ] toggle game AI
+  - [ ] ...
+- Pipenv
     - [ ] stop pinning versions (migrate to *)
     - [ ] clean up dependencies
 - [ ] get [Trial tests](https://twisted.readthedocs.io/en/twisted-18.9.0/core/howto/trial.html) working

@@ -1,0 +1,36 @@
+[tool.poetry]
+name = "ccircle"
+version = "0.1.0"
+description = ""
+authors = ["Brendan Hu <contact@brendanhu.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "3.9.10"
+attrs = "20.3.0"  # Upgraded version
+Automat = "20.2.0"  # Upgraded version
+constantly = "15.1.0"
+cycler = "0.10.0"
+decorator = "5.1.0"  # Upgraded version
+glfw = "1.11.0"
+hyperlink = "21.0.0"  # Upgraded version
+idna = "2.10"  # Upgraded version
+incremental = "21.3.0"  # Upgraded version
+kiwisolver = "1.4.0"  # Upgraded version
+matplotlib = "3.5.0"  # Upgraded version
+opencv-python = "4.8.1.78"
+PyHamcrest = "2.0.2"
+PyOpenGL = "3.1.5"
+PyOpenGL-accelerate = "3.1.5"
+pypandoc = "1.6.3"  # Upgraded version
+pyparsing = "3.0.4"  # Upgraded version
+python-dateutil = "2.8.2"  # Upgraded version
+PyWavelets = "1.1.1"  # Upgraded version
+scikit-image = "0.22.0"  # Upgraded version
+six = "1.16.0"  # Upgraded version
+Twisted = "21.7.0"  # Upgraded version
+yapf = "0.31.0"  # Upgraded version
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
