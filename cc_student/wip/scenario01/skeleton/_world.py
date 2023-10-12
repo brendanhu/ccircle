@@ -8,8 +8,8 @@ from cc_student.wip.scenario01.solution import Solution
 
 class World:
     def __init__(self):
-        self.imageBG = Image.from_path('cc_student/scenario01/assets/images/space.png')
-        self.imageGoal = Image.from_path('cc_student/scenario01/assets/images/pizza.png')
+        self.imageBG = Image.from_path('cc_student/wip/scenario01/assets/images/space.png')
+        self.imageGoal = Image.from_path('cc_student/wip/scenario01/assets/images/pizza.png')
 
         self.load(Solution.get_level())
 
@@ -20,7 +20,7 @@ class World:
         self.objects = []
 
     def add_object(self, obj):
-        """ Add a new free-standing object to the world. """
+        """ Add a new freestanding object to the world. """
         self.objects.append(obj)
 
     def draw(self, window: Window):

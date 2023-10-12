@@ -11,7 +11,7 @@ class Solution:
     @staticmethod
     def get_level() -> Layout:
         """ Choose your level here. """
-        return Layout.EASY
+        return Layout.HARD
 
     @staticmethod
     def get_pause_time() -> float:

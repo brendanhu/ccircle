@@ -13,12 +13,14 @@ from cc._util import get_ccircle_image_path
 
 class Image:
 
-    def __init__(self, texture_id: int):
+    def __init__(self, texture_id: int, width: int, height: int):
         """ An RGB image bound to a 2D OpenGL texture.
             Should be created from a classmethod builder:
                 @from_path or @from_numpy_array
         """
         self.id = texture_id
+        self.width = width
+        self.height = height
 
     def __eq__(self, other):
         """ Two textures are equal if they share the same OpenGL-assigned id."""
@@ -31,7 +33,7 @@ class Image:
         img = Image.__open_image(resolved_path)
         LOGGER.debug('Loading image: %s' % resolved_path.name)
         texture_id = Image.bind_to_texture(img)
-        return cls(texture_id)
+        return cls(texture_id, img.width, img.height)
 
     @classmethod
     def from_numpy_array(cls, pixel_array: ndarray):
@@ -42,7 +44,7 @@ class Image:
         """
         pillow_image = pilImage.fromarray(pixel_array)
         texture_id = Image.bind_to_texture(pillow_image)
-        return cls(texture_id)
+        return cls(texture_id, pillow_image.width, pillow_image.height)
 
     @staticmethod
     def __max_texture_size():
@@ -80,6 +82,7 @@ class Image:
 
         # Transpose the image and convert to RGBA.
         img_data = img.transpose(FLIP_TOP_BOTTOM).convert(RGBA)
+        # noinspection PyTypeChecker we actually want bytes here
         img_data = fromstring(img_data.tobytes(), uint8)
 
         # Bind the image data to an OpenGL texture.

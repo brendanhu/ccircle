@@ -71,6 +71,14 @@ class Window:
         Notes: Here only as a wrapper around __draw_rect() to reuse materials created with CCircle v0.9.8 (Win64).
         """
         color = Color(r, g, b, a)
+        self.drawRect(x, y, width, height, color)
+
+    def drawRect(self, x: int, y: int, width: int, height: int, color: Color):
+        """ Draw a rectangle starting at (x, y) (the top-left corner) that is width pixels wide and height pixels tall
+            with given color.
+
+        Notes: Here only as a wrapper around __draw_rect() to reuse materials created with CCircle v0.9.8 (Win64).
+        """
         self.__drawRect(x, y, width, height, color)
 
     def draw_image(self, image: Image, x: int, y: int, width: int, height: int):
@@ -123,7 +131,7 @@ class Window:
         self.__draw_circle(circle)
 
     def is_open(self) -> bool:
-        """ Returns whether or not this window is open. """
+        """ Returns whether this window is open. """
         return not glfw.window_should_close(self.win)
 
     def get_top_left_corner(self) -> tuple:

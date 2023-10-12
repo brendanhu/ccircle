@@ -14,7 +14,7 @@ class Account:
 
     def _logAction(self, action):
         self._log.append(action)
-        print(action)
+        print(action) #TODO: swap to logging
 
     def _removeShares(self, sym, quantity):
         self._shares[sym] -= quantity
@@ -98,7 +98,7 @@ class StockMarket:
 
 
 def create(solution):
-    diff = solution.getDifficulty()
+    diff = solution.difficulty()
 
     account = Account()
     account._balance = 1000

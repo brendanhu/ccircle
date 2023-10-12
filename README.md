@@ -8,12 +8,19 @@
 
 1. Ensure system has `asdf`.
    1. `brew install coreutils curl git asdf`
-2. Ensure system has poetry (via asdf).
-   1. `asdf ensure-versions`
-3. Install dependencies via `poetry`
+1. Ensure system has poetry (via asdf).
+    1. `asdf ensure-versions`
+1. Ensure poetry installs deps in a .venv directory.
+   1. `poetry config virtualenvs.in-project true --local`
+1. Install dependencies via `poetry`
    1. `poetry install`
-4. Validate your setup
-   1. TODO: `` 
+1. Ensure the system has `glfw`. TODO(move this to poetry).
+    1. `pip install glfw`
+1. Validate your setup by running `02_cc_hello.py` in PyCharm or on the CLI via:
+   1. ```
+      PYTHONPATH=$PWD \
+      poetry run python cc_student/hello_world/02_cc_hello.py
+      ```
 
 > TODO(Brendan): Move this info to the setup section of [the docs](https://mithridatize.github.io/ccircle/).
 
@@ -48,13 +55,13 @@
 
 ## TODO
 - Hackathon stuff
-    - [x] swap dependency mgmt to poetry
-    - [ ] upgrade dependencies to work on arm64
-      - [x] upgrade deps minimally 
-      - [ ] confirm upgrade via _
-  - [ ] upgrade from python 3.7?)
-  - [ ] MVP game UI
-    - [ ] Similar scenario as trading, except w/ freight marketplace
+  - [x] swap dependency mgmt to poetry
+  - [x] upgrade dependencies to work on arm64
+    - [x] upgrade deps minimally 
+    - [x] confirm upgrade via 02_cc_hello.py
+  - [x] upgrade from python 3.7?)
+  - [x] MVP freight game UI -> scenario05
+  - [ ] MVP freight game setup
   - [ ] game AI
   - [ ] compare game AI results to user's algo
   - [ ] toggle game AI

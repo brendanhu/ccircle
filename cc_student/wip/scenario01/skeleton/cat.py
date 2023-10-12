@@ -12,10 +12,10 @@ class Cat:
         self.tx = x
         self.ty = y
         self.images_by_direction = {
-            Direction.NORTH: Image.from_path('cc_student/scenario01/assets/images/cat_n.png'),
-            Direction.EAST: Image.from_path('cc_student/scenario01/assets/images/cat_e.png'),
-            Direction.SOUTH: Image.from_path('cc_student/scenario01/assets/images/cat_s.png'),
-            Direction.WEST: Image.from_path('cc_student/scenario01/assets/images/cat_w.png'),
+            Direction.NORTH: Image.from_path('cc_student/wip/scenario01/assets/images/cat_n.png'),
+            Direction.EAST: Image.from_path('cc_student/wip/scenario01/assets/images/cat_e.png'),
+            Direction.SOUTH: Image.from_path('cc_student/wip/scenario01/assets/images/cat_s.png'),
+            Direction.WEST: Image.from_path('cc_student/wip/scenario01/assets/images/cat_w.png'),
         }
         self.direction = Direction.WEST
 
