@@ -2,6 +2,8 @@ from enum import Enum
 from itertools import count
 from typing import Generator, Any
 
+from cc.constant import LOGGER
+
 
 # TODO: this should be modeled as an FSM.
 class ShipmentState(Enum):
@@ -86,12 +88,12 @@ class Marketplace:
     def add_shipment(self, shipment: Shipment) -> None:
         """ Adds the given shipment to the marketplace."""
         self._shipments_by_id[shipment.id] = shipment
-        print(f'Added shipment {shipment.id} to the marketplace.')
+        LOGGER.debug(f'Added shipment {shipment.id} to the marketplace.')
 
     def add_carrier(self, carrier: Carrier) -> None:
         """ Adds the given carrier to the marketplace."""
         self._carriers_by_id[carrier.id] = carrier
-        print(f'Added carrier {carrier.id} to the marketplace.')
+        LOGGER.debug(f'Added carrier {carrier.id} to the marketplace.')
 
     def update(self) -> None:
         """ Update the marketplace for the next day. """

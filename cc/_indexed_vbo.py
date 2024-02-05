@@ -41,9 +41,7 @@ class IndexedVbo:
         self.shapes.clear()
 
     def __draw(self, shape: Shape):
-        """ Draw a shape (texture or colored) with the indexed VBO.
-                TODO(Brendan)
-        """
+        """ Draw a shape (texture or colored) with the indexed VBO."""
         if not shape:
             return
 
@@ -54,7 +52,7 @@ class IndexedVbo:
         vertex_bytes = 20 if texture else 28
         shader = self.tex_shader if texture else self.shader
 
-        # Use appropriate shader to use.
+        # Use appropriate shader.
         glUseProgram(shader.program_id)
 
         # Enable the 2 vertex attrib arrays.

@@ -4,6 +4,7 @@ from PIL import ImageFont
 from PIL.ImageFont import FreeTypeFont
 
 from cc._util import get_ccircle_image_path
+from cc.constant import LOGGER
 
 
 class Font:
@@ -50,4 +51,5 @@ class Font:
         Returns:
             font (FreeTypeFont): the font.
         """
+        LOGGER.debug(f"Loading font from {resolved_path} at size {pt}.")
         return ImageFont.truetype(str(resolved_path), pt)

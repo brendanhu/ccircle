@@ -64,14 +64,6 @@ class Window:
         self.__draw_triangle(tri)
 
     # noinspection PyPep8Naming
-    def drawRect(self, x: int, y: int, width: int, height: int, r: float, g: float, b: float, a: float = 1.0):
-        """ Draw a rectangle starting at (x, y) (the top-left corner) that is width pixels wide and height pixels tall
-            with given color.
-
-        Notes: Here only as a wrapper around __draw_rect() to reuse materials created with CCircle v0.9.8 (Win64).
-        """
-        color = Color(r, g, b, a)
-        self.drawRect(x, y, width, height, color)
 
     def drawRect(self, x: int, y: int, width: int, height: int, color: Color):
         """ Draw a rectangle starting at (x, y) (the top-left corner) that is width pixels wide and height pixels tall
@@ -84,8 +76,7 @@ class Window:
     def draw_image(self, image: Image, x: int, y: int, width: int, height: int):
         """ Draw the image on the window at the point (x, y) and with size width x height pixels.
 
-        TODO(Brendan): The optional angle parameter can be used to draw the image with a rotation of angle degrees
-            about its origin.
+        TODO(Brendan): Introduce optional `angle` parameter to draw the image with a rotation about its origin.
         """
         self.__drawRect(x, y, width, height, image=image)
 

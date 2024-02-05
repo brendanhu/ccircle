@@ -18,13 +18,13 @@ def lerp(x, y, t):
     return x + t * (y - x)
 
 
-def panel(window, x, y, sx, sy, b, cInner, cOuter):
-    window.drawRect(x, y, sx, sy, *cOuter)
-    window.drawRect(x + b, y + b, sx - 2 * b, sy - 2 * b, *cInner)
+def panel(window, x, y, sx, sy, b, cInner: Color, cOuter: Color):
+    window.drawRect(x, y, sx, sy, cOuter)
+    window.drawRect(x + b, y + b, sx - 2 * b, sy - 2 * b, cInner)
 
 
 def rect(window, x, y, sx, sy, r, g, b):
-    window.drawRect(x, y, sx, sy, r, g, b)
+    window.drawRect(x, y, sx, sy, Color(r, g, b))
 
 
 def draw_text(window: Window, font_path: str, txt: str, x, y, font_pt=16, color=(1, 1, 1)):
@@ -35,7 +35,7 @@ def draw_text(window: Window, font_path: str, txt: str, x, y, font_pt=16, color=
 
 
 def accountPanel(window: Window, fMenu_path: str, fMono_path: str, account, wy, day):
-    panel(window, 0, 0, 400, wy, 8, (0.15, 0.15, 0.15), (0.2, 0.2, 0.2))
+    panel(window, 0, 0, 400, wy, 8, Color(0.15, 0.15, 0.15), Color(0.2, 0.2, 0.2))
     draw_text(window, fMenu_path, '- Account Info -', 64, 20, 30, (1, 1, 1))
     y = 80
     draw_text(window, fMenu_path, 'BALANCE', 32, y, 20)
@@ -72,7 +72,7 @@ def accountPanel(window: Window, fMenu_path: str, fMono_path: str, account, wy, 
 
 
 def marketPanel(window, fMono, market, wx, wy, day):
-    panel(window, 416, 0, wx - 416, wy, 8, (0.15, 0.15, 0.15), (0.2, 0.2, 0.2))
+    panel(window, 416, 0, wx - 416, wy, 8, Color(0.15, 0.15, 0.15), Color(0.2, 0.2, 0.2))
     draw_text(window, fMono, 'Market (Day: %d)' % day, 870, 20, 30, (1, 1, 1))
 
     spacing = 8
@@ -80,8 +80,8 @@ def marketPanel(window, fMono, market, wx, wy, day):
     h -= spacing
     y = 64
     for sym, stock in market._stocks.items():
-        panel(window, 432, y, 96, h, 2, (0.2, 0.2, 0.2), (0.10, 0.10, 0.10))
-        panel(window, 540, y, wx - 540 - 16, h, 2, (0.2, 0.2, 0.2), (0.1, 0.1, 0.1))
+        panel(window, 432, y, 96, h, 2, Color(0.2, 0.2, 0.2), Color(0.10, 0.10, 0.10))
+        panel(window, 540, y, wx - 540 - 16, h, 2, Color(0.2, 0.2, 0.2), Color(0.1, 0.1, 0.1))
         draw_text(window, fMono, sym, 450, int(y) + 8, 32)
         draw_text(window, fMono, '$%.2f' % stock.price, 442, int(y) + 54, 20)
 

@@ -18,9 +18,7 @@ class Text(Image):
     def __init__(self, text: str, font: Font, color: Color, background_color: Color = CLEAR):
         """ Render text to a texture; multi-line text not (yet) supported.
 
-        TODO(Brendan):
-            keep track of fonts in separate class so we don't have to pass in path here.
-            support multi-line text.
+        TODO(Brendan): support multi-line text.
         """
         if '\n' in text:
             raise RuntimeError('Drawing multi-line text not supported.')

@@ -1,6 +1,8 @@
 import random
 
+from cc.constant import LOGGER
 from cc_student.wip.scenario02.skeleton.util import genSymbol
+from cc_student.wip.scenario02.solution import StockTrader
 
 
 class Account:
@@ -14,7 +16,7 @@ class Account:
 
     def _logAction(self, action):
         self._log.append(action)
-        print(action) #TODO: swap to logging
+        LOGGER.debug(action)
 
     def _removeShares(self, sym, quantity):
         self._shares[sym] -= quantity
@@ -97,8 +99,8 @@ class StockMarket:
         account._logAction('SELL %d x %s @ $%.2f; total = $%.2f' % (quantity, sym, stock.price, total))
 
 
-def create(solution):
-    diff = solution.difficulty()
+def create(stock_trader: StockTrader):
+    diff = stock_trader.getDifficulty()
 
     account = Account()
     account._balance = 1000

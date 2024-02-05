@@ -12,8 +12,6 @@ def get_ccircle_image_path(relative_path: str) -> Path:
 
     Params:
         relative_path: the path relative to the ccircle directory.
-
-    TODO(Brendan): Throws an exception for file not found.
     """
     ccircle_dir = Path(__file__).resolve().parent.parent
     path = ccircle_dir.joinpath(relative_path)

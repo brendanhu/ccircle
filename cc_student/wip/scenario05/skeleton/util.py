@@ -1,6 +1,8 @@
 import random
 
+from cc import colors
 from cc.color import Color
+from cc.constant import LOGGER
 from cc.font import Font
 from cc.image import Image
 from cc.text import Text
@@ -43,7 +45,7 @@ def draw_text(window: Window, font_path: str, txt: str, x, y, font_pt=16, color=
     window.draw_text(text, x, y)
 
 
-def draw_text_centered_on_window(window: Window, font_path: str, txt: str, y, font_pt=16, color=(1, 1, 1)):
+def draw_text_MinimizableWindowon_window(window: Window, font_path: str, txt: str, y, font_pt=16, color=(1, 1, 1)):
     color = Color(color[0], color[1], color[2])
     font = Font(font_path, font_pt)
     text = Text(txt, font, color)
@@ -120,7 +122,10 @@ def draw_map_panel(window: Window, p: Panel, mono_font_path: str, market: Market
     border = 8
     panel(window, p.x, p.y, p.width, p.height, border, Color(0.15, 0.15, 0.15), Color(0.2, 0.2, 0.2))
     y = p.y + (2*border)
-    draw_text_centered_on_window(window, mono_font_path, f'- Map Panel (Day {day}) -', y, 24, (1, 1, 1))
+    window.draw_texts_centered(
+        y=24,
+        texts=[Text(f'- Map Panel (Day {day}) -', Font(mono_font_path, 24), colors.WHITE)],
+    )
     y += 30
 
     # Draw US map, centered with maximal width.
@@ -132,9 +137,9 @@ def draw_map_panel(window: Window, p: Panel, mono_font_path: str, market: Market
     image_width = us_map_image.width * image_scale_factor
     image_height = us_map_image.height * image_scale_factor
     x = p.x + border + image_border
-    # Just determined y by eye.
+    # Determined y by eye.
     y += 120
-    print(f"map: x={x}, y={y}, width={image_width}, height={image_height}")
+    LOGGER.debug(f"map: x={x}, y={y}, width={image_width}, height={image_height}")
     draw_image(window, us_map_image, x, y, image_width, image_height)
 
 

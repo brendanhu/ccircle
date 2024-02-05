@@ -38,9 +38,9 @@
     so you can explore 'how does this work?' as much as you want.
 * Learn the fundamentals of a breadth of computer science topics:
     * Object Oriented Programming (OOP)
-    * 2D Game Development (Modern OpenGL 3.2+)
+    * 2D Game Development (OpenGL 3.2+)
     * Multi-player Game Development: Client/Server (http & tcp)
-    * TODO
+    * TODO; Topics planned for future development:
         * Audio Synthesis
         * Data Structures
         * Databases
@@ -51,6 +51,7 @@
             * Quaternions and matrix math
             * Ray-tracing
             * Bounding Boxes and Object collision
+            * Physically based Rendering (BRDF, etc.) - consider repurposing UC Berkeley CS 184 materials 
   
 
 ## TODO

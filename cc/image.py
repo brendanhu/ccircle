@@ -2,6 +2,7 @@ from OpenGL.GL import glGetIntegerv, GL_MAX_TEXTURE_SIZE, glGenTextures, glBindT
     GL_UNSIGNED_BYTE, GL_RGBA, GL_TEXTURE_MAG_FILTER, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, \
     glGenerateMipmap, glTexParameteri, glPixelStorei, GL_UNPACK_ALIGNMENT, \
     GL_TEXTURE_WRAP_S, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE, glTexParameterf
+from OpenGL.raw.GL.VERSION.GL_2_0 import GL_MAX_TEXTURE_IMAGE_UNITS
 from PIL import Image as pilImage
 from PIL.Image import FLIP_TOP_BOTTOM
 from PIL.Image import Image as PILImage
@@ -12,6 +13,7 @@ from cc._util import get_ccircle_image_path
 
 
 class Image:
+    _num_loaded_textures = 0
 
     def __init__(self, texture_id: int, width: int, height: int):
         """ An RGB image bound to a 2D OpenGL texture.
@@ -31,7 +33,7 @@ class Image:
         """ Create an image given a path relative to the ccircle directory. """
         resolved_path = get_ccircle_image_path(path)
         img = Image.__open_image(resolved_path)
-        LOGGER.debug('Loading image: %s' % resolved_path.name)
+        LOGGER.debug(f'Loading image: {resolved_path.name}')
         texture_id = Image.bind_to_texture(img)
         return cls(texture_id, img.width, img.height)
 
@@ -62,6 +64,13 @@ class Image:
             raise
 
     @staticmethod
+    def exists_space_for_texture() -> bool:
+        """ Check if there is space for another texture in OpenGL. """
+        max_texture_units = glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS)
+        num_loaded_textures = Image._num_loaded_textures
+        return num_loaded_textures < max_texture_units
+
+    @staticmethod
     def bind_to_texture(img: PILImage) -> int:
         """ Convert img (BMP, IM, JPEG, PNG, etc.) to an OpenGL texture.
 
@@ -72,13 +81,18 @@ class Image:
             texture_id: the id of the texture loaded into OpenGL.
 
         Notes:
-            Verifies image dimensions and (TODO(Brendan)) ensures there is space for another texture in OpenGL.
+            - Verifies image dimensions and ensures there is space for another texture in OpenGL.
+            - TODO: deform_texture_coordinates for genie_minimize
         """
-        # Verify the image size/channels are supported.
+        # Validate the image size/channels are supported.
         width, height = img.size
         max_dimension = Image.__max_texture_size()
         if width > max_dimension or height > max_dimension:
             raise RuntimeError('Image dimensions must be < %s.' % max_dimension)
+
+        # Validate there is space for another texture in OpenGL.
+        if not Image.exists_space_for_texture():
+            raise RuntimeError(f"Can't load {img}. Maxed out at {Image.__max_texture_size()} textures.")
 
         # Transpose the image and convert to RGBA.
         img_data = img.transpose(FLIP_TOP_BOTTOM).convert(RGBA)
@@ -109,5 +123,8 @@ class Image:
         glGenerateMipmap(GL_TEXTURE_2D)
 
         img.close()
+
+        Image._num_loaded_textures += 1
+        LOGGER.debug(f"Have {Image._num_loaded_textures} textures loaded.")
 
         return texture_id

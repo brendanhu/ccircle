@@ -2,7 +2,7 @@
     Demonstrates possibility of arbitrarily complex scenes through a 'simple' scene of texture-on-color-on-texture,
     and an fps counter.
 
-    TODO(Brendan): this is growing out of control!
+    TODO(Brendan): this is growing out of control! Split into multiple files.
 """
 import math
 
@@ -72,7 +72,7 @@ while win.is_open():
         y=cy + gray_box_border,
         width=wx - (2 * gray_box_border),
         height=cy - (2 * gray_box_border),
-        r=colors.GRAY.r, g=colors.GRAY.g, b=colors.GRAY.b, a=0.8
+        color=colors.GRAY_SEMI_TRANSPARENT,
     )
 
     # Layer 4: Bottom-right: A circle that changes size over time.

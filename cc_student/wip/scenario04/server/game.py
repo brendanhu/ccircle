@@ -10,15 +10,19 @@ from boss import Boss
 from player import Player
 from reward import Reward
 
+
 class State:
     def __init__(self, size):
         self.sx, self.sy = size
         self.reset()
 
         if DEBUG_MODE:
-            p0 = self.get_player('133.0.242.0'); p0.name = 'beep'
-            p1 = self.get_player('0.4124.33.1'); p1.name = 'boop'
-            p2 = self.get_player('12.0.9.1'); p2.name = 'zooooom'
+            p0 = self.get_player('133.0.242.0');
+            p0.name = 'beep'
+            p1 = self.get_player('0.4124.33.1');
+            p1.name = 'boop'
+            p2 = self.get_player('12.0.9.1');
+            p2.name = 'zooooom'
             p2.money = 1337
             p1.money = 50
             p0.money = 0
@@ -35,7 +39,6 @@ class State:
         for obj in self.players.values():
             obj.draw(self, window)
 
-
         window.drawRect(sx - 248, 0, 256, 72 + 16 * len(self.players), 0.2, 0.2, 0.2, 0.5)
         window.drawRect(sx - 240, 0, 240, 64 + 16 * len(self.players), 0.4, 0.4, 0.4, 0.5)
         util.font().draw('--- PLAYERS (%d) ---' % len(self.players), sx - 220, 32, 16)
@@ -45,10 +48,10 @@ class State:
             util.font().draw('${} : {}'.format(player.money, player.name), sx - 200, y, 12)
 
         if self.boss.dead:
-          s = min(self.sx, self.sy)
-          window.drawRect(0, 0, self.sx, self.sy, 0.1, 0.1, 0.1, 0.9)
-          window.drawRect((self.sx - s) / 2 - 16, 0, s + 32, s, 0.2, random.uniform(0, 1), 0.2)
-          util.draw_image_centered('win.bin', self.sx / 2, self.sy / 2, s - 16)
+            s = min(self.sx, self.sy)
+            window.drawRect(0, 0, self.sx, self.sy, 0.1, 0.1, 0.1, 0.9)
+            window.drawRect((self.sx - s) / 2 - 16, 0, s + 32, s, 0.2, random.uniform(0, 1), 0.2)
+            util.draw_image_centered('win.bin', self.sx / 2, self.sy / 2, s - 16)
 
     def gen_reward(self):
         reward = Reward(
@@ -94,7 +97,7 @@ class State:
         self.reset_time = 1e30
 
         for i in range(REWARD_COUNT):
-          self.gen_reward()
+            self.gen_reward()
 
     def update(self, dt):
         self.time += dt
@@ -112,7 +115,7 @@ class State:
         for obj in self.rewards:
             obj.update(self, dt)
             if obj.remove:
-              remove_list.append(obj)
+                remove_list.append(obj)
         for obj in remove_list:
             self.rewards.remove(obj)
         while len(self.rewards) < REWARD_COUNT:
@@ -130,24 +133,28 @@ class State:
         for addr in remove_list:
             del self.players[addr]
 
+
 class MessageFn:
     def __init__(self, *params):
-        self.params = params if params != None else []
+        self.params = params if params is not None else []
 
     def __call__(self, fn):
         def impl(handler, player, args):
             extracted = []
             for tp, name in self.params:
-                if not name in args: return 'missing argument: %s' % name
+                if name not in args:
+                    return 'missing argument: %s' % name
                 arg = args[name]
                 if type(arg) != tp:
-                  return '%s must have type %s' % (name, str(tp))
+                    return '%s must have type %s' % (name, str(tp))
                 extracted.append(arg)
             if len(extracted) > 0:
-              return fn(handler, player, *extracted)
+                return fn(handler, player, *extracted)
             else:
-              return fn(handler, player)
+                return fn(handler, player)
+
         return impl
+
 
 class MessageHandler:
     def __init__(self, game):

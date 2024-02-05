@@ -6,7 +6,7 @@ VERSION = '0.1'
 REQUIREMENTS_FILE = 'requirements.txt'
 
 # Configure logging.
-LOGGER_LEVEL = 'INFO'
+LOGGER_LEVEL = 'DEBUG'
 LOGGER = logging.getLogger(MODULE_NAME)
 maybe_level = logging.getLevelName(LOGGER_LEVEL)
 maybe_level = maybe_level if maybe_level else 'INFO'
