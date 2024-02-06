@@ -23,7 +23,7 @@ class Text(Image):
         if '\n' in text:
             raise RuntimeError('Drawing multi-line text not supported.')
         self.img = self._render_text(font, text, color, background_color)
-        self.id = Image.bind_to_texture(self.img)
+        self.id = Image._bind_to_texture(self.img)
 
     @property
     def height(self):

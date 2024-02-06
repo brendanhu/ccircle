@@ -17,9 +17,9 @@ win = Window()
 win.hide_cursor()
 
 # Load any images or fonts just once.
-rainbow_img = Image.from_path('cc_student/assets/images/rainbow.png')
-hazard_img = Image.from_path('cc_student/assets/images/hazard.png')
-pizza_img = Image.from_path('cc_student/assets/images/pizza.png')
+rainbow_img = Image.bind_from_path('cc_student/assets/images/rainbow.png')
+hazard_img = Image.bind_from_path('cc_student/assets/images/hazard.png')
+pizza_img = Image.bind_from_path('cc_student/assets/images/pizza.png')
 nova_flat_26 = Font('cc_student/assets/fonts/NovaFlat.ttf', 26)
 aller_Lt_70 = Font('cc_student/assets/fonts/Aller_Lt.ttf', 70)
 ralewayExtraBold_70 = Font('cc_student/assets/fonts/Raleway-ExtraBold.ttf', 70)

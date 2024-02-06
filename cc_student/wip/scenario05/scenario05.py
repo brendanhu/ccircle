@@ -17,7 +17,7 @@ font_mono_path = 'cc_student/assets/fonts/FiraMono.ttf'
 
 # Load the USA map image once.
 # TODO - pivot to https://www.amazon.com/Educational-Playroom-Nursery-Bedroom-Classroom/dp/B07HQGK19C
-us_map_image = Image.from_path('cc_student/wip/scenario05/assets/images/us_map_2.png')
+us_map_image = Image.bind_from_path('cc_student/wip/scenario05/assets/images/us_map_2.png')
 
 day = 1
 last = window.get_time() - player_code.pause_time
